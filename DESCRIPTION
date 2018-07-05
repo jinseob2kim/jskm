@@ -1,0 +1,13 @@
+Package: jskm
+Title: Kaplan-meier plot: Modified ggkm
+Version: 0.0.1
+Authors@R: person("Jinseob", "Kim", email = "jinseob2kim@gmail.com", role = c("aut", "cre"))
+Description: Kaplan-meier plot: Modified ggkm by michaelway.
+Depends: R (>= 3.4.0)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: ggplot2, gridExtra, plyr, survival
+RoxygenNote: 6.0.1
+URL: https://github.com/jinseob2kim/jskm
+
