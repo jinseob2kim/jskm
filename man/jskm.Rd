@@ -5,14 +5,31 @@
 \title{Creates a Kaplan-Meier plot: ggkm + cumhaz option}
 \usage{
 jskm(sfit, table = FALSE, xlabs = "Time-to-event",
-  ylabs = "Survival (\%)", xlims = c(0, max(sfit$time)), ylims = c(0, 1),
-  ystratalabs = names(sfit$strata), ystrataname = "Strata",
+  ylabs = "Survival (\%)", xlims = c(0, max(sfit$time)), ylims = c(0,
+  1), ystratalabs = names(sfit$strata), ystrataname = "Strata",
   timeby = signif(max(sfit$time)/7, 1), main = "", pval = FALSE,
-  marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85, 0.8),
-  ci = FALSE, subs = NULL, linecols = "Set1", dashed = FALSE,
-  cumhaz = F, ...)
+  marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85,
+  0.8), ci = FALSE, subs = NULL, linecols = "Set1", dashed = FALSE,
+  cumhaz = F, cluster.option = c("None", "cluster", "frailty"),
+  cluster.var = NULL, ...)
 }
 \arguments{
+\item{sfit}{a survfit object}
+
+\item{table}{logical: Create a table graphic below the K-M plot, indicating at-risk numbers?}
+
+\item{xlabs}{x-axis label}
+
+\item{ylabs}{y-axis label}
+
+\item{xlims}{numeric: list of min and max for x-axis. Default = c(0,max(sfit$time))}
+
+\item{ylims}{numeric: list of min and max for y-axis. Default = c(0,1)}
+
+\item{ystratalabs}{character list. A list of names for each strata. Default = names(sfit$strata)}
+
+\item{ystrataname}{The legend name. Default = "Strata"}
+
 \item{timeby}{numeric: control the granularity along the time-axis; defaults to 7 time-points. Default = signif(max(sfit$time)/7, 1)}
 
 \item{main}{plot title}
@@ -21,39 +38,27 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 
 \item{marks}{logical: should censoring marks be added?}
 
+\item{shape}{what shape should the censoring marks be, default is a vertical line}
+
+\item{legend}{logical. should a legend be added to the plot?}
+
+\item{legendposition}{numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)}
+
+\item{ci}{logical. Should confidence intervals be plotted. Default = FALSE}
+
 \item{subs}{= NULL,}
+
+\item{linecols}{Character. Colour brewer pallettes too colour lines. Default ="Set1",}
+
+\item{dashed}{logical. Should a variety of linetypes be used to identify lines. Default = FALSE}
 
 \item{cumhaz}{Show cumulaive hazard function, Default: F}
 
+\item{cluster.option}{Cluster option for p value, Default: c("None", "cluster", "frailty")}
+
+\item{cluster.var}{Cluster variable}
+
 \item{...}{PARAM_DESCRIPTION}
-
-\item{sfit:}{a survfit object}
-
-\item{table:}{logical: Create a table graphic below the K-M plot, indicating at-risk numbers?}
-
-\item{xlabs:}{x-axis label}
-
-\item{ylabs:}{y-axis label}
-
-\item{xlims:}{numeric: list of min and max for x-axis. Default = c(0,max(sfit$time))}
-
-\item{ylims:}{numeric: list of min and max for y-axis. Default = c(0,1)}
-
-\item{ystratalabs:}{character list. A list of names for each strata. Default = names(sfit$strata)}
-
-\item{ystrataname:}{The legend name. Default = "Strata"}
-
-\item{shape:}{what shape should the censoring marks be, default is a vertical line}
-
-\item{legend:}{logical. should a legend be added to the plot?}
-
-\item{legendposition:}{numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)}
-
-\item{ci:}{logical. Should confidence intervals be plotted. Default = FALSE}
-
-\item{linecols:}{Character. Colour brewer pallettes too colour lines. Default ="Set1",}
-
-\item{dashed:}{logical. Should a variety of linetypes be used to identify lines. Default = FALSE}
 }
 \value{
 Plot

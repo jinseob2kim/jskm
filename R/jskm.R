@@ -1,25 +1,28 @@
+
 #' @title Creates a Kaplan-Meier plot: ggkm + cumhaz option 
 #' @description Creates a Kaplan-Meier plot with at risk tables below
-#' @param sfit: a survfit object
-#' @param table: logical: Create a table graphic below the K-M plot, indicating at-risk numbers?
-#' @param xlabs: x-axis label
-#' @param ylabs: y-axis label
-#' @param xlims: numeric: list of min and max for x-axis. Default = c(0,max(sfit$time))
-#' @param ylims: numeric: list of min and max for y-axis. Default = c(0,1)
-#' @param ystratalabs: character list. A list of names for each strata. Default = names(sfit$strata)
-#' @param ystrataname: The legend name. Default = "Strata"
+#' @param sfit a survfit object
+#' @param table logical: Create a table graphic below the K-M plot, indicating at-risk numbers?
+#' @param xlabs x-axis label
+#' @param ylabs y-axis label
+#' @param xlims numeric: list of min and max for x-axis. Default = c(0,max(sfit$time))
+#' @param ylims numeric: list of min and max for y-axis. Default = c(0,1)
+#' @param ystratalabs character list. A list of names for each strata. Default = names(sfit$strata)
+#' @param ystrataname The legend name. Default = "Strata"
 #' @param timeby numeric: control the granularity along the time-axis; defaults to 7 time-points. Default = signif(max(sfit$time)/7, 1)
 #' @param main plot title
 #' @param pval logical: add the pvalue to the plot?
 #' @param marks logical: should censoring marks be added?
-#' @param shape: what shape should the censoring marks be, default is a vertical line
-#' @param legend: logical. should a legend be added to the plot?
-#' @param legendposition: numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
-#' @param ci: logical. Should confidence intervals be plotted. Default = FALSE
+#' @param shape what shape should the censoring marks be, default is a vertical line
+#' @param legend logical. should a legend be added to the plot?
+#' @param legendposition numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
+#' @param ci logical. Should confidence intervals be plotted. Default = FALSE
 #' @param subs = NULL,
-#' @param linecols: Character. Colour brewer pallettes too colour lines. Default ="Set1",
-#' @param dashed: logical. Should a variety of linetypes be used to identify lines. Default = FALSE
+#' @param linecols Character. Colour brewer pallettes too colour lines. Default ="Set1",
+#' @param dashed logical. Should a variety of linetypes be used to identify lines. Default = FALSE
 #' @param cumhaz Show cumulaive hazard function, Default: F
+#' @param cluster.option Cluster option for p value, Default: c("None", "cluster", "frailty")
+#' @param cluster.var Cluster variable
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -60,9 +63,10 @@
 #' @importFrom grid unit
 #' @importFrom gridExtra grid.arrange
 #' @importFrom plyr rbind.fill
-#' @importFrom stats pchisq time
-#' @importFrom survival survfit survdiff 
+#' @importFrom stats pchisq time as.formula
+#' @importFrom survival survfit survdiff coxph
 #' @export
+ 
 
 jskm <- function(sfit,
                  table = FALSE,
@@ -84,6 +88,8 @@ jskm <- function(sfit,
                  linecols="Set1",
                  dashed= FALSE,
                  cumhaz = F,
+                 cluster.option = c("None", "cluster", "frailty"),
+                 cluster.var = NULL,
                  ...) {
   
   
@@ -250,6 +256,20 @@ jskm <- function(sfit,
   if(pval == TRUE) {
     sdiff <- survdiff(eval(sfit$call$formula), data = eval(sfit$call$data))
     pvalue <- pchisq(sdiff$chisq,length(sdiff$n) - 1,lower.tail = FALSE)
+    
+    ## cluster option
+    if (cluster.option == "cluster" && !is.null(cluster.var)){
+      form.old = as.character(sfit$call$formula)
+      form.new = paste(form.old[2], form.old[1], " + ", form.old[3], " + cluster(", cluster.var, ")", sep="")
+      sdiff <- coxph(as.formula(form.new), data = eval(sfit$call$data))
+      pvalue <- summary(sdiff)$robscore["pvalue"]
+    } else if (cluster.option == "frailty" && !is.null(cluster.var)){
+      form.old = as.character(sfit$call$formula)
+      form.new = paste(form.old[2], form.old[1], " + ", form.old[3], " + frailty(", cluster.var, ")", sep="")
+      sdiff <- coxph(as.formula(form.new), data = eval(sfit$call$data))
+      pvalue <- summary(sdiff)$logtest["pvalue"]
+    }
+    
     pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", signif(pvalue, 3)))
     # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
     p <- p + annotate("text",x = (as.integer(max(sfit$time)/5)), y = 0.1,label = pvaltxt)
