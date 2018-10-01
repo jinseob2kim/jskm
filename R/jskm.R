@@ -254,6 +254,7 @@ jskm <- function(sfit,
   if(length(levels(summary(sfit)$strata)) == 0) pval <- FALSE
   
   if(pval == TRUE) {
+  
     sdiff <- survdiff(eval(sfit$call$formula), data = eval(sfit$call$data))
     pvalue <- pchisq(sdiff$chisq,length(sdiff$n) - 1,lower.tail = FALSE)
     
