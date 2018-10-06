@@ -29,3 +29,6 @@ jskm(fit)
 jskm(fit, cumhaz = T, ylab = "Cumulative hazard (%)")
 ```
 
+
+
+
