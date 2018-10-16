@@ -2,6 +2,7 @@
 R package for kaplan meier plot: Modified ggkm
 
 [![Build Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/jskm)](http://cran.r-project.org/package=jskm)
 [![GitHub issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/issues)
 [![GitHub forks](https://img.shields.io/github/forks/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/network)
 [![GitHub stars](https://img.shields.io/github/stars/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/stargazers)
