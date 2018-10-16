@@ -1,6 +1,12 @@
 # jskm
 R package for kaplan meier plot: Modified ggkm
 
+[![GitHub issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/issues)
+[![GitHub forks](https://img.shields.io/github/forks/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/network)
+[![GitHub stars](https://img.shields.io/github/stars/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/stargazers)
+[![GitHub license](https://img.shields.io/github/license/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/blob/master/LICENSE)
+[![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg)](https://github.com/jinseob2kim/jskm)
+[![GitHub contributors](https://img.shields.io/github/contributors/jinseob2kim/jskm.svg?maxAge=2592000)](https://github.com/jinseob2kim/jskm/graphs/contributors)
 
 ## Install
 ```r
