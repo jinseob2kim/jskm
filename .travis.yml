@@ -2,3 +2,9 @@ language: r
 cache: packages
 Imports: ggplot2, gridExtra, plyr, survival
 
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'
+
