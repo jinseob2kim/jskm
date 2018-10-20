@@ -39,6 +39,19 @@ jskm(fit)
 jskm(fit, cumhaz = T, ylab = "Cumulative hazard (%)")
 ```
 
+### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
 
+```r
+data(pbc, package="survival")
+pbc$randomized <- with(pbc, !is.na(trt) & trt>0)
+biasmodel<-glm(randomized~age*edema,data=pbc)
+pbc$randprob<-fitted(biasmodel)
 
+dpbc<-svydesign(id=~1, prob=~randprob, strata=~edema, data=subset(pbc,randomized))
 
+s1<-svykm(Surv(time,status>0)~1, design=dpbc)
+s2<-svykm(Surv(time,status>0)~sex, design=dpbc)
+
+svyjskm(s1)
+svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)")
+```

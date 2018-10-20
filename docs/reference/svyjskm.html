@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a Kaplan-Meier plot: ggkm + cumhaz option — jskm • jskm</title>
+<title>Creates a Weighted Kaplan-Meier plot - svykm.object in survey package — svyjskm • jskm</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -36,9 +36,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Creates a Kaplan-Meier plot: ggkm + cumhaz option — jskm" />
+<meta property="og:title" content="Creates a Weighted Kaplan-Meier plot - svykm.object in survey package — svyjskm" />
 
-<meta property="og:description" content="Creates a Kaplan-Meier plot with at risk tables below" />
+<meta property="og:description" content="Creates a Weighted Kaplan-Meier plot - svykm.object in survey package" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -113,116 +113,85 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a Kaplan-Meier plot: ggkm + cumhaz option</h1>
-    <small class="dont-index">Source: <a href='https://github.com/jinseob2kim/jskm/blob/master/R/jskm.R'><code>R/jskm.R</code></a></small>
-    <div class="hidden name"><code>jskm.Rd</code></div>
+    <h1>Creates a Weighted Kaplan-Meier plot - svykm.object in survey package</h1>
+    <small class="dont-index">Source: <a href='https://github.com/jinseob2kim/jskm/blob/master/R/svyjskm.R'><code>R/svyjskm.R</code></a></small>
+    <div class="hidden name"><code>svyjskm.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Creates a Kaplan-Meier plot with at risk tables below</p>
+    <p>Creates a Weighted Kaplan-Meier plot - svykm.object in survey package</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>jskm</span>(<span class='no'>sfit</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xlabs</span> <span class='kw'>=</span> <span class='st'>"Time-to-event"</span>,
-  <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='st'>"Survival (%)"</span>, <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fu'>max</span>(<span class='no'>sfit</span>$<span class='no'>time</span>)), <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>,
-  <span class='fl'>1</span>), <span class='kw'>ystratalabs</span> <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>sfit</span>$<span class='no'>strata</span>), <span class='kw'>ystrataname</span> <span class='kw'>=</span> <span class='st'>"Strata"</span>,
-  <span class='kw'>timeby</span> <span class='kw'>=</span> <span class='fu'>signif</span>(<span class='fu'>max</span>(<span class='no'>sfit</span>$<span class='no'>time</span>)/<span class='fl'>7</span>, <span class='fl'>1</span>), <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>pval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>marks</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.85</span>,
-  <span class='fl'>0.8</span>), <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>subs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>linecols</span> <span class='kw'>=</span> <span class='st'>"Set1"</span>, <span class='kw'>dashed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>cumhaz</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>cluster.option</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"None"</span>, <span class='st'>"cluster"</span>, <span class='st'>"frailty"</span>),
-  <span class='kw'>cluster.var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>svyjskm</span>(<span class='no'>sfit</span>, <span class='kw'>xlabs</span> <span class='kw'>=</span> <span class='st'>"Time-to-event"</span>, <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='st'>"Survival (%)"</span>,
+  <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>), <span class='kw'>ystratalabs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ystrataname</span> <span class='kw'>=</span> <span class='st'>"Strata"</span>, <span class='kw'>timeby</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>pval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.85</span>, <span class='fl'>0.8</span>), <span class='kw'>linecols</span> <span class='kw'>=</span> <span class='st'>"Set1"</span>,
+  <span class='kw'>dashed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cumhaz</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sfit</th>
-      <td><p>a survfit object</p></td>
-    </tr>
-    <tr>
-      <th>table</th>
-      <td><p>logical: Create a table graphic below the K-M plot, indicating at-risk numbers?</p></td>
+      <td><p>a svykm object</p></td>
     </tr>
     <tr>
       <th>xlabs</th>
-      <td><p>x-axis label</p></td>
+      <td><p>x-axis label, Default: 'Time-to-event'</p></td>
     </tr>
     <tr>
       <th>ylabs</th>
-      <td><p>y-axis label</p></td>
+      <td><p>y-axis label.</p></td>
     </tr>
     <tr>
       <th>xlims</th>
-      <td><p>numeric: list of min and max for x-axis. Default = c(0,max(sfit$time))</p></td>
+      <td><p>numeric: list of min and max for x-axis. Default: NULL</p></td>
     </tr>
     <tr>
       <th>ylims</th>
-      <td><p>numeric: list of min and max for y-axis. Default = c(0,1)</p></td>
+      <td><p>numeric: list of min and max for y-axis. Default: c(0, 1)</p></td>
     </tr>
     <tr>
       <th>ystratalabs</th>
-      <td><p>character list. A list of names for each strata. Default = names(sfit$strata)</p></td>
+      <td><p>character list. A list of names for each strata. Default: NULL</p></td>
     </tr>
     <tr>
       <th>ystrataname</th>
-      <td><p>The legend name. Default = "Strata"</p></td>
+      <td><p>The legend name. Default: 'Strata'</p></td>
     </tr>
     <tr>
       <th>timeby</th>
-      <td><p>numeric: control the granularity along the time-axis; defaults to 7 time-points. Default = signif(max(sfit$time)/7, 1)</p></td>
+      <td><p>numeric: control the granularity along the time-axis; defaults to 7 time-points.</p></td>
     </tr>
     <tr>
       <th>main</th>
-      <td><p>plot title</p></td>
+      <td><p>plot title, Default: ''</p></td>
     </tr>
     <tr>
       <th>pval</th>
-      <td><p>logical: add the pvalue to the plot?</p></td>
-    </tr>
-    <tr>
-      <th>marks</th>
-      <td><p>logical: should censoring marks be added?</p></td>
-    </tr>
-    <tr>
-      <th>shape</th>
-      <td><p>what shape should the censoring marks be, default is a vertical line</p></td>
+      <td><p>logical: add the pvalue to the plot?, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>legend</th>
-      <td><p>logical. should a legend be added to the plot?</p></td>
+      <td><p>logical. should a legend be added to the plot? Default: TRUE</p></td>
     </tr>
     <tr>
       <th>legendposition</th>
-      <td><p>numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)</p></td>
-    </tr>
-    <tr>
-      <th>ci</th>
-      <td><p>logical. Should confidence intervals be plotted. Default = FALSE</p></td>
-    </tr>
-    <tr>
-      <th>subs</th>
-      <td><p>= NULL,</p></td>
+      <td><p>numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)</p></td>
     </tr>
     <tr>
       <th>linecols</th>
-      <td><p>Character. Colour brewer pallettes too colour lines. Default ="Set1",</p></td>
+      <td><p>Character. Colour brewer pallettes too colour lines. Default: 'Set1'</p></td>
     </tr>
     <tr>
       <th>dashed</th>
-      <td><p>logical. Should a variety of linetypes be used to identify lines. Default = FALSE</p></td>
+      <td><p>logical. Should a variety of linetypes be used to identify lines. Default: FALSE</p></td>
     </tr>
     <tr>
       <th>cumhaz</th>
       <td><p>Show cumulaive hazard function, Default: F</p></td>
-    </tr>
-    <tr>
-      <th>cluster.option</th>
-      <td><p>Cluster option for p value, Default: c("None", "cluster", "frailty")</p></td>
-    </tr>
-    <tr>
-      <th>cluster.var</th>
-      <td><p>Cluster variable</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -232,7 +201,7 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Plot</p>
+    <p>plot</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -240,10 +209,19 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>survival</span>)
- <span class='fu'>data</span>(<span class='no'>colon</span>)
- <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/survival/topics/survfit'>survfit</a></span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/survival/topics/Surv'>Surv</a></span>(<span class='no'>time</span>,<span class='no'>status</span>)~<span class='no'>rx</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='no'>colon</span>)
- <span class='fu'>jskm</span>(<span class='no'>fit</span>, <span class='kw'>timeby</span><span class='kw'>=</span><span class='fl'>500</span>)</div><div class='img'><img src='jskm-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='fu'>data</span>(<span class='no'>pbc</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"survival"</span>)
+ <span class='no'>pbc</span>$<span class='no'>randomized</span> <span class='kw'>&lt;-</span> <span class='fu'>with</span>(<span class='no'>pbc</span>, !<span class='fu'>is.na</span>(<span class='no'>trt</span>) <span class='kw'>&amp;</span> <span class='no'>trt</span><span class='kw'>&gt;</span><span class='fl'>0</span>)
+ <span class='no'>biasmodel</span><span class='kw'>&lt;-</span><span class='fu'>glm</span>(<span class='no'>randomized</span>~<span class='no'>age</span>*<span class='no'>edema</span>,<span class='kw'>data</span><span class='kw'>=</span><span class='no'>pbc</span>)
+ <span class='no'>pbc</span>$<span class='no'>randprob</span><span class='kw'>&lt;-</span><span class='fu'>fitted</span>(<span class='no'>biasmodel</span>)
+
+ <span class='no'>dpbc</span><span class='kw'>&lt;-</span><span class='fu'>svydesign</span>(<span class='kw'>id</span><span class='kw'>=</span>~<span class='fl'>1</span>, <span class='kw'>prob</span><span class='kw'>=</span>~<span class='no'>randprob</span>, <span class='kw'>strata</span><span class='kw'>=</span>~<span class='no'>edema</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='fu'>subset</span>(<span class='no'>pbc</span>,<span class='no'>randomized</span>))
+
+ <span class='no'>s1</span> <span class='kw'>&lt;-</span> <span class='fu'>svykm</span>(<span class='fu'>Surv</span>(<span class='no'>time</span>,<span class='no'>status</span><span class='kw'>&gt;</span><span class='fl'>0</span>)~<span class='no'>sex</span>, <span class='kw'>design</span><span class='kw'>=</span><span class='no'>dpbc</span>)
+ <span class='fu'>svyjskm</span>(<span class='no'>s1</span>)
+ }
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -256,12 +234,6 @@
       
       <li><a href="#examples">Examples</a></li>
     </ul>
-
-    <h2>Author</h2>
-    
-Jinseob Kim, but heavily modified version of a script created by Michael Way.
-<a href='https://github.com/michaelway/ggkm/'>https://github.com/michaelway/ggkm/</a>
-I have packaged this function, added functions to namespace and included a range of new parameters.
 
   </div>
 </div>
