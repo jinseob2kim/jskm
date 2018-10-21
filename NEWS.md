@@ -1,3 +1,7 @@
+# jskm 0.2.1
+
+* Can run when reactive data
+
 # jskm 0.2.0
 
 ## New function

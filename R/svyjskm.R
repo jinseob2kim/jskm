@@ -16,6 +16,7 @@
 #' @param linecols Character. Colour brewer pallettes too colour lines. Default: 'Set1'
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default: FALSE
 #' @param cumhaz Show cumulaive hazard function, Default: F
+#' @param design Data design for reactive design data , Default: NULL
 #' @param ... PARAM_DESCRIPTION
 #' @return plot
 #' @details DETAILS
@@ -35,6 +36,8 @@
 #' }
 #' @rdname svyjskm
 #' @import ggplot2
+#' @importFrom stats formula
+#' @importFrom survey svyranktest
 #' @export 
 
 svyjskm <- function(sfit,
@@ -52,6 +55,7 @@ svyjskm <- function(sfit,
                     linecols="Set1",
                     dashed= FALSE,
                     cumhaz = F,
+                    design = NULL,
                     ...) {
 
   if(is.null(ystrataname)) ystrataname <- "Strata"
@@ -150,6 +154,20 @@ svyjskm <- function(sfit,
     scale_linetype_manual(name = ystrataname, values=linetype) +
     scale_colour_brewer(name = ystrataname, palette=linecols)
   
+  
+  ## p-value
+  if(class(sfit) == "svykm") pval <- FALSE
+  if(is.null(design)) pval <- FALSE
+  
+  if(pval == TRUE) {
+    
+    sdiff <- survey::svyranktest(formula(sfit), design = design)
+    pvalue <- sdiff$p.value
+    
+    pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", signif(pvalue, 3)))
+    # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
+    p <- p + annotate("text",x = (as.integer(max(sapply(sfit, function(x){max(x$time)}))/5)), y = 0.1,label = pvaltxt)
+  }
   
   p
 

@@ -11,7 +11,7 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
   marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85,
   0.8), ci = FALSE, subs = NULL, linecols = "Set1", dashed = FALSE,
   cumhaz = F, cluster.option = c("None", "cluster", "frailty"),
-  cluster.var = NULL, ...)
+  cluster.var = NULL, data = NULL, ...)
 }
 \arguments{
 \item{sfit}{a survfit object}
@@ -57,6 +57,8 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 \item{cluster.option}{Cluster option for p value, Default: c("None", "cluster", "frailty")}
 
 \item{cluster.var}{Cluster variable}
+
+\item{data}{select specific data - for reactive input. Default = NULL}
 
 \item{...}{PARAM_DESCRIPTION}
 }

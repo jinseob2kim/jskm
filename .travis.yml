@@ -1,6 +1,6 @@
 language: r
 cache: packages
-Imports: ggplot2, gridExtra, plyr, survival
+Imports: ggplot2, gridExtra, plyr, survival, survey
 
 r_packages:
   - covr

@@ -23,6 +23,7 @@
 #' @param cumhaz Show cumulaive hazard function, Default: F
 #' @param cluster.option Cluster option for p value, Default: c("None", "cluster", "frailty")
 #' @param cluster.var Cluster variable
+#' @param data select specific data - for reactive input. Default = NULL
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -90,6 +91,7 @@ jskm <- function(sfit,
                  cumhaz = F,
                  cluster.option = c("None", "cluster", "frailty"),
                  cluster.var = NULL,
+                 data = NULL,
                  ...) {
   
   
@@ -254,20 +256,23 @@ jskm <- function(sfit,
   if(length(levels(summary(sfit)$strata)) == 0) pval <- FALSE
   
   if(pval == TRUE) {
+    if (is.null(data)){
+      data = eval(sfit$call$data)
+    }
   
-    sdiff <- survdiff(eval(sfit$call$formula), data = eval(sfit$call$data))
+    sdiff <- survdiff(eval(sfit$call$formula), data = data)
     pvalue <- pchisq(sdiff$chisq,length(sdiff$n) - 1,lower.tail = FALSE)
     
     ## cluster option
     if (cluster.option == "cluster" && !is.null(cluster.var)){
       form.old = as.character(sfit$call$formula)
       form.new = paste(form.old[2], form.old[1], " + ", form.old[3], " + cluster(", cluster.var, ")", sep="")
-      sdiff <- coxph(as.formula(form.new), data = eval(sfit$call$data))
+      sdiff <- coxph(as.formula(form.new), data = data)
       pvalue <- summary(sdiff)$robscore["pvalue"]
     } else if (cluster.option == "frailty" && !is.null(cluster.var)){
       form.old = as.character(sfit$call$formula)
       form.new = paste(form.old[2], form.old[1], " + ", form.old[3], " + frailty(", cluster.var, ")", sep="")
-      sdiff <- coxph(as.formula(form.new), data = eval(sfit$call$data))
+      sdiff <- coxph(as.formula(form.new), data =data)
       pvalue <- summary(sdiff)$logtest["pvalue"]
     }
     

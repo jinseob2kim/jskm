@@ -68,7 +68,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.2.0</span>
+        <span class="label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.2.1</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@
   <span class='kw'>marks</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.85</span>,
   <span class='fl'>0.8</span>), <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>subs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>linecols</span> <span class='kw'>=</span> <span class='st'>"Set1"</span>, <span class='kw'>dashed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>cumhaz</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>cluster.option</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"None"</span>, <span class='st'>"cluster"</span>, <span class='st'>"frailty"</span>),
-  <span class='kw'>cluster.var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>cluster.var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -223,6 +223,10 @@
     <tr>
       <th>cluster.var</th>
       <td><p>Cluster variable</p></td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td><p>select specific data - for reactive input. Default = NULL</p></td>
     </tr>
     <tr>
       <th>...</th>

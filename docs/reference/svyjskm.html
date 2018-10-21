@@ -68,7 +68,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.2.0</span>
+        <span class="label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.2.1</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
   <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>), <span class='kw'>ystratalabs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ystrataname</span> <span class='kw'>=</span> <span class='st'>"Strata"</span>, <span class='kw'>timeby</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>pval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.85</span>, <span class='fl'>0.8</span>), <span class='kw'>linecols</span> <span class='kw'>=</span> <span class='st'>"Set1"</span>,
-  <span class='kw'>dashed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cumhaz</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>dashed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cumhaz</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>design</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -192,6 +192,10 @@
     <tr>
       <th>cumhaz</th>
       <td><p>Show cumulaive hazard function, Default: F</p></td>
+    </tr>
+    <tr>
+      <th>design</th>
+      <td><p>Data design for reactive design data , Default: NULL</p></td>
     </tr>
     <tr>
       <th>...</th>

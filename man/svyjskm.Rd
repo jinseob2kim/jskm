@@ -8,7 +8,7 @@ svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival (\%)",
   xlims = NULL, ylims = c(0, 1), ystratalabs = NULL,
   ystrataname = "Strata", timeby = NULL, main = "", pval = FALSE,
   legend = TRUE, legendposition = c(0.85, 0.8), linecols = "Set1",
-  dashed = FALSE, cumhaz = F, ...)
+  dashed = FALSE, cumhaz = F, design = NULL, ...)
 }
 \arguments{
 \item{sfit}{a svykm object}
@@ -40,6 +40,8 @@ svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival (\%)",
 \item{dashed}{logical. Should a variety of linetypes be used to identify lines. Default: FALSE}
 
 \item{cumhaz}{Show cumulaive hazard function, Default: F}
+
+\item{design}{Data design for reactive design data , Default: NULL}
 
 \item{...}{PARAM_DESCRIPTION}
 }
