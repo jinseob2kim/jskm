@@ -38,6 +38,7 @@
 #' @import ggplot2
 #' @importFrom stats formula
 #' @importFrom survey svyranktest
+#' @importFrom survival Surv
 #' @export 
 
 svyjskm <- function(sfit,
