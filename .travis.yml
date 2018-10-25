@@ -5,6 +5,10 @@ Imports: ggplot2, gridExtra, plyr, survival, survey
 r_packages:
   - covr
 
+r_github_packages:
+  - jinseob2kim/jskm
+
 after_success:
+  - Rscript -e 'library(jskm);library(survival);data(colon);jskm(survfit(Surv(time,status)~rx, data=colon))'
   - Rscript -e 'library(covr); codecov()'
 
