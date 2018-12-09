@@ -1,3 +1,7 @@
+# jskm 0.2.2
+
+* Apply **testthat**
+
 # jskm 0.2.1
 
 * Can run when reactive data
