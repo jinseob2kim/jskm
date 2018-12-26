@@ -6,13 +6,20 @@ data(colon);data(pbc)
 test_that("Run jskm", {
   fit <- survfit(Surv(time,status)~rx, data=colon)
   jskm(fit, timeby=500)
-  jskm(fit, timeby=500, table = T)
+  jskm(fit, timeby=500, table = T, pval = T)
   jskm(fit, timeby=500, main = "kaplan", xlabs = "time", ylabs = "suvrival")
   expect_is(jskm(fit, timeby=500), "gg")
   expect_is(jskm(fit), "gg")
   expect_is(jskm(fit, timeby=500, ci = T), "gg")
   expect_is(jskm(fit, timeby=500, legend = F), "gg")
   expect_is(jskm(fit, timeby=500, cumhaz = T), "gg")
+  
+  expect_is(jskm(fit, cluster.option = "cluster", cluster.var = "id", pval = T), "gg")
+  expect_warning(jskm(fit, cluster.option = "frailty", cluster.var = "id", pval = T))
+  
+  fit3 <- survfit(Surv(time,status)~rx + frailty(id), data=colon)
+  expect_is(jskm(fit3), "gg")
+  expect_is(jskm(fit3, pval = T), "gg")
 })
 
 
