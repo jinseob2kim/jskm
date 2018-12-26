@@ -12,6 +12,7 @@
 #' @param main plot title, Default: ''
 #' @param pval logical: add the pvalue to the plot?, Default: FALSE
 #' @param legend logical. should a legend be added to the plot? Default: TRUE
+#' @param ci logical. Should confidence intervals be plotted. Default = NULL
 #' @param legendposition numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)
 #' @param linecols Character. Colour brewer pallettes too colour lines. Default: 'Set1'
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default: FALSE
@@ -53,6 +54,7 @@ svyjskm <- function(sfit,
                     pval = FALSE,
                     legend = TRUE,
                     legendposition=c(0.85,0.8),
+                    ci = NULL,
                     linecols="Set1",
                     dashed= FALSE,
                     cumhaz = F,
@@ -60,7 +62,6 @@ svyjskm <- function(sfit,
                     ...) {
 
   if(is.null(ystrataname)) ystrataname <- "Strata"
-  
   
   if (is.null(timeby)){
     if (class(sfit) == "svykmlist"){
@@ -72,7 +73,19 @@ svyjskm <- function(sfit,
   }
   
   if (class(sfit) == "svykmlist"){
-    df <- Reduce(rbind, lapply(names(sfit), function(x){data.frame("strata" = x, "time" = sfit[[x]]$time, "surv" = sfit[[x]]$surv)}))
+    if (is.null(ci)){
+      ci <- "varlog" %in% names(sfit[[1]])
+    }
+    if (ci){
+      if ("varlog" %in% names(sfit[[1]])){
+        df <- Reduce(rbind, lapply(names(sfit), function(x){data.frame("strata" = x, "time" = sfit[[x]]$time, "surv" = sfit[[x]]$surv, "lower" = pmax(0, exp(log(sfit[[x]]$surv) - 1.96 * sqrt(sfit[[x]]$varlog))), "upper" = pmin(1, exp(log(sfit[[x]]$surv) + 1.96 * sqrt(sfit[[x]]$varlog))))}))
+      } else{
+        stop("No CI information in svykmlist object. please run svykm with se = T option.")
+      }
+    } else{
+      df <- Reduce(rbind, lapply(names(sfit), function(x){data.frame("strata" = x, "time" = sfit[[x]]$time, "surv" = sfit[[x]]$surv)}))
+    }
+    
     df$strata <- as.factor(df$strata)
     times <- seq(0, max(sapply(sfit, function(x){max(x$time)})), by = timeby)
     if (is.null(ystratalabs)){
@@ -83,7 +96,19 @@ svyjskm <- function(sfit,
     }
     
   } else if(class(sfit) == "svykm"){
-    df <- data.frame("strata" = "All", "time" = sfit$time, "surv" = sfit$surv)
+    if (is.null(ci)){
+      ci <- "varlog" %in% names(sfit)
+    }
+    if (ci){
+      if ("varlog" %in% names(sfit)){
+        df <- data.frame("strata" = "All", "time" = sfit$time, "surv" = sfit$surv,  "lower" = pmax(0, exp(log(sfit$surv) - 1.96 * sqrt(sfit$varlog))), "upper" = pmax(0, exp(log(sfit$surv) + 1.96 * sqrt(sfit$varlog))))
+      } else{
+        stop("No CI information in svykm object. please run svykm with se = T option.")
+      }
+    } else{
+      df <- data.frame("strata" = "All", "time" = sfit$time, "surv" = sfit$surv)
+    }
+    
     times <- seq(0, max(sfit$time), by = timeby)
     if (is.null(ystratalabs)){
       ystratalabs <- "All"
@@ -100,15 +125,27 @@ svyjskm <- function(sfit,
   
   
   if (cumhaz){
-    df$surv = 1 - df$surv
+    df$surv <- 1 - df$surv
+    if (ci){
+      df$lower <- 1 - df$upper
+      df$upper <- 1 - df$lower
+    }
     }
   
   #Final changes to data for survival plot
   levels(df$strata) <- ystratalabs
   zeros <- data.frame("strata" = factor(ystratalabs, levels=levels(df$strata)), "time" = 0, "surv" = 1)
+  if (ci){
+    zeros$upper <- 1
+    zeros$lower <- 1
+  }
   
   if (cumhaz){
-    zeros$surv = 0
+    zeros$surv <- 0
+    if (ci){
+      zeros$lower <- 0
+      zeros$upper <- 0
+    }
   }
   
   df <- rbind(zeros, df)
@@ -125,8 +162,7 @@ svyjskm <- function(sfit,
   }
   
   
-  p <- ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) +
-    ggtitle(main)
+  p <- ggplot2::ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) + ggtitle(main)
   
   #Set up theme elements
   p <- p + theme_bw() +
@@ -145,6 +181,9 @@ svyjskm <- function(sfit,
     scale_y_continuous(ylabs, limits = ylims)
   
   
+  #Add 95% CI to plot
+  if(ci == TRUE)
+    p <- p +  geom_ribbon(data=df, aes(ymin = lower, ymax = upper), fill = "grey", alpha=0.25, colour=NA)
   
   #Removes the legend:
   if(legend == FALSE)

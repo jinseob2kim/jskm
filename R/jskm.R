@@ -202,8 +202,7 @@ jskm <- function(sfit,
   }
   
   
-  p <- ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) +
-    ggtitle(main)
+  p <- ggplot2::ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) + ggtitle(main)
   
   #Set up theme elements
   p <- p + theme_bw() +

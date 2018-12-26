@@ -1,30 +1,39 @@
-# jskm
+jskm
+================
+
 R package for kaplan meier plot: Modified ggkm
 
-[![Build Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm)
+[![Build
+Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/jskm)](http://cran.r-project.org/package=jskm)
 [![codecov](https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg)](https://codecov.io/github/jinseob2kim/jskm)
-[![GitHub issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/issues)
-[![GitHub forks](https://img.shields.io/github/forks/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/network)
-[![GitHub stars](https://img.shields.io/github/stars/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/stargazers)
-[![GitHub license](https://img.shields.io/github/license/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/blob/master/LICENSE)
-[![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg)](https://github.com/jinseob2kim/jskm)
-[![GitHub contributors](https://img.shields.io/github/contributors/jinseob2kim/jskm.svg?maxAge=2592000)](https://github.com/jinseob2kim/jskm/graphs/contributors)
-
+[![GitHub
+issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/issues)
+[![GitHub
+forks](https://img.shields.io/github/forks/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/network)
+[![GitHub
+stars](https://img.shields.io/github/stars/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/stargazers)
+[![GitHub
+license](https://img.shields.io/github/license/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/blob/master/LICENSE)
+[![GitHub last
+commit](https://img.shields.io/github/last-commit/google/skia.svg)](https://github.com/jinseob2kim/jskm)
+[![GitHub
+contributors](https://img.shields.io/github/contributors/jinseob2kim/jskm.svg?maxAge=2592000)](https://github.com/jinseob2kim/jskm/graphs/contributors)
 
 ## Install
-```r
+
+``` r
 install.packages("devtools")
 library(devtools)
 install_github("jinseob2kim/jskm")
 library(jskm)
 ```
 
-
 ## Example
 
 ### Survival probability
-```r
+
+``` r
 #Load dataset
 library(survival)
 data(colon)
@@ -34,24 +43,53 @@ fit <- survfit(Surv(time,status)~rx, data=colon)
 jskm(fit)
 ```
 
+![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
 ### Cumulative hazard: 1- Survival probability
-```r
-jskm(fit, cumhaz = T, ylab = "Cumulative hazard (%)")
+
+``` r
+jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)")
 ```
+
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
 
-```r
+``` r
+library(survey)
 data(pbc, package="survival")
 pbc$randomized <- with(pbc, !is.na(trt) & trt>0)
-biasmodel<-glm(randomized~age*edema,data=pbc)
-pbc$randprob<-fitted(biasmodel)
+biasmodel <- glm(randomized~age*edema,data=pbc)
+pbc$randprob <- fitted(biasmodel)
 
 dpbc<-svydesign(id=~1, prob=~randprob, strata=~edema, data=subset(pbc,randomized))
 
-s1<-svykm(Surv(time,status>0)~1, design=dpbc)
-s2<-svykm(Surv(time,status>0)~sex, design=dpbc)
+s1 <-svykm(Surv(time,status>0) ~ 1, design=dpbc)
+s2 <-svykm(Surv(time,status>0) ~ sex, design=dpbc)
 
 svyjskm(s1)
-svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)")
 ```
+
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+``` r
+svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)") 
+```
+
+![](README_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
+
+If you want to get **confidence interval**, you should apply `se = T`
+option to `svykm` object.
+
+``` r
+s3 <- svykm(Surv(time,status>0) ~ sex, design=dpbc, se = T)
+svyjskm(s3)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+svyjskm(s3, ci = F)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->

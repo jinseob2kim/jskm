@@ -1,3 +1,9 @@
+# jskm 0.2.4
+
+## Update
+
+* Add **ci** option to `svykm`.
+
 # jskm 0.2.2
 
 * Apply **testthat**

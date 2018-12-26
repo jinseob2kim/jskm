@@ -7,8 +7,9 @@
 svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival (\%)",
   xlims = NULL, ylims = c(0, 1), ystratalabs = NULL,
   ystrataname = "Strata", timeby = NULL, main = "", pval = FALSE,
-  legend = TRUE, legendposition = c(0.85, 0.8), linecols = "Set1",
-  dashed = FALSE, cumhaz = F, design = NULL, ...)
+  legend = TRUE, legendposition = c(0.85, 0.8), ci = NULL,
+  linecols = "Set1", dashed = FALSE, cumhaz = F, design = NULL,
+  ...)
 }
 \arguments{
 \item{sfit}{a svykm object}
@@ -34,6 +35,8 @@ svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival (\%)",
 \item{legend}{logical. should a legend be added to the plot? Default: TRUE}
 
 \item{legendposition}{numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)}
+
+\item{ci}{logical. Should confidence intervals be plotted. Default = NULL}
 
 \item{linecols}{Character. Colour brewer pallettes too colour lines. Default: 'Set1'}
 
