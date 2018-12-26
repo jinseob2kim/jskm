@@ -2,7 +2,9 @@
 
 ## Update
 
-* Add **ci** option to `svykm`.
+* Add **ci** option to `svyjskm`.
+
+* Get **p-value** without **design** option in `svyjskm`
 
 # jskm 0.2.2
 

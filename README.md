@@ -45,6 +45,12 @@ jskm(fit)
 
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
+``` r
+jskm(fit, table = T, pval = T)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
+
 ### Cumulative hazard: 1- Survival probability
 
 ``` r
@@ -64,8 +70,8 @@ pbc$randprob <- fitted(biasmodel)
 
 dpbc<-svydesign(id=~1, prob=~randprob, strata=~edema, data=subset(pbc,randomized))
 
-s1 <-svykm(Surv(time,status>0) ~ 1, design=dpbc)
-s2 <-svykm(Surv(time,status>0) ~ sex, design=dpbc)
+s1 <-svykm(Surv(time,status>0) ~ 1, design = dpbc)
+s2 <-svykm(Surv(time,status>0) ~ sex, design = dpbc)
 
 svyjskm(s1)
 ```
@@ -73,10 +79,16 @@ svyjskm(s1)
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ``` r
-svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)") 
+svyjskm(s2, pval = T, design = dpbc)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
+
+``` r
+svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)") 
+```
+
+![](README_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
 
 If you want to get **confidence interval**, you should apply `se = T`
 option to `svykm` object.

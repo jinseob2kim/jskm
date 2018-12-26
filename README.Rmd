@@ -41,6 +41,7 @@ fit <- survfit(Surv(time,status)~rx, data=colon)
 
 #Plot the data
 jskm(fit)
+jskm(fit, table = T, pval = T)
 ```
 
 ### Cumulative hazard: 1- Survival probability
@@ -60,10 +61,11 @@ pbc$randprob <- fitted(biasmodel)
 
 dpbc<-svydesign(id=~1, prob=~randprob, strata=~edema, data=subset(pbc,randomized))
 
-s1 <-svykm(Surv(time,status>0) ~ 1, design=dpbc)
-s2 <-svykm(Surv(time,status>0) ~ sex, design=dpbc)
+s1 <-svykm(Surv(time,status>0) ~ 1, design = dpbc)
+s2 <-svykm(Surv(time,status>0) ~ sex, design = dpbc)
 
 svyjskm(s1)
+svyjskm(s2, pval = T, design = dpbc)
 svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)") 
 ```
 

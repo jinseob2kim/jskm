@@ -197,11 +197,14 @@ svyjskm <- function(sfit,
   
   ## p-value
   if(class(sfit) == "svykm") pval <- FALSE
-  if(is.null(design)) pval <- FALSE
+  #if(is.null(design)) pval <- FALSE
   
   if(pval == TRUE) {
-    
-    sdiff <- survey::svyranktest(formula(sfit), design = design)
+    if(is.null(design)){
+      sdiff <- survey::svyranktest(formula(sfit), design = get(as.character(attr(sfit, "call")$design)))
+    } else{
+      sdiff <- survey::svyranktest(formula(sfit), design = design)
+    }
     pvalue <- sdiff$p.value
     
     pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", signif(pvalue, 3)))
