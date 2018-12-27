@@ -4,12 +4,12 @@
 \alias{svyjskm}
 \title{Creates a Weighted Kaplan-Meier plot - svykm.object in survey package}
 \usage{
-svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival (\%)",
+svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival probability",
   xlims = NULL, ylims = c(0, 1), ystratalabs = NULL,
-  ystrataname = "Strata", timeby = NULL, main = "", pval = FALSE,
-  legend = TRUE, legendposition = c(0.85, 0.8), ci = NULL,
-  linecols = "Set1", dashed = FALSE, cumhaz = F, design = NULL,
-  ...)
+  ystrataname = "Strata", surv.scale = c("default", "percent"),
+  timeby = NULL, main = "", pval = FALSE, legend = TRUE,
+  legendposition = c(0.85, 0.8), ci = NULL, linecols = "Set1",
+  dashed = FALSE, cumhaz = F, design = NULL, ...)
 }
 \arguments{
 \item{sfit}{a svykm object}
@@ -25,6 +25,8 @@ svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival (\%)",
 \item{ystratalabs}{character list. A list of names for each strata. Default: NULL}
 
 \item{ystrataname}{The legend name. Default: 'Strata'}
+
+\item{surv.scale}{scale transformation of survival curves. Allowed values are "default" or "percent".}
 
 \item{timeby}{numeric: control the granularity along the time-axis; defaults to 7 time-points.}
 

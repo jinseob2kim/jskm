@@ -7,6 +7,7 @@
 #' @param ylabs y-axis label
 #' @param xlims numeric: list of min and max for x-axis. Default = c(0,max(sfit$time))
 #' @param ylims numeric: list of min and max for y-axis. Default = c(0,1)
+#' @param surv.scale 	scale transformation of survival curves. Allowed values are "default" or "percent".
 #' @param ystratalabs character list. A list of names for each strata. Default = names(sfit$strata)
 #' @param ystrataname The legend name. Default = "Strata"
 #' @param timeby numeric: control the granularity along the time-axis; defaults to 7 time-points. Default = signif(max(sfit$time)/7, 1)
@@ -74,9 +75,10 @@
 jskm <- function(sfit,
                  table = FALSE,
                  xlabs = "Time-to-event",
-                 ylabs = "Survival (%)",
+                 ylabs = "Survival probability",
                  xlims = c(0,max(sfit$time)),
                  ylims = c(0,1),
+                 surv.scale = c("default", "percent"),
                  ystratalabs = names(sfit$strata),
                  ystrataname = "Strata",
                  timeby = signif(max(sfit$time)/7, 1),
@@ -205,6 +207,11 @@ jskm <- function(sfit,
     linetype=c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
   }
   
+  # Scale transformation
+  #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  surv.scale <- match.arg(surv.scale)
+  scale_labels <-  ggplot2::waiver()
+  if (surv.scale == "percent") scale_labels <- scales::percent
   
   p <- ggplot2::ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) + ggtitle(main)
   
@@ -222,7 +229,7 @@ jskm <- function(sfit,
           axis.line.x = element_line(size = 0.5, linetype = "solid", colour = "black"),
           axis.line.y = element_line(size = 0.5, linetype = "solid", colour = "black")) +
     scale_x_continuous(xlabs, breaks = times, limits = xlims) +
-    scale_y_continuous(ylabs, limits = ylims)
+    scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   
   
   #Add 95% CI to plot

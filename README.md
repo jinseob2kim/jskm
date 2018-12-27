@@ -46,8 +46,9 @@ jskm(fit)
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 ``` r
-jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", timeby = 365, xlabs = "Time(Day)", ylabs = "Survival(%)", marks = F, xlims = c(0, 3000), ylims = c(0.25, 1),
-     ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx")
+jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8, 
+     xlabs = "Time(Day)", ylabs = "Survival", ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx",
+     marks = F, timeby = 365, xlims = c(0, 3000), ylims = c(0.25, 1))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
@@ -55,7 +56,7 @@ jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", timeby = 365, xlabs 
 ### Cumulative hazard: 1- Survival probability
 
 ``` r
-jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)")
+jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)", surv.scale = "percent")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
@@ -86,7 +87,7 @@ svyjskm(s2, pval = T, design = dpbc)
 ![](README_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
 
 ``` r
-svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)") 
+svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)", surv.scale = "percent") 
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->

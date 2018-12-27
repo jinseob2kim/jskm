@@ -10,6 +10,9 @@
 
 * Add **Numbers at risk** label option to `jskm`: `label.nrisk`, `size.label.nrisk`.
 
+* Add **percent scale** option : `surv.scale`
+
+
 # jskm 0.2.4
 
 ## Update

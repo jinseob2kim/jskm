@@ -5,8 +5,9 @@
 \title{Creates a Kaplan-Meier plot: ggkm + cumhaz option}
 \usage{
 jskm(sfit, table = FALSE, xlabs = "Time-to-event",
-  ylabs = "Survival (\%)", xlims = c(0, max(sfit$time)), ylims = c(0,
-  1), ystratalabs = names(sfit$strata), ystrataname = "Strata",
+  ylabs = "Survival probability", xlims = c(0, max(sfit$time)),
+  ylims = c(0, 1), surv.scale = c("default", "percent"),
+  ystratalabs = names(sfit$strata), ystrataname = "Strata",
   timeby = signif(max(sfit$time)/7, 1), main = "", pval = FALSE,
   marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85,
   0.8), ci = FALSE, subs = NULL, label.nrisk = "Numbers at risk",
@@ -26,6 +27,8 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 \item{xlims}{numeric: list of min and max for x-axis. Default = c(0,max(sfit$time))}
 
 \item{ylims}{numeric: list of min and max for y-axis. Default = c(0,1)}
+
+\item{surv.scale}{scale transformation of survival curves. Allowed values are "default" or "percent".}
 
 \item{ystratalabs}{character list. A list of names for each strata. Default = names(sfit$strata)}
 

@@ -1,6 +1,8 @@
 ---
 title: "jskm"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 R package for kaplan meier plot: Modified ggkm
@@ -41,12 +43,14 @@ fit <- survfit(Surv(time,status)~rx, data=colon)
 
 #Plot the data
 jskm(fit)
-jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8, timeby = 365, xlabs = "Time(Day)", ylabs = "Survival(%)", marks = F, xlims = c(0, 3000), ylims = c(0.25, 1), ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx")
+jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8, 
+     xlabs = "Time(Day)", ylabs = "Survival", ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx",
+     marks = F, timeby = 365, xlims = c(0, 3000), ylims = c(0.25, 1))
 ```
 
 ### Cumulative hazard: 1- Survival probability
 ```{r}
-jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)")
+jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)", surv.scale = "percent")
 ```
 
 
@@ -66,7 +70,7 @@ s2 <-svykm(Surv(time,status>0) ~ sex, design = dpbc)
 
 svyjskm(s1)
 svyjskm(s2, pval = T, design = dpbc)
-svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)") 
+svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)", surv.scale = "percent") 
 ```
 
 If you want to get **confidence interval**, you should apply `se = T` option to `svykm` object.

@@ -126,8 +126,9 @@
     </div>
 
     <pre class="usage"><span class='fu'>jskm</span>(<span class='no'>sfit</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xlabs</span> <span class='kw'>=</span> <span class='st'>"Time-to-event"</span>,
-  <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='st'>"Survival (%)"</span>, <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)), <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,
-  <span class='fl'>1</span>), <span class='kw'>ystratalabs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>sfit</span>$<span class='no'>strata</span>), <span class='kw'>ystrataname</span> <span class='kw'>=</span> <span class='st'>"Strata"</span>,
+  <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='st'>"Survival probability"</span>, <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)),
+  <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>), <span class='kw'>surv.scale</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"default"</span>, <span class='st'>"percent"</span>),
+  <span class='kw'>ystratalabs</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>sfit</span>$<span class='no'>strata</span>), <span class='kw'>ystrataname</span> <span class='kw'>=</span> <span class='st'>"Strata"</span>,
   <span class='kw'>timeby</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Round'>signif</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)/<span class='fl'>7</span>, <span class='fl'>1</span>), <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>pval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>marks</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.85</span>,
   <span class='fl'>0.8</span>), <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>subs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>label.nrisk</span> <span class='kw'>=</span> <span class='st'>"Numbers at risk"</span>,
@@ -161,6 +162,10 @@
     <tr>
       <th>ylims</th>
       <td><p>numeric: list of min and max for y-axis. Default = c(0,1)</p></td>
+    </tr>
+    <tr>
+      <th>surv.scale</th>
+      <td><p>scale transformation of survival curves. Allowed values are "default" or "percent".</p></td>
     </tr>
     <tr>
       <th>ystratalabs</th>
