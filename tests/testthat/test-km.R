@@ -5,10 +5,11 @@ data(colon);data(pbc)
 
 test_that("Run jskm", {
   fit <- survfit(Surv(time,status)~rx, data=colon)
-  jskm(fit, timeby=500)
-  jskm(fit, timeby=500, table = T, pval = T)
-  jskm(fit, timeby=500, main = "kaplan", xlabs = "time", ylabs = "suvrival")
+  expect_is(jskm(fit, timeby=500, table = T, pval = T), "gtable")
+  expect_is(jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", timeby = 365, xlabs = "Time(Day)", ylabs = "Survival(%)", marks = F, xlims = c(0, 3500), ylims = c(0.25, 1),
+       ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx"), "gtable")
   expect_is(jskm(fit, timeby=500), "gg")
+  expect_is(jskm(fit, timeby=500, main = "kaplan", xlabs = "time", ylabs = "suvrival"), "gg")
   expect_is(jskm(fit), "gg")
   expect_is(jskm(fit, timeby=500, ci = T), "gg")
   expect_is(jskm(fit, timeby=500, legend = F), "gg")

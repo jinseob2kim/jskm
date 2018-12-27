@@ -46,7 +46,8 @@ jskm(fit)
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 ``` r
-jskm(fit, table = T, pval = T)
+jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", timeby = 365, xlabs = "Time(Day)", ylabs = "Survival(%)", marks = F, xlims = c(0, 3000), ylims = c(0.25, 1),
+     ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->

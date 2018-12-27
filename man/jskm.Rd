@@ -9,9 +9,10 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
   1), ystratalabs = names(sfit$strata), ystrataname = "Strata",
   timeby = signif(max(sfit$time)/7, 1), main = "", pval = FALSE,
   marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85,
-  0.8), ci = FALSE, subs = NULL, linecols = "Set1", dashed = FALSE,
-  cumhaz = F, cluster.option = c("None", "cluster", "frailty"),
-  cluster.var = NULL, data = NULL, ...)
+  0.8), ci = FALSE, subs = NULL, label.nrisk = "Numbers at risk",
+  linecols = "Set1", dashed = FALSE, cumhaz = F,
+  cluster.option = c("None", "cluster", "frailty"), cluster.var = NULL,
+  data = NULL, ...)
 }
 \arguments{
 \item{sfit}{a survfit object}
@@ -47,6 +48,8 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 \item{ci}{logical. Should confidence intervals be plotted. Default = FALSE}
 
 \item{subs}{= NULL,}
+
+\item{label.nrisk}{numbers at risk label. Default = "Numbers at risk"}
 
 \item{linecols}{Character. Colour brewer pallettes too colour lines. Default ="Set1",}
 

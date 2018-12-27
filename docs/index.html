@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">jskm</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.2.4</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.2.5</span>
       </span>
     </div>
 
@@ -103,7 +103,8 @@
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#Plot the data</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit)</a></code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">table =</span> T, <span class="dt">pval =</span> T)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">table =</span> T, <span class="dt">pval =</span> T, <span class="dt">label.nrisk =</span> <span class="st">"No. at risk"</span>, <span class="dt">timeby =</span> <span class="dv">365</span>, <span class="dt">xlabs =</span> <span class="st">"Time(Day)"</span>, <span class="dt">ylabs =</span> <span class="st">"Survival(%)"</span>, <span class="dt">marks =</span> F, <span class="dt">xlims =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">3000</span>), <span class="dt">ylims =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.25</span>, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">     <span class="dt">ystratalabs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Obs"</span>, <span class="st">"Lev"</span>, <span class="st">"Lev + 5FU"</span>), <span class="dt">ystrataname =</span> <span class="st">"rx"</span>)</a></code></pre></div>
 <p><img src="index_files/figure-html/unnamed-chunk-1-2.png" width="700"></p>
 </div>
 <div id="cumulative-hazard-1--survival-probability" class="section level3">

@@ -1,3 +1,15 @@
+# jskm 0.2.5
+
+## Bug fixes
+
+* Remove grey rectangle above the `Number at risk` table.
+
+* **p-value** position according `ylims` option.
+
+## Update
+
+* Add **Numbers at risk** label option: `label.nrisk`
+
 # jskm 0.2.4
 
 ## Update

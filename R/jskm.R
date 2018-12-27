@@ -18,6 +18,7 @@
 #' @param legendposition numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
 #' @param ci logical. Should confidence intervals be plotted. Default = FALSE
 #' @param subs = NULL,
+#' @param label.nrisk numbers at risk label. Default = "Numbers at risk"
 #' @param linecols Character. Colour brewer pallettes too colour lines. Default ="Set1",
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default = FALSE
 #' @param cumhaz Show cumulaive hazard function, Default: F
@@ -86,6 +87,7 @@ jskm <- function(sfit,
                  legendposition=c(0.85,0.8),
                  ci = FALSE,
                  subs = NULL,
+                 label.nrisk = "Numbers at risk",
                  linecols="Set1",
                  dashed= FALSE,
                  cumhaz = F,
@@ -242,7 +244,7 @@ jskm <- function(sfit,
   
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +
-    geom_blank() + theme_bw() +
+    geom_blank() + theme_void() +             ## Remove gray color
     theme(axis.text.x = element_blank(),axis.text.y = element_blank(),
           axis.title.x = element_blank(),axis.title.y = element_blank(),
           axis.ticks = element_blank(),
@@ -277,7 +279,7 @@ jskm <- function(sfit,
     
     pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", signif(pvalue, 3)))
     # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
-    p <- p + annotate("text",x = (as.integer(max(sfit$time)/5)), y = 0.1,label = pvaltxt)
+    p <- p + annotate("text",x = (as.integer(max(sfit$time)/5)), y = 0.1 + ylims[1],label = pvaltxt)
   }
   
   ###################################################
@@ -303,12 +305,11 @@ jskm <- function(sfit,
       geom_text(size = 3.5) + theme_bw() +
       scale_y_discrete(breaks = as.character(levels(risk.data$strata)),
                        labels = rev(ystratalabs)) +
-      scale_x_continuous("Numbers at risk", limits = xlims) +
+      scale_x_continuous(label.nrisk, limits = xlims) +
       theme(axis.title.x = element_text(size = 10, vjust = 1),
             panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
             panel.border = element_blank(),axis.text.x = element_blank(),
-            axis.ticks = element_blank(),axis.text.y = element_text(face = "bold",hjust = 1))
-    
+            axis.ticks = element_blank(),axis.text.y = element_text(face = "bold",hjust = 1)) 
     data.table <- data.table +
       theme(legend.position = "none") + xlab(NULL) + ylab(NULL)
     
