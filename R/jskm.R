@@ -13,6 +13,8 @@
 #' @param timeby numeric: control the granularity along the time-axis; defaults to 7 time-points. Default = signif(max(sfit$time)/7, 1)
 #' @param main plot title
 #' @param pval logical: add the pvalue to the plot?
+#' @param pval.size numeric value specifying the p-value text size. Default is 5.
+#' @param pval.coord numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL
 #' @param marks logical: should censoring marks be added?
 #' @param shape what shape should the censoring marks be, default is a vertical line
 #' @param legend logical. should a legend be added to the plot?
@@ -84,6 +86,8 @@ jskm <- function(sfit,
                  timeby = signif(max(sfit$time)/7, 1),
                  main = "",
                  pval = FALSE,
+                 pval.size = 5, 
+                 pval.coord = c(NULL, NULL),
                  marks = TRUE,
                  shape = 3,
                  legend = TRUE,
@@ -288,7 +292,12 @@ jskm <- function(sfit,
     
     pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", signif(pvalue, 3)))
     # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
-    p <- p + annotate("text",x = (as.integer(max(sfit$time)/5)), y = 0.1 + ylims[1],label = pvaltxt)
+    if (is.null(pval.coord)){
+      p <- p + annotate("text",x = (as.integer(max(sfit$time)/5)), y = 0.1 + ylims[1],label = pvaltxt, size  = pval.size)
+    } else{
+      p <- p + annotate("text",x = pval.coord[1], y = pval.coord[2], label = pvaltxt, size  = pval.size)
+    }
+    
   }
   
   ###################################################

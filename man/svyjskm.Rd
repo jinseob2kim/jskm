@@ -7,9 +7,10 @@
 svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival probability",
   xlims = NULL, ylims = c(0, 1), ystratalabs = NULL,
   ystrataname = "Strata", surv.scale = c("default", "percent"),
-  timeby = NULL, main = "", pval = FALSE, legend = TRUE,
-  legendposition = c(0.85, 0.8), ci = NULL, linecols = "Set1",
-  dashed = FALSE, cumhaz = F, design = NULL, ...)
+  timeby = NULL, main = "", pval = FALSE, pval.size = 5,
+  pval.coord = c(NULL, NULL), legend = TRUE, legendposition = c(0.85,
+  0.8), ci = NULL, linecols = "Set1", dashed = FALSE, cumhaz = F,
+  design = NULL, ...)
 }
 \arguments{
 \item{sfit}{a svykm object}
@@ -33,6 +34,10 @@ svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival probability",
 \item{main}{plot title, Default: ''}
 
 \item{pval}{logical: add the pvalue to the plot?, Default: FALSE}
+
+\item{pval.size}{numeric value specifying the p-value text size. Default is 5.}
+
+\item{pval.coord}{numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL}
 
 \item{legend}{logical. should a legend be added to the plot? Default: TRUE}
 

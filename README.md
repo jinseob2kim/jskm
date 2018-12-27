@@ -56,7 +56,7 @@ jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8
 ### Cumulative hazard: 1- Survival probability
 
 ``` r
-jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)", surv.scale = "percent")
+jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
@@ -87,7 +87,7 @@ svyjskm(s2, pval = T, design = dpbc)
 ![](README_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
 
 ``` r
-svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)", surv.scale = "percent") 
+svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7)) 
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
