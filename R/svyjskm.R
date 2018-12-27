@@ -209,7 +209,7 @@ svyjskm <- function(sfit,
     
     pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", signif(pvalue, 3)))
     # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
-    p <- p + annotate("text",x = (as.integer(max(sapply(sfit, function(x){max(x$time)}))/5)), y = 0.1,label = pvaltxt)
+    p <- p + annotate("text",x = (as.integer(max(sapply(sfit, function(x){max(x$time)}))/5)), y = 0.1 + ylims[1],label = pvaltxt)
   }
   
   p

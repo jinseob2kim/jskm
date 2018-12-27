@@ -10,9 +10,9 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
   timeby = signif(max(sfit$time)/7, 1), main = "", pval = FALSE,
   marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85,
   0.8), ci = FALSE, subs = NULL, label.nrisk = "Numbers at risk",
-  linecols = "Set1", dashed = FALSE, cumhaz = F,
-  cluster.option = c("None", "cluster", "frailty"), cluster.var = NULL,
-  data = NULL, ...)
+  size.label.nrisk = 10, linecols = "Set1", dashed = FALSE,
+  cumhaz = F, cluster.option = c("None", "cluster", "frailty"),
+  cluster.var = NULL, data = NULL, ...)
 }
 \arguments{
 \item{sfit}{a survfit object}
@@ -49,7 +49,9 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 
 \item{subs}{= NULL,}
 
-\item{label.nrisk}{numbers at risk label. Default = "Numbers at risk"}
+\item{label.nrisk}{Numbers at risk label. Default = "Numbers at risk"}
+
+\item{size.label.nrisk}{Font size of label.nrisk. Default = 10}
 
 \item{linecols}{Character. Colour brewer pallettes too colour lines. Default ="Set1",}
 

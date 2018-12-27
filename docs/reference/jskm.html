@@ -131,9 +131,9 @@
   <span class='kw'>timeby</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Round'>signif</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)/<span class='fl'>7</span>, <span class='fl'>1</span>), <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>pval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>marks</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.85</span>,
   <span class='fl'>0.8</span>), <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>subs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>label.nrisk</span> <span class='kw'>=</span> <span class='st'>"Numbers at risk"</span>,
-  <span class='kw'>linecols</span> <span class='kw'>=</span> <span class='st'>"Set1"</span>, <span class='kw'>dashed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cumhaz</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>cluster.option</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"None"</span>, <span class='st'>"cluster"</span>, <span class='st'>"frailty"</span>), <span class='kw'>cluster.var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>size.label.nrisk</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>linecols</span> <span class='kw'>=</span> <span class='st'>"Set1"</span>, <span class='kw'>dashed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>cumhaz</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>cluster.option</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"None"</span>, <span class='st'>"cluster"</span>, <span class='st'>"frailty"</span>),
+  <span class='kw'>cluster.var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -208,7 +208,11 @@
     </tr>
     <tr>
       <th>label.nrisk</th>
-      <td><p>numbers at risk label. Default = "Numbers at risk"</p></td>
+      <td><p>Numbers at risk label. Default = "Numbers at risk"</p></td>
+    </tr>
+    <tr>
+      <th>size.label.nrisk</th>
+      <td><p>Font size of label.nrisk. Default = 10</p></td>
     </tr>
     <tr>
       <th>linecols</th>

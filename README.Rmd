@@ -41,8 +41,7 @@ fit <- survfit(Surv(time,status)~rx, data=colon)
 
 #Plot the data
 jskm(fit)
-jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", timeby = 365, xlabs = "Time(Day)", ylabs = "Survival(%)", marks = F, xlims = c(0, 3000), ylims = c(0.25, 1),
-     ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx")
+jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8, timeby = 365, xlabs = "Time(Day)", ylabs = "Survival(%)", marks = F, xlims = c(0, 3000), ylims = c(0.25, 1), ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx")
 ```
 
 ### Cumulative hazard: 1- Survival probability

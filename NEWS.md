@@ -2,13 +2,13 @@
 
 ## Bug fixes
 
-* Remove grey rectangle above the `Number at risk` table.
+* Remove grey rectangle above the **Number at risk** table.
 
-* **p-value** position according `ylims` option.
+* Change **p-value** position according **ylims** option.
 
 ## Update
 
-* Add **Numbers at risk** label option: `label.nrisk`
+* Add **Numbers at risk** label option to `jskm`: `label.nrisk`, `size.label.nrisk`.
 
 # jskm 0.2.4
 

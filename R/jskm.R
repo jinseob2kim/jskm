@@ -18,7 +18,8 @@
 #' @param legendposition numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
 #' @param ci logical. Should confidence intervals be plotted. Default = FALSE
 #' @param subs = NULL,
-#' @param label.nrisk numbers at risk label. Default = "Numbers at risk"
+#' @param label.nrisk Numbers at risk label. Default = "Numbers at risk"
+#' @param size.label.nrisk Font size of label.nrisk. Default = 10
 #' @param linecols Character. Colour brewer pallettes too colour lines. Default ="Set1",
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default = FALSE
 #' @param cumhaz Show cumulaive hazard function, Default: F
@@ -88,6 +89,7 @@ jskm <- function(sfit,
                  ci = FALSE,
                  subs = NULL,
                  label.nrisk = "Numbers at risk",
+                 size.label.nrisk = 10,
                  linecols="Set1",
                  dashed= FALSE,
                  cumhaz = F,
@@ -301,12 +303,12 @@ jskm <- function(sfit,
     
     risk.data$strata <- factor(risk.data$strata, levels=rev(levels(risk.data$strata)))
     
-    data.table <- ggplot(risk.data,aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) +
+    data.table <- ggplot(risk.data,aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) + 
       geom_text(size = 3.5) + theme_bw() +
       scale_y_discrete(breaks = as.character(levels(risk.data$strata)),
                        labels = rev(ystratalabs)) +
       scale_x_continuous(label.nrisk, limits = xlims) +
-      theme(axis.title.x = element_text(size = 10, vjust = 1),
+      theme(axis.title.x = element_text(size = size.label.nrisk, vjust = 1),
             panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
             panel.border = element_blank(),axis.text.x = element_blank(),
             axis.ticks = element_blank(),axis.text.y = element_text(face = "bold",hjust = 1)) 
