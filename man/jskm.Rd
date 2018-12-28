@@ -2,7 +2,7 @@
 % Please edit documentation in R/jskm.R
 \name{jskm}
 \alias{jskm}
-\title{Creates a Kaplan-Meier plot: ggkm + cumhaz option}
+\title{Creates a Kaplan-Meier plot for survfit object.}
 \usage{
 jskm(sfit, table = FALSE, xlabs = "Time-to-event",
   ylabs = "Survival probability", xlims = c(0, max(sfit$time)),
@@ -79,7 +79,7 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 Plot
 }
 \description{
-Creates a Kaplan-Meier plot with at risk tables below
+Creates a Kaplan-Meier plot with at risk tables below for survfit object.
 }
 \details{
 DETAILS

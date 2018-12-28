@@ -2,7 +2,7 @@
 
 ## Bug fixes
 
-* Remove grey rectangle above the **Number at risk** table.
+* Remove gray rectangle above the **Number at risk** table.
 
 * Change **p-value** position according **ylims** option.
 

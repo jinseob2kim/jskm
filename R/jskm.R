@@ -1,6 +1,6 @@
 
-#' @title Creates a Kaplan-Meier plot: ggkm + cumhaz option 
-#' @description Creates a Kaplan-Meier plot with at risk tables below
+#' @title Creates a Kaplan-Meier plot for survfit object.
+#' @description Creates a Kaplan-Meier plot with at risk tables below for survfit object.
 #' @param sfit a survfit object
 #' @param table logical: Create a table graphic below the K-M plot, indicating at-risk numbers?
 #' @param xlabs x-axis label
