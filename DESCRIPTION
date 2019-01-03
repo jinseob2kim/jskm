@@ -1,5 +1,5 @@
 Package: jskm
-Title: Kaplan-meier Plot with ggplot2
+Title: Kaplan-Meier Plot with ggplot2
 Version: 0.2.5
 Date: 2018-12-28
 Authors@R: c(person("Jinseob", "Kim", email = "jinseob2kim@gmail.com", role = c("aut", "cre"),  comment = c(ORCID = "0000-0002-9403-605X")),

@@ -6,7 +6,7 @@
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
-There was 10 NOTE:
+There was 1 NOTE:
 
 * jskm: no visible binding for global variable ‘surv’
 * jskm: no visible binding for global variable ‘strata’
