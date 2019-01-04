@@ -1,3 +1,8 @@
+os:
+  - linux
+  - osx
+  - windows
+
 language: r
 cache: packages
 Imports: ggplot2, gridExtra, plyr, survival, survey
