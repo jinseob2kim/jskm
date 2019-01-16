@@ -43,15 +43,12 @@ fit <- survfit(Surv(time,status)~rx, data=colon)
 jskm(fit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
-
 ``` r
 jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8, 
      xlabs = "Time(Day)", ylabs = "Survival", ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx",
      marks = F, timeby = 365, xlims = c(0, 3000), ylims = c(0.25, 1))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
 
 ### Cumulative hazard: 1- Survival probability
 
@@ -59,7 +56,6 @@ jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8
 jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
 
@@ -78,19 +74,13 @@ s2 <-svykm(Surv(time,status>0) ~ sex, design = dpbc)
 svyjskm(s1)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
 ``` r
 svyjskm(s2, pval = T, design = dpbc)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
-
 ``` r
 svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7)) 
 ```
-
-![](README_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
 
 If you want to get **confidence interval**, you should apply `se = T`
 option to `svykm` object.
@@ -100,10 +90,8 @@ s3 <- svykm(Surv(time,status>0) ~ sex, design=dpbc, se = T)
 svyjskm(s3)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 svyjskm(s3, ci = F)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->

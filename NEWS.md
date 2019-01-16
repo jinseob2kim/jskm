@@ -1,3 +1,9 @@
+# jskm 0.2.6
+
+## Bug fixes
+
+* Change `||`, `&&` to `|`, `&` for **Debian** environment. 
+
 # jskm 0.2.5
 
 ## Bug fixes
