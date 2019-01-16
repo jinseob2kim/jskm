@@ -109,6 +109,8 @@ jskm <- function(sfit,
   # sorting the use of subsetting #
   #################################
   
+  n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
+  
   times <- seq(0, max(sfit$time), by = timeby)
   
   if(is.null(subs)){

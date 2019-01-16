@@ -4,6 +4,8 @@
 
 * Change `||`, `&&` to `|`, `&` for **Debian** environment. 
 
+* Set some variable's initial values to `NULL` for cran release.
+
 # jskm 0.2.5
 
 ## Bug fixes

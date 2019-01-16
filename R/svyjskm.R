@@ -66,7 +66,9 @@ svyjskm <- function(sfit,
                     cumhaz = F,
                     design = NULL,
                     ...) {
-
+  
+  surv <- strata <- lower <- upper <- NULL
+  
   if(is.null(ystrataname)) ystrataname <- "Strata"
   
   if (is.null(timeby)){
