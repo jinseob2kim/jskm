@@ -26,7 +26,7 @@
 #' @param linecols Character. Colour brewer pallettes too colour lines. Default ="Set1",
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default = FALSE
 #' @param cumhaz Show cumulaive hazard function, Default: F
-#' @param cluster.option Cluster option for p value, Default: c("None", "cluster", "frailty")
+#' @param cluster.option Cluster option for p value, Option: "None", "cluster", "frailty", Default: "None"
 #' @param cluster.var Cluster variable
 #' @param data select specific data - for reactive input. Default = NULL
 #' @param ... PARAM_DESCRIPTION
@@ -99,7 +99,7 @@ jskm <- function(sfit,
                  linecols="Set1",
                  dashed= FALSE,
                  cumhaz = F,
-                 cluster.option = c("None", "cluster", "frailty"),
+                 cluster.option = "None",
                  cluster.var = NULL,
                  data = NULL,
                  ...) {

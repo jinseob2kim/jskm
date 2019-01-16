@@ -13,8 +13,8 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
   shape = 3, legend = TRUE, legendposition = c(0.85, 0.8),
   ci = FALSE, subs = NULL, label.nrisk = "Numbers at risk",
   size.label.nrisk = 10, linecols = "Set1", dashed = FALSE,
-  cumhaz = F, cluster.option = c("None", "cluster", "frailty"),
-  cluster.var = NULL, data = NULL, ...)
+  cumhaz = F, cluster.option = "None", cluster.var = NULL,
+  data = NULL, ...)
 }
 \arguments{
 \item{sfit}{a survfit object}
@@ -67,7 +67,7 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 
 \item{cumhaz}{Show cumulaive hazard function, Default: F}
 
-\item{cluster.option}{Cluster option for p value, Default: c("None", "cluster", "frailty")}
+\item{cluster.option}{Cluster option for p value, Option: "None", "cluster", "frailty", Default: "None"}
 
 \item{cluster.var}{Cluster variable}
 
