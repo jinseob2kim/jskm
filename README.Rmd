@@ -5,7 +5,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-R package for kaplan meier plot: Modified ggkm
+Kaplan-Meier plot with 'ggplot2': 'survfit' and 'svykm' objects from 'survival' and 'survey' packages.
 
 [![Build Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/jskm)](http://cran.r-project.org/package=jskm)
