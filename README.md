@@ -1,7 +1,7 @@
 jskm
 ================
 
-R package for kaplan meier plot: Modified ggkm
+Kaplan-Meier plot with 'ggplot2': 'survfit' and 'svykm' objects from 'survival' and 'survey' packages.
 
 [![Build
 Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm)
