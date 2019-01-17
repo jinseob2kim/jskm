@@ -1,3 +1,9 @@
+# jskm 0.2.7
+
+## Bug fixes
+
+* Fix some spell for cran release.
+
 # jskm 0.2.6
 
 ## Bug fixes
