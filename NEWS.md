@@ -4,6 +4,13 @@
 
 * Fix some spell for cran release.
 
+## Update
+
+* Update **travis-ci**.
+
+* Add **appveyor** CI to test **window** environment. 
+
+
 # jskm 0.2.6
 
 ## Bug fixes
