@@ -5,9 +5,7 @@ os:
 language: r
 
 r: 
-  - oldrel
   - release
-  - devel
   
 cache: packages
 Imports: ggplot2, gridExtra, plyr, survival, survey
@@ -17,7 +15,17 @@ r_packages:
 
 r_github_packages:
   - jinseob2kim/jskm
+  - r-lib/pkgdown
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
+  - Rscript -e 'pkgdown::build_site()'
 
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: false
+  local-dir: docs
+  on:
+    branch: master
