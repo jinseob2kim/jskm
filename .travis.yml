@@ -3,6 +3,12 @@ os:
   - osx
 
 language: r
+
+r: 
+  - oldrel
+  - release
+  - devel
+  
 cache: packages
 Imports: ggplot2, gridExtra, plyr, survival, survey
 
