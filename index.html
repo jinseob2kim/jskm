@@ -108,17 +108,17 @@
 <a class="sourceLine" id="cb2-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#Plot the data</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit)</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-1-1.png" width="700"></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">table =</span> T, <span class="dt">pval =</span> T, <span class="dt">label.nrisk =</span> <span class="st">"No. at risk"</span>, <span class="dt">size.label.nrisk =</span> <span class="dv">8</span>, </a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">     <span class="dt">xlabs =</span> <span class="st">"Time(Day)"</span>, <span class="dt">ylabs =</span> <span class="st">"Survival"</span>, <span class="dt">ystratalabs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Obs"</span>, <span class="st">"Lev"</span>, <span class="st">"Lev + 5FU"</span>), <span class="dt">ystrataname =</span> <span class="st">"rx"</span>,</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">     <span class="dt">marks =</span> F, <span class="dt">timeby =</span> <span class="dv">365</span>, <span class="dt">xlims =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">3000</span>), <span class="dt">ylims =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.25</span>, <span class="dv">1</span>))</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-1-2.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-1-2.png" width="700"></p>
 </div>
 <div id="cumulative-hazard-1--survival-probability" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cumulative-hazard-1--survival-probability" class="anchor"></a>Cumulative hazard: 1- Survival probability</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">ci =</span> T, <span class="dt">cumhaz =</span> T,  <span class="dt">mark =</span> F, <span class="dt">ylab =</span> <span class="st">"Cumulative hazard (%)"</span>, <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span>T, <span class="dt">pval.size =</span> <span class="dv">6</span>, <span class="dt">pval.coord =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">300</span>, <span class="fl">0.7</span>))</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="700"></p>
 </div>
 <div id="weighted-kaplan-meier-plot---svykm-object-in-survey-package" class="section level3">
 <h3 class="hasAnchor">
@@ -135,17 +135,17 @@
 <a class="sourceLine" id="cb5-10" data-line-number="10">s2 &lt;-<span class="kw"><a href="https://www.rdocumentation.org/packages/survey/topics/svykm">svykm</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/survival/topics/Surv">Surv</a></span>(time,status<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span>sex, <span class="dt">design =</span> dpbc)</a>
 <a class="sourceLine" id="cb5-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb5-12" data-line-number="12"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s1)</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="700"></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s2, <span class="dt">pval =</span> T, <span class="dt">design =</span> dpbc)</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-3-2.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-3-2.png" width="700"></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s2, <span class="dt">cumhaz =</span> T, <span class="dt">ylab =</span> <span class="st">"Cumulative (%)"</span>, <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span> T, <span class="dt">design =</span> dpbc, <span class="dt">pval.coord =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">300</span>, <span class="fl">0.7</span>)) </a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-3-3.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-3-3.png" width="700"></p>
 <p>If you want to get <strong>confidence interval</strong>, you should apply <code>se = T</code> option to <code>svykm</code> object.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">s3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/survey/topics/svykm">svykm</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/survival/topics/Surv">Surv</a></span>(time,status<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span>sex, <span class="dt">design=</span>dpbc, <span class="dt">se =</span> T)</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s3)</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="700"></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s3, <span class="dt">ci =</span> F)</a></code></pre></div>
-<p><img src="index_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-4-2.png" width="700"></p>
 </div>
 </div>
   </div>
