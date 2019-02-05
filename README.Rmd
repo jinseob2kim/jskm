@@ -17,7 +17,7 @@ Kaplan-Meier Plot with 'ggplot2': 'survfit' and 'svykm' objects from 'survival' 
 [![GitHub license](https://img.shields.io/github/license/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/blob/master/LICENSE)
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = F, warning = F)
+knitr::opts_chunk$set(echo = TRUE, message = F, warning = F, fig.path = "man/figures/README-")
 library(jskm)
 ```
 
