@@ -1,9 +1,5 @@
 language: r
-
 cache: packages
-Imports: ggplot2, gridExtra, plyr, survival, survey
-
-
 
 matrix:
   allow_failures: 
