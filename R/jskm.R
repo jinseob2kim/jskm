@@ -276,7 +276,7 @@ jskm <- function(sfit,
       data = eval(sfit$call$data)
     }
   
-    sdiff <- survival::survdiff(eval(sfit$call$formula), data = data)
+    sdiff <- survival::survdiff(as.character(sfit$call$formula), data = data)
     pvalue <- pchisq(sdiff$chisq,length(sdiff$n) - 1,lower.tail = FALSE)
     
     ## cluster option
