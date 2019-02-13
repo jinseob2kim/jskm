@@ -1,3 +1,9 @@
+# jskm 0.2.8
+
+## Bug fixes
+
+* Add namespace **survival::frailty, survival::cluster**.
+
 # jskm 0.2.7
 
 ## Bug fixes
