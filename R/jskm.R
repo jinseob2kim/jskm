@@ -283,12 +283,12 @@ jskm <- function(sfit,
     if (cluster.option == "cluster" & !is.null(cluster.var)){
       form.old = as.character(sfit$call$formula)
       form.new = paste(form.old[2], form.old[1], " + ", form.old[3], " + cluster(", cluster.var, ")", sep="")
-      sdiff <- survival::coxph(as.formula(form.new), data = data)
+      sdiff <- survival::coxph(as.formula(form.new), data = data, model = T)
       pvalue <- summary(sdiff)$robscore["pvalue"]
     } else if (cluster.option == "frailty" & !is.null(cluster.var)){
       form.old = as.character(sfit$call$formula)
       form.new = paste(form.old[2], form.old[1], " + ", form.old[3], " + frailty(", cluster.var, ")", sep="")
-      sdiff <- survival::coxph(as.formula(form.new), data =data)
+      sdiff <- survival::coxph(as.formula(form.new), data =data, model = T)
       pvalue <- summary(sdiff)$logtest["pvalue"]
     }
     
