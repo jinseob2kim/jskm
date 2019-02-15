@@ -1,4 +1,3 @@
-
 #' @title Creates a Weighted Kaplan-Meier plot - svykm.object in survey package
 #' @description Creates a Weighted Kaplan-Meier plot - svykm.object in survey package
 #' @param sfit a svykm object
@@ -21,6 +20,10 @@
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default: FALSE
 #' @param cumhaz Show cumulaive hazard function, Default: F
 #' @param design Data design for reactive design data , Default: NULL
+#' @param subs = NULL,
+#' @param table logical: Create a table graphic below the K-M plot, indicating at-risk numbers?
+#' @param label.nrisk Numbers at risk label. Default = "Numbers at risk"
+#' @param size.label.nrisk Font size of label.nrisk. Default = 10
 #' @param ... PARAM_DESCRIPTION
 #' @return plot
 #' @details DETAILS
@@ -46,7 +49,7 @@ svyjskm <- function(sfit,
                     xlims = NULL,
                     ylims = c(0,1),
                     ystratalabs = NULL,
-                    ystrataname = "Strata",
+                    ystrataname = NULL,
                     surv.scale = c("default", "percent"),
                     timeby = NULL,
                     main = "",
@@ -60,11 +63,14 @@ svyjskm <- function(sfit,
                     dashed= FALSE,
                     cumhaz = F,
                     design = NULL,
+                    subs = NULL,
+                    table = F,
+                    label.nrisk = "Numbers at risk",
+                    size.label.nrisk = 10,
                     ...) {
   
   surv <- strata <- lower <- upper <- NULL
   
-  if(is.null(ystrataname)) ystrataname <- "Strata"
   
   if (is.null(timeby)){
     if (class(sfit) == "svykmlist"){
@@ -76,6 +82,7 @@ svyjskm <- function(sfit,
   }
   
   if (class(sfit) == "svykmlist"){
+    if(is.null(ystrataname)) ystrataname <- as.character(formula(sfit)[[3]])
     if (is.null(ci)){
       ci <- "varlog" %in% names(sfit[[1]])
     }
@@ -99,6 +106,7 @@ svyjskm <- function(sfit,
     }
     
   } else if(class(sfit) == "svykm"){
+    if(is.null(ystrataname)) ystrataname <- "Strata"
     if (is.null(ci)){
       ci <- "varlog" %in% names(sfit)
     }
@@ -219,13 +227,113 @@ svyjskm <- function(sfit,
     pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", signif(pvalue, 3)))
     # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
     if (is.null(pval.coord)){
-      p <- p + annotate("text",x = (as.integer(max(sfit$time)/5)), y = 0.1 + ylims[1],label = pvaltxt, size  = pval.size)
+      p <- p + annotate("text",x = (as.integer(max(sapply(sfit, function(x){max(x$time)/5})))), y = 0.1 + ylims[1],label = pvaltxt, size  = pval.size)
     } else{
       p <- p + annotate("text",x = pval.coord[1], y = pval.coord[2], label = pvaltxt, size  = pval.size)
     }
   }
   
-  p
+  ## Create a blank plot for place-holding
+  blank.pic <- ggplot(df, aes(time, surv)) +
+    geom_blank() + theme_void() +             ## Remove gray color
+    theme(axis.text.x = element_blank(),axis.text.y = element_blank(),
+          axis.title.x = element_blank(),axis.title.y = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid.major = element_blank(),panel.border = element_blank())
+  
+  ###################################################
+  # Create table graphic to include at-risk numbers #
+  ###################################################
+  
+  n.risk <- NULL
+  if(table == TRUE) {
+    
+    if(is.null(design)){
+      sfit2 <- survival::survfit(formula(sfit), data = get(as.character(attr(sfit, "call")$design))$variables)
+    } else{
+      sfit2 <- survival::survfit(formula(sfit), data = design$variables)
+    }
+    
+    #times <- seq(0, max(sfit2$time), by = timeby)
+    
+    if(is.null(subs)){
+      if(length(levels(summary(sfit2)$strata)) == 0) {
+        subs1 <- 1
+        subs2 <- 1:length(summary(sfit2,censored=T)$time)
+        subs3 <- 1:length(summary(sfit2,times = times,extend = TRUE)$time)
+      } else {
+        subs1 <- 1:length(levels(summary(sfit2)$strata))
+        subs2 <- 1:length(summary(sfit2,censored=T)$strata)
+        subs3 <- 1:length(summary(sfit2,times = times,extend = TRUE)$strata)
+      }
+    } else{
+      for(i in 1:length(subs)){
+        if(i==1){
+          ssvar <- paste("(?=.*\\b=",subs[i],sep="")
+        }
+        if(i==length(subs)){
+          ssvar <- paste(ssvar,"\\b)(?=.*\\b=",subs[i],"\\b)",sep="")
+        }
+        if(!i %in% c(1, length(subs))){
+          ssvar <- paste(ssvar,"\\b)(?=.*\\b=",subs[i],sep="")
+        }
+        if(i==1 & i==length(subs)){
+          ssvar <- paste("(?=.*\\b=",subs[i],"\\b)",sep="")
+        }
+      }
+      subs1 <- which(regexpr(ssvar,levels(summary(sfit2)$strata), perl=T)!=-1)
+      subs2 <- which(regexpr(ssvar,summary(sfit2,censored=T)$strata, perl=T)!=-1)
+      subs3 <- which(regexpr(ssvar,summary(sfit2,times = times,extend = TRUE)$strata, perl=T)!=-1)
+    }
+    
+    if(!is.null(subs)) pval <- FALSE
+    
+
+    
+    if(length(levels(summary(sfit2)$strata)) == 0) {
+      Factor <- factor(rep("All",length(subs3)))
+    } else {
+      Factor <- factor(summary(sfit2,times = times,extend = TRUE)$strata[subs3])
+    }
+    
+    
+    risk.data <- data.frame(
+      strata = Factor,
+      time = summary(sfit2,times = times,extend = TRUE)$time[subs3],
+      n.risk = summary(sfit2,times = times,extend = TRUE)$n.risk[subs3]
+    )
+    
+    
+    risk.data$strata <- factor(risk.data$strata, levels=rev(levels(risk.data$strata)))
+    
+    data.table <- ggplot(risk.data,aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) + 
+      geom_text(size = 3.5) + theme_bw() +
+      scale_y_discrete(breaks = as.character(levels(risk.data$strata)),
+                       labels = rev(ystratalabs)) +
+      scale_x_continuous(label.nrisk, limits = xlims) +
+      theme(axis.title.x = element_text(size = size.label.nrisk, vjust = 1),
+            panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+            panel.border = element_blank(),axis.text.x = element_blank(),
+            axis.ticks = element_blank(),axis.text.y = element_text(face = "bold",hjust = 1)) 
+    data.table <- data.table +
+      theme(legend.position = "none") + xlab(NULL) + ylab(NULL)
+    
+    
+    # ADJUST POSITION OF TABLE FOR AT RISK
+    data.table <- data.table +
+      theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 2.5, 3.5) - 0.15 * m), "lines"))
+  }
+  
+  #######################
+  # Plotting the graphs #
+  #######################
+  
+  if(table == TRUE){
+    grid.arrange(p, blank.pic, data.table, clip = FALSE, nrow = 3,
+                 ncol = 1, heights = unit(c(2, .1, .25),c("null", "null", "null")))
+  } else {
+    p
+  }
 
   
 }

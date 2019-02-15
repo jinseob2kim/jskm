@@ -6,11 +6,12 @@
 \usage{
 svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival probability",
   xlims = NULL, ylims = c(0, 1), ystratalabs = NULL,
-  ystrataname = "Strata", surv.scale = c("default", "percent"),
+  ystrataname = NULL, surv.scale = c("default", "percent"),
   timeby = NULL, main = "", pval = FALSE, pval.size = 5,
   pval.coord = c(NULL, NULL), legend = TRUE, legendposition = c(0.85,
   0.8), ci = NULL, linecols = "Set1", dashed = FALSE, cumhaz = F,
-  design = NULL, ...)
+  design = NULL, subs = NULL, table = F,
+  label.nrisk = "Numbers at risk", size.label.nrisk = 10, ...)
 }
 \arguments{
 \item{sfit}{a svykm object}
@@ -52,6 +53,14 @@ svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival probability",
 \item{cumhaz}{Show cumulaive hazard function, Default: F}
 
 \item{design}{Data design for reactive design data , Default: NULL}
+
+\item{subs}{= NULL,}
+
+\item{table}{logical: Create a table graphic below the K-M plot, indicating at-risk numbers?}
+
+\item{label.nrisk}{Numbers at risk label. Default = "Numbers at risk"}
+
+\item{size.label.nrisk}{Font size of label.nrisk. Default = 10}
 
 \item{...}{PARAM_DESCRIPTION}
 }

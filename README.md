@@ -71,7 +71,7 @@ svyjskm(s1)
 ![](man/figures/README-unnamed-chunk-3-1.png)
 
 ``` r
-svyjskm(s2, pval = T, design = dpbc)
+svyjskm(s2, pval = T,  table = T, design = dpbc)
 ```
 
 ![](man/figures/README-unnamed-chunk-3-2.png)

@@ -306,6 +306,7 @@ jskm <- function(sfit,
   # Create table graphic to include at-risk numbers #
   ###################################################
   
+  n.risk <- NULL
   if(length(levels(summary(sfit)$strata)) == 0) {
     Factor <- factor(rep("All",length(subs3)))
   } else {

@@ -71,7 +71,7 @@ s1 <-svykm(Surv(time,status>0) ~ 1, design = dpbc)
 s2 <-svykm(Surv(time,status>0) ~ sex, design = dpbc)
 
 svyjskm(s1)
-svyjskm(s2, pval = T, design = dpbc)
+svyjskm(s2, pval = T,  table = T, design = dpbc)
 svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7)) 
 ```
 
