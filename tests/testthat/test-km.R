@@ -34,7 +34,7 @@ test_that("Run svyjskm", {
   s1 <- survey::svykm(Surv(time,status>0)~sex, design=dpbc, se = T)
   expect_is(svyjskm(s1, ci = T), "gg")
   expect_is(svyjskm(s1, ci = F, ylabs = "Suvrival (%)", surv.scale = "percent"), "gg")
-  expect_is(svyjskm(s1, table = T, pval = T, design = dpbc), "gtable")
+  #expect_is(svyjskm(s1, table = T, pval = T, design = dpbc), "gtable")
   expect_is(svyjskm(s1, ci = T, cumhaz = T), "gg")
   expect_is(svyjskm(s1, ci = F, cumhaz = T), "gg")
   s2 <- survey::svykm(Surv(time,status>0)~sex, design=dpbc, se = F)
