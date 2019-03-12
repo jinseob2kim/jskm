@@ -4,7 +4,7 @@
 
 * The p-value is expressed as the value rounded to the 3rd decimal place.
 
-* Add **pval.testname** option, p-value is expressed with **(Log-rank)** text if **pval.testname == T**.
+* Add **pval.testname** option, p-value is expressed with **(Log-rank)** text if **pval.testname = T**.
 
 # jskm 0.3.0
 
