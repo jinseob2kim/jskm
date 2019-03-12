@@ -9,9 +9,9 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
   ylims = c(0, 1), surv.scale = c("default", "percent"),
   ystratalabs = names(sfit$strata), ystrataname = "Strata",
   timeby = signif(max(sfit$time)/7, 1), main = "", pval = FALSE,
-  pval.size = 5, pval.coord = c(NULL, NULL), marks = TRUE,
-  shape = 3, legend = TRUE, legendposition = c(0.85, 0.8),
-  ci = FALSE, subs = NULL, label.nrisk = "Numbers at risk",
+  pval.size = 5, pval.coord = c(NULL, NULL), pval.testname = F,
+  marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85,
+  0.8), ci = FALSE, subs = NULL, label.nrisk = "Numbers at risk",
   size.label.nrisk = 10, linecols = "Set1", dashed = FALSE,
   cumhaz = F, cluster.option = "None", cluster.var = NULL,
   data = NULL, ...)
@@ -44,6 +44,8 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 \item{pval.size}{numeric value specifying the p-value text size. Default is 5.}
 
 \item{pval.coord}{numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL}
+
+\item{pval.testname}{logical: add '(Log-rank)' text to p-value. Default = F}
 
 \item{marks}{logical: should censoring marks be added?}
 

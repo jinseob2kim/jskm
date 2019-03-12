@@ -13,6 +13,7 @@
 #' @param pval logical: add the pvalue to the plot?, Default: FALSE
 #' @param pval.size numeric value specifying the p-value text size. Default is 5.
 #' @param pval.coord numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL
+#' @param pval.testname logical: add '(Log-rank)' text to p-value. Default = F
 #' @param legend logical. should a legend be added to the plot? Default: TRUE
 #' @param ci logical. Should confidence intervals be plotted. Default = NULL
 #' @param legendposition numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)
@@ -56,6 +57,7 @@ svyjskm <- function(sfit,
                     pval = FALSE,
                     pval.size = 5, 
                     pval.coord = c(NULL, NULL),
+                    pval.testname = F,
                     legend = TRUE,
                     legendposition=c(0.85,0.8),
                     ci = NULL,
@@ -224,7 +226,9 @@ svyjskm <- function(sfit,
     }
     pvalue <- sdiff$p.value
     
-    pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", signif(pvalue, 3)))
+    pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", round(pvalue, 3)))
+    if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")
+    
     # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
     if (is.null(pval.coord)){
       p <- p + annotate("text",x = (as.integer(max(sapply(sfit, function(x){max(x$time)/5})))), y = 0.1 + ylims[1],label = pvaltxt, size  = pval.size)
