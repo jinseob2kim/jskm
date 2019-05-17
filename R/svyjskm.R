@@ -220,11 +220,11 @@ svyjskm <- function(sfit,
   
   if(pval == TRUE) {
     if(is.null(design)){
-      sdiff <- survey::svyranktest(formula(sfit), design = get(as.character(attr(sfit, "call")$design)))
+      sdiff <- survey::svylogrank(formula(sfit), design = get(as.character(attr(sfit, "call")$design)))
     } else{
-      sdiff <- survey::svyranktest(formula(sfit), design = design)
+      sdiff <- survey::svylogrank(formula(sfit), design = design)
     }
-    pvalue <- sdiff$p.value
+    pvalue <- sdiff[[2]][2]
     
     pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", round(pvalue, 3)))
     if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")

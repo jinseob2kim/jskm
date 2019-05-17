@@ -1,3 +1,9 @@
+# jskm 0.3.5
+
+## Fix
+
+* Apply appropriate p-value to `svyjskm`
+
 # jskm 0.3.1
 
 ## Update
