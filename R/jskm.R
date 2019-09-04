@@ -24,7 +24,7 @@
 #' @param subs = NULL,
 #' @param label.nrisk Numbers at risk label. Default = "Numbers at risk"
 #' @param size.label.nrisk Font size of label.nrisk. Default = 10
-#' @param linecols Character. Colour brewer pallettes too colour lines. Default ="Set1",
+#' @param linecols Character. Colour brewer pallettes too colour lines. Default ="Set1", "black" for black with dashed line.
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default = FALSE
 #' @param cumhaz Show cumulaive hazard function, Default: F
 #' @param cluster.option Cluster option for p value, Option: "None", "cluster", "frailty", Default: "None"
@@ -209,7 +209,7 @@ jskm <- function(sfit,
   # specifying axis parameteres etc #
   ###################################
   
-  if(dashed == TRUE){
+  if(dashed == TRUE | linecols == "black"){
     linetype=c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash", "1F", "F1", "4C88C488", "12345678")
   } else {
     linetype=c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
@@ -222,6 +222,11 @@ jskm <- function(sfit,
   if (surv.scale == "percent") scale_labels <- scales::percent
   
   p <- ggplot2::ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) + ggtitle(main)
+  if (linecols == "black"){
+    linecols <- "Set1"
+    p <- ggplot2::ggplot( df, aes(x=time, y=surv, linetype=strata)) + ggtitle(main)
+  }
+  
   
   #Set up theme elements
   p <- p + theme_bw() +

@@ -1,3 +1,7 @@
+# jskm 0.3.6
+
+* Add linecols option: **"black"** for black with dashed line.
+
 # jskm 0.3.5
 
 ## Fix

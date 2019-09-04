@@ -17,7 +17,7 @@
 #' @param legend logical. should a legend be added to the plot? Default: TRUE
 #' @param ci logical. Should confidence intervals be plotted. Default = NULL
 #' @param legendposition numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)
-#' @param linecols Character. Colour brewer pallettes too colour lines. Default: 'Set1'
+#' @param linecols Character. Colour brewer pallettes too colour lines. Default: 'Set1', "black" for black with dashed line.
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default: FALSE
 #' @param cumhaz Show cumulaive hazard function, Default: F
 #' @param design Data design for reactive design data , Default: NULL
@@ -168,7 +168,7 @@ svyjskm <- function(sfit,
   # specifying axis parameteres etc #
   ###################################
   
-  if(dashed == TRUE){
+  if(dashed == TRUE | linecols == "black"){
     linetype=c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash", "1F", "F1", "4C88C488", "12345678")
   } else {
     linetype=c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
@@ -182,6 +182,10 @@ svyjskm <- function(sfit,
   
   
   p <- ggplot2::ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) + ggtitle(main)
+  if (linecols == "black"){
+    linecols <- "Set1"
+    p <- ggplot2::ggplot( df, aes(x=time, y=surv, linetype=strata)) + ggtitle(main)
+  }
   
   #Set up theme elements
   p <- p + theme_bw() +
