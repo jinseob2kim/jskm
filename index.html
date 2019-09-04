@@ -21,7 +21,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-article">
+    <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.6</span>
       </span>
     </div>
 
@@ -77,12 +77,12 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    
 
-    
-    
+      </header><div class="row">
+  <div class="contents col-md-9">
+<div id="jskm" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#jskm" class="anchor"></a>jskm</h1></div>
 <p>Kaplan-Meier Plot with ‘ggplot2’: ‘survfit’ and ‘svykm’ objects from ‘survival’ and ‘survey’ packages.</p>
 <p><a href="https://travis-ci.org/jinseob2kim/jskm"><img src="https://travis-ci.org/jinseob2kim/jskm.svg?branch=master" alt="Build Status"></a> <a href="https://ci.appveyor.com/project/jinseob2kim/jskm"><img src="https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&amp;svg=true" alt="AppVeyor build status"></a> <a href="https://cran.r-project.org/package=jskm"><img src="https://www.r-pkg.org/badges/version/jskm" alt="CRAN_Status_Badge"></a> <a href="https://CRAN.R-project.org/package=jskm"><img src="https://cranlogs.r-pkg.org/badges/jskm" alt="CRAN_Download_Badge"></a> <a href="https://codecov.io/github/jinseob2kim/jskm"><img src="https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg" alt="codecov"></a> <a href="https://github.com/jinseob2kim/jskm/issues"><img src="https://img.shields.io/github/issues/jinseob2kim/jskm.svg" alt="GitHub issues"></a> <a href="https://github.com/jinseob2kim/jskm/stargazers"><img src="https://img.shields.io/github/stars/jinseob2kim/jskm.svg" alt="GitHub stars"></a> <a href="https://github.com/jinseob2kim/jskm/blob/master/LICENSE"><img src="https://img.shields.io/github/license/jinseob2kim/jskm.svg" alt="GitHub license"></a></p>
 <div id="install" class="section level2">
@@ -109,17 +109,17 @@
 <a class="sourceLine" id="cb2-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#Plot the data</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit)</a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-1-1.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-1-1.png"></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">table =</span> T, <span class="dt">pval =</span> T, <span class="dt">label.nrisk =</span> <span class="st">"No. at risk"</span>, <span class="dt">size.label.nrisk =</span> <span class="dv">8</span>, </a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">     <span class="dt">xlabs =</span> <span class="st">"Time(Day)"</span>, <span class="dt">ylabs =</span> <span class="st">"Survival"</span>, <span class="dt">ystratalabs =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Obs"</span>, <span class="st">"Lev"</span>, <span class="st">"Lev + 5FU"</span>), <span class="dt">ystrataname =</span> <span class="st">"rx"</span>,</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">     <span class="dt">marks =</span> F, <span class="dt">timeby =</span> <span class="dv">365</span>, <span class="dt">xlims =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">3000</span>), <span class="dt">ylims =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.25</span>, <span class="dv">1</span>))</a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-1-2.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-1-2.png"></p>
 </div>
 <div id="cumulative-hazard-1--survival-probability" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cumulative-hazard-1--survival-probability" class="anchor"></a>Cumulative hazard: 1- Survival probability</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">ci =</span> T, <span class="dt">cumhaz =</span> T,  <span class="dt">mark =</span> F, <span class="dt">ylab =</span> <span class="st">"Cumulative hazard (%)"</span>, <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span>T, <span class="dt">pval.size =</span> <span class="dv">6</span>, <span class="dt">pval.coord =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">300</span>, <span class="fl">0.7</span>))</a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-2-1.png"></p>
 </div>
 <div id="weighted-kaplan-meier-plot---svykm-object-in-survey-package" class="section level3">
 <h3 class="hasAnchor">
@@ -136,17 +136,18 @@
 <a class="sourceLine" id="cb5-10" data-line-number="10">s2 &lt;-<span class="kw"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(time,status<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span>sex, <span class="dt">design =</span> dpbc)</a>
 <a class="sourceLine" id="cb5-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb5-12" data-line-number="12"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s1)</a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-3-1.png"></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s2, <span class="dt">pval =</span> T,  <span class="dt">table =</span> T, <span class="dt">design =</span> dpbc)</a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-2.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-3-2.png"></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s2, <span class="dt">cumhaz =</span> T, <span class="dt">ylab =</span> <span class="st">"Cumulative (%)"</span>, <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span> T, <span class="dt">design =</span> dpbc, <span class="dt">pval.coord =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">300</span>, <span class="fl">0.7</span>)) </a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-3.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-3-3.png"></p>
 <p>If you want to get <strong>confidence interval</strong>, you should apply <code>se = T</code> option to <code>svykm</code> object.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">s3 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(time,status<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span>sex, <span class="dt">design=</span>dpbc, <span class="dt">se =</span> T)</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s3)</a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-4-1.png"></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s3, <span class="dt">ci =</span> F)</a></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-2.png" width="700"></p>
+<p><img src="reference/figures/README-unnamed-chunk-4-2.png"></p>
+</div>
 </div>
 </div>
   </div>
@@ -173,14 +174,13 @@
 <h2>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://github.com/jinseob2kim">Jinseob Kim</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-9403-605X" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<a href="https://github.com/jinseob2kim">Jinseob Kim</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-9403-605X" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
 <li>
 <a href="https://www.zarathu.com"><img src="https://raw.githubusercontent.com/zarathucorp/zarathu/master/Color%20logo%20-%20no%20background.png" height="24"></a> <br><small class="roles"> Copyright holder, funder </small>  </li>
 </ul>
 </div>
 
-      </div>
-
+  </div>
 </div>
 
 
@@ -189,8 +189,9 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.9000.</p>
 </div>
+
       </footer>
 </div>
 
