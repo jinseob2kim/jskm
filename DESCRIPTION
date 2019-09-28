@@ -1,7 +1,7 @@
 Package: jskm
 Title: Kaplan-Meier Plot with 'ggplot2'
-Version: 0.3.6
-Date: 2019-09-04
+Version: 0.3.7
+Date: 2019-09-28
 Authors@R: c(person("Jinseob", "Kim", email = "jinseob2kim@gmail.com", role = c("aut", "cre"),  comment = c(ORCID = "0000-0002-9403-605X")),
              person("Zarathu", role = c("cph", "fnd"))
              )

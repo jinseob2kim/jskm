@@ -1,3 +1,7 @@
+# jskm 0.3.7
+
+* Match the color: Line and 95% CI.  
+
 # jskm 0.3.6
 
 * Add linecols option: **"black"** for black with dashed line.

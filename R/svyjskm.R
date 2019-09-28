@@ -182,6 +182,7 @@ svyjskm <- function(sfit,
   
   
   p <- ggplot2::ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) + ggtitle(main)
+  linecols2 <- linecols
   if (linecols == "black"){
     linecols <- "Set1"
     p <- ggplot2::ggplot( df, aes(x=time, y=surv, linetype=strata)) + ggtitle(main)
@@ -204,10 +205,7 @@ svyjskm <- function(sfit,
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   
   
-  #Add 95% CI to plot
-  if(ci == TRUE)
-    p <- p +  geom_ribbon(data=df, aes(ymin = lower, ymax = upper), fill = "grey", alpha=0.25, colour=NA)
-  
+ 
   #Removes the legend:
   if(legend == FALSE)
     p <- p + theme(legend.position="none")
@@ -217,6 +215,14 @@ svyjskm <- function(sfit,
     scale_linetype_manual(name = ystrataname, values=linetype) +
     scale_colour_brewer(name = ystrataname, palette=linecols)
   
+  #Add 95% CI to plot
+  if(ci == TRUE){
+    if (linecols2 == "black"){
+      p <- p +  geom_ribbon(data=df, aes(ymin = lower, ymax = upper), alpha=0.25, colour=NA) 
+    } else{
+      p <- p +  geom_ribbon(data=df, aes(ymin = lower, ymax = upper, fill = strata), alpha=0.25, colour=NA) + scale_fill_brewer(name = ystrataname, palette=linecols)
+    } 
+  }
   
   ## p-value
   if(class(sfit) == "svykm") pval <- FALSE

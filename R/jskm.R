@@ -222,6 +222,8 @@ jskm <- function(sfit,
   if (surv.scale == "percent") scale_labels <- scales::percent
   
   p <- ggplot2::ggplot( df, aes(x=time, y=surv, colour=strata, linetype=strata)) + ggtitle(main)
+  
+  linecols2 <- linecols
   if (linecols == "black"){
     linecols <- "Set1"
     p <- ggplot2::ggplot( df, aes(x=time, y=surv, linetype=strata)) + ggtitle(main)
@@ -245,9 +247,6 @@ jskm <- function(sfit,
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   
   
-  #Add 95% CI to plot
-  if(ci == TRUE)
-    p <- p +  geom_ribbon(data=df, aes(ymin = lower, ymax = upper), fill = "grey", alpha=0.25, colour=NA)
   
   #Removes the legend:
   if(legend == FALSE)
@@ -262,7 +261,14 @@ jskm <- function(sfit,
   if(marks == TRUE)
     p <- p + geom_point(data = subset(df, n.censor >= 1), aes(x = time, y = surv), shape = shape, colour = "black")
   
-  
+  #Add 95% CI to plot
+  if(ci == TRUE){
+    if (linecols2 == "black"){
+      p <- p +  geom_ribbon(data=df, aes(ymin = lower, ymax = upper), alpha=0.25, colour=NA) 
+    } else{
+      p <- p +  geom_ribbon(data=df, aes(ymin = lower, ymax = upper, fill = strata), alpha=0.25, colour=NA) + scale_fill_brewer(name = ystrataname, palette=linecols)
+    } 
+  }
   
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +
