@@ -1,3 +1,7 @@
+# jskm 0.3.8
+
+* Bug fixes: Incorrect p-value when applying cluster options.  
+
 # jskm 0.3.7
 
 * Match the color: Line and 95% CI.  
