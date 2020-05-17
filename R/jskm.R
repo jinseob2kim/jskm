@@ -305,7 +305,7 @@ jskm <- function(sfit,
       pvalue <- summary(sdiff)$logtest["pvalue"]
     }
     
-    pvaltxt <- ifelse(pvalue < 0.0001,"p < 0.0001",paste("p =", round(pvalue, 4)))
+    pvaltxt <- ifelse(pvalue < 0.001,"p < 0.001",paste("p =", round(pvalue, 3)))
     
     if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")
     

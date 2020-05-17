@@ -1,6 +1,6 @@
 # jskm 0.3.9
 
-* Bug fixes: p value is rounded up to the **4th** digit.
+* Bug fixes: show p value "< 0.001" when p < 0.001
 
 # jskm 0.3.8
 
