@@ -1,3 +1,7 @@
+# jskm 0.3.9
+
+* Bug fixes: p value is rounded up to the **4th** digit.
+
 # jskm 0.3.8
 
 * Bug fixes: Incorrect p-value when applying cluster options.  
