@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@
       <h1 data-toc-skip>jskm</h1>
                         <h4 class="author">Jinseob Kim</h4>
             
-            <h4 class="date">2020-05-17</h4>
+            <h4 class="date">2020-08-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jinseob2kim/jstable/blob/master/vignettes/jskm.Rmd"><code>vignettes/jskm.Rmd</code></a></small>
       <div class="hidden name"><code>jskm.Rmd</code></div>
@@ -96,10 +96,12 @@
 <div id="install" class="section level2">
 <h2 class="hasAnchor">
 <a href="#install" class="anchor"></a>Install</h2>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">devtools</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">devtools</span>)
 <span class="fu">install_github</span>(<span class="st">"jinseob2kim/jskm"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">jskm</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/jinseob2kim/jskm">jskm</a></span>)
+</pre></div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
@@ -107,31 +109,38 @@
 <div id="survival-probability" class="section level3">
 <h3 class="hasAnchor">
 <a href="#survival-probability" class="anchor"></a>Survival probability</h3>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co">#Load dataset</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">survival</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">colon</span>)
-<span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="no">time</span>,<span class="no">status</span>)~<span class="no">rx</span>, <span class="kw">data</span><span class="kw">=</span><span class="no">colon</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co">#Load dataset</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/therneau/survival">survival</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">colon</span>)
+<span class="kw">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="kw">time</span>,<span class="kw">status</span>)<span class="op">~</span><span class="kw">rx</span>, data=<span class="kw">colon</span>)
 
 <span class="co">#Plot the data</span>
-<span class="fu"><a href="../reference/jskm.html">jskm</a></span>(<span class="no">fit</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/jskm.html">jskm</a></span>(<span class="kw">fit</span>)
+</pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/jskm.html">jskm</a></span>(<span class="no">fit</span>, <span class="kw">table</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">pval</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">label.nrisk</span> <span class="kw">=</span> <span class="st">"No. at risk"</span>, <span class="kw">size.label.nrisk</span> <span class="kw">=</span> <span class="fl">8</span>,
-     <span class="kw">xlabs</span> <span class="kw">=</span> <span class="st">"Time(Day)"</span>, <span class="kw">ylabs</span> <span class="kw">=</span> <span class="st">"Survival"</span>, <span class="kw">ystratalabs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Obs"</span>, <span class="st">"Lev"</span>, <span class="st">"Lev + 5FU"</span>), <span class="kw">ystrataname</span> <span class="kw">=</span> <span class="st">"rx"</span>,
-     <span class="kw">marks</span> <span class="kw">=</span> <span class="no">F</span>, <span class="kw">timeby</span> <span class="kw">=</span> <span class="fl">365</span>, <span class="kw">xlims</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">3000</span>), <span class="kw">ylims</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.25</span>, <span class="fl">1</span>))
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="../reference/jskm.html">jskm</a></span>(<span class="kw">fit</span>, table = <span class="kw">T</span>, pval = <span class="kw">T</span>, label.nrisk = <span class="st">"No. at risk"</span>, size.label.nrisk = <span class="fl">8</span>, 
+     xlabs = <span class="st">"Time(Day)"</span>, ylabs = <span class="st">"Survival"</span>, ystratalabs = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Obs"</span>, <span class="st">"Lev"</span>, <span class="st">"Lev + 5FU"</span>), ystrataname = <span class="st">"rx"</span>,
+     marks = <span class="kw">F</span>, timeby = <span class="fl">365</span>, xlims = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">3000</span>), ylims = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.25</span>, <span class="fl">1</span>))
 <span class="co">#&gt; Warning: Removed 16 row(s) containing missing values (geom_path).</span>
-<span class="co">#&gt; Warning: Removed 3 rows containing missing values (geom_text).</span></pre></body></html></div>
+<span class="co">#&gt; Warning: Removed 3 rows containing missing values (geom_text).</span>
+</pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-1-2.png" width="700"></p>
 </div>
 <div id="cumulative-hazard-1--survival-probability" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cumulative-hazard-1--survival-probability" class="anchor"></a>Cumulative hazard: 1- Survival probability</h3>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="../reference/jskm.html">jskm</a></span>(<span class="no">fit</span>, <span class="kw">ci</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">cumhaz</span> <span class="kw">=</span> <span class="no">T</span>,  <span class="kw">mark</span> <span class="kw">=</span> <span class="no">F</span>, <span class="kw">ylab</span> <span class="kw">=</span> <span class="st">"Cumulative hazard (%)"</span>, <span class="kw">surv.scale</span> <span class="kw">=</span> <span class="st">"percent"</span>, <span class="kw">pval</span> <span class="kw">=</span><span class="no">T</span>, <span class="kw">pval.size</span> <span class="kw">=</span> <span class="fl">6</span>, <span class="kw">pval.coord</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">300</span>, <span class="fl">0.7</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="fu"><a href="../reference/jskm.html">jskm</a></span>(<span class="kw">fit</span>, ci = <span class="kw">T</span>, cumhaz = <span class="kw">T</span>,  mark = <span class="kw">F</span>, ylab = <span class="st">"Cumulative hazard (%)"</span>, surv.scale = <span class="st">"percent"</span>, pval =<span class="kw">T</span>, pval.size = <span class="fl">6</span>, pval.coord = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">300</span>, <span class="fl">0.7</span>))
+</pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 </div>
 <div id="weighted-kaplan-meier-plot---svykm-object-in-survey-package" class="section level3">
 <h3 class="hasAnchor">
 <a href="#weighted-kaplan-meier-plot---svykm-object-in-survey-package" class="anchor"></a>Weighted Kaplan-Meier plot - <code>svykm.object</code> in <strong>survey</strong> package</h3>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">survey</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://r-survey.r-forge.r-project.org/survey">survey</a></span>)
 <span class="co">#&gt; Loading required package: grid</span>
 <span class="co">#&gt; Loading required package: Matrix</span>
 <span class="co">#&gt; </span>
@@ -139,27 +148,36 @@
 <span class="co">#&gt; The following object is masked from 'package:graphics':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     dotchart</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">pbc</span>, <span class="kw">package</span><span class="kw">=</span><span class="st">"survival"</span>)
-<span class="no">pbc</span>$<span class="no">randomized</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="no">pbc</span>, !<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">trt</span>) <span class="kw">&amp;</span> <span class="no">trt</span><span class="kw">&gt;</span><span class="fl">0</span>)
-<span class="no">biasmodel</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(<span class="no">randomized</span>~<span class="no">age</span>*<span class="no">edema</span>,<span class="kw">data</span><span class="kw">=</span><span class="no">pbc</span>)
-<span class="no">pbc</span>$<span class="no">randprob</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span>(<span class="no">biasmodel</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="kw">pbc</span>, package=<span class="st">"survival"</span>)
+<span class="kw">pbc</span><span class="op">$</span><span class="kw">randomized</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="kw">pbc</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="kw">trt</span>) <span class="op">&amp;</span> <span class="kw">trt</span><span class="op">&gt;</span><span class="fl">0</span>)
+<span class="kw">biasmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(<span class="kw">randomized</span><span class="op">~</span><span class="kw">age</span><span class="op">*</span><span class="kw">edema</span>,data=<span class="kw">pbc</span>)
+<span class="kw">pbc</span><span class="op">$</span><span class="kw">randprob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span>(<span class="kw">biasmodel</span>)
 
-<span class="no">dpbc</span><span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svydesign.html">svydesign</a></span>(<span class="kw">id</span><span class="kw">=</span>~<span class="fl">1</span>, <span class="kw">prob</span><span class="kw">=</span>~<span class="no">randprob</span>, <span class="kw">strata</span><span class="kw">=</span>~<span class="no">edema</span>, <span class="kw">data</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">pbc</span>,<span class="no">randomized</span>))
+<span class="kw">dpbc</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svydesign.html">svydesign</a></span>(id=<span class="op">~</span><span class="fl">1</span>, prob=<span class="op">~</span><span class="kw">randprob</span>, strata=<span class="op">~</span><span class="kw">edema</span>, data=<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">pbc</span>,<span class="kw">randomized</span>))
 
-<span class="no">s1</span> <span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="no">time</span>,<span class="no">status</span><span class="kw">&gt;</span><span class="fl">0</span>) ~ <span class="fl">1</span>, <span class="kw">design</span> <span class="kw">=</span> <span class="no">dpbc</span>)
-<span class="no">s2</span> <span class="kw">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="no">time</span>,<span class="no">status</span><span class="kw">&gt;</span><span class="fl">0</span>) ~ <span class="no">sex</span>, <span class="kw">design</span> <span class="kw">=</span> <span class="no">dpbc</span>)
+<span class="kw">s1</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="kw">time</span>,<span class="kw">status</span><span class="op">&gt;</span><span class="fl">0</span>) <span class="op">~</span> <span class="fl">1</span>, design = <span class="kw">dpbc</span>)
+<span class="kw">s2</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="kw">time</span>,<span class="kw">status</span><span class="op">&gt;</span><span class="fl">0</span>) <span class="op">~</span> <span class="kw">sex</span>, design = <span class="kw">dpbc</span>)
 
-<span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="no">s1</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="kw">s1</span>)
+</pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="no">s2</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="kw">s2</span>)
+</pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-3-2.png" width="700"></p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="no">s2</span>, <span class="kw">cumhaz</span> <span class="kw">=</span> <span class="no">T</span>, <span class="kw">ylab</span> <span class="kw">=</span> <span class="st">"Cumulative hazard(%)"</span>, <span class="kw">surv.scale</span> <span class="kw">=</span> <span class="st">"percent"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="kw">s2</span>, cumhaz = <span class="kw">T</span>, ylab = <span class="st">"Cumulative hazard(%)"</span>, surv.scale = <span class="st">"percent"</span>) 
+</pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-3-3.png" width="700"></p>
 <p>If you want to get <strong>confidence interval</strong>, you should apply <code>se = T</code> option to <code>svykm</code> object.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">s3</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="no">time</span>,<span class="no">status</span><span class="kw">&gt;</span><span class="fl">0</span>) ~ <span class="no">sex</span>, <span class="kw">design</span><span class="kw">=</span><span class="no">dpbc</span>, <span class="kw">se</span> <span class="kw">=</span> <span class="no">T</span>)
-<span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="no">s3</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="kw">s3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(<span class="kw">time</span>,<span class="kw">status</span><span class="op">&gt;</span><span class="fl">0</span>) <span class="op">~</span> <span class="kw">sex</span>, design=<span class="kw">dpbc</span>, se = <span class="kw">T</span>)
+<span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="kw">s3</span>)
+</pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="no">s3</span>, <span class="kw">ci</span> <span class="kw">=</span> <span class="no">F</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="fu"><a href="../reference/svyjskm.html">svyjskm</a></span>(<span class="kw">s3</span>, ci = <span class="kw">F</span>)
+</pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
 </div>
 </div>

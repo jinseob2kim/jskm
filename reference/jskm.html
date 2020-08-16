@@ -78,7 +78,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -135,17 +135,39 @@
     <p>Creates a Kaplan-Meier plot with at risk tables below for survfit object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>jskm</span>(<span class='no'>sfit</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xlabs</span> <span class='kw'>=</span> <span class='st'>"Time-to-event"</span>,
-  <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='st'>"Survival probability"</span>, <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)),
-  <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>), <span class='kw'>surv.scale</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"default"</span>, <span class='st'>"percent"</span>),
-  <span class='kw'>ystratalabs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>sfit</span>$<span class='no'>strata</span>), <span class='kw'>ystrataname</span> <span class='kw'>=</span> <span class='st'>"Strata"</span>,
-  <span class='kw'>timeby</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)/<span class='fl'>7</span>, <span class='fl'>1</span>), <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>pval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>pval.size</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>pval.coord</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>NULL</span>, <span class='kw'>NULL</span>), <span class='kw'>pval.testname</span> <span class='kw'>=</span> <span class='no'>F</span>,
-  <span class='kw'>marks</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.85</span>,
-  <span class='fl'>0.8</span>), <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>subs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>label.nrisk</span> <span class='kw'>=</span> <span class='st'>"Numbers at risk"</span>,
-  <span class='kw'>size.label.nrisk</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>linecols</span> <span class='kw'>=</span> <span class='st'>"Set1"</span>, <span class='kw'>dashed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>cumhaz</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>cluster.option</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>cluster.var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>jskm</span>(
+  <span class='kw'>sfit</span>,
+  table = <span class='fl'>FALSE</span>,
+  xlabs = <span class='st'>"Time-to-event"</span>,
+  ylabs = <span class='st'>"Survival probability"</span>,
+  xlims = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='kw'>sfit</span><span class='op'>$</span><span class='kw'>time</span>)),
+  ylims = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
+  surv.scale = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"default"</span>, <span class='st'>"percent"</span>),
+  ystratalabs = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>sfit</span><span class='op'>$</span><span class='kw'>strata</span>),
+  ystrataname = <span class='st'>"Strata"</span>,
+  timeby = <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='kw'>sfit</span><span class='op'>$</span><span class='kw'>time</span>)<span class='op'>/</span><span class='fl'>7</span>, <span class='fl'>1</span>),
+  main = <span class='st'>""</span>,
+  pval = <span class='fl'>FALSE</span>,
+  pval.size = <span class='fl'>5</span>,
+  pval.coord = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>NULL</span>, <span class='kw'>NULL</span>),
+  pval.testname = <span class='kw'>F</span>,
+  marks = <span class='fl'>TRUE</span>,
+  shape = <span class='fl'>3</span>,
+  legend = <span class='fl'>TRUE</span>,
+  legendposition = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.85</span>, <span class='fl'>0.8</span>),
+  ci = <span class='fl'>FALSE</span>,
+  subs = <span class='kw'>NULL</span>,
+  label.nrisk = <span class='st'>"Numbers at risk"</span>,
+  size.label.nrisk = <span class='fl'>10</span>,
+  linecols = <span class='st'>"Set1"</span>,
+  dashed = <span class='fl'>FALSE</span>,
+  cumhaz = <span class='kw'>F</span>,
+  cluster.option = <span class='st'>"None"</span>,
+  cluster.var = <span class='kw'>NULL</span>,
+  data = <span class='kw'>NULL</span>,
+  cut.landmark = <span class='kw'>NULL</span>,
+  <span class='kw'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -264,7 +286,11 @@
     </tr>
     <tr>
       <th>data</th>
-      <td><p>select specific data - for reactive input. Default = NULL</p></td>
+      <td><p>select specific data - for reactive input, Default = NULL</p></td>
+    </tr>
+    <tr>
+      <th>cut.landmark</th>
+      <td><p>cut-off for landmark analysis, Default = NULL</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -278,12 +304,17 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>DETAILS</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Jinseob Kim, but heavily modified version of a script created by Michael Way.
+<a href='https://github.com/michaelway/ggkm/'>https://github.com/michaelway/ggkm/</a>
+I have packaged this function, added functions to namespace and included a range of new parameters.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>survival</span>)
- <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>colon</span>)
- <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survival/man/survfit.html'>survfit</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='no'>time</span>,<span class='no'>status</span>)~<span class='no'>rx</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='no'>colon</span>)
- <span class='fu'>jskm</span>(<span class='no'>fit</span>, <span class='kw'>timeby</span><span class='kw'>=</span><span class='fl'>500</span>)</div><div class='img'><img src='jskm-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'> <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/therneau/survival'>survival</a></span>)
+ <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>colon</span>)
+ <span class='kw'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survival/man/survfit.html'>survfit</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='kw'>time</span>,<span class='kw'>status</span>)<span class='op'>~</span><span class='kw'>rx</span>, data=<span class='kw'>colon</span>)
+ <span class='fu'>jskm</span>(<span class='kw'>fit</span>, timeby=<span class='fl'>500</span>)</div><div class='img'><img src='jskm-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
