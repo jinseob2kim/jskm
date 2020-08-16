@@ -1,12 +1,24 @@
 jskm
 ================
 
-Kaplan-Meier Plot with 'ggplot2': 'survfit' and 'svykm' objects from 'survival' and 'survey' packages.
+Kaplan-Meier Plot with ‘ggplot2’: ‘survfit’ and ‘svykm’ objects from
+‘survival’ and ‘survey’ packages.
 
-[![Build Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm) [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&svg=true)](https://ci.appveyor.com/project/jinseob2kim/jskm) [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/jskm)](https://cran.r-project.org/package=jskm) [![CRAN\_Download\_Badge](https://cranlogs.r-pkg.org/badges/jskm)](https://CRAN.R-project.org/package=jskm) [![codecov](https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg)](https://codecov.io/github/jinseob2kim/jskm) [![GitHub issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/issues) [![GitHub stars](https://img.shields.io/github/stars/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/stargazers) [![GitHub license](https://img.shields.io/github/license/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/blob/master/LICENSE)
+[![Build
+Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&svg=true)](https://ci.appveyor.com/project/jinseob2kim/jskm)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/jskm)](https://cran.r-project.org/package=jskm)
+[![CRAN\_Download\_Badge](https://cranlogs.r-pkg.org/badges/jskm)](https://CRAN.R-project.org/package=jskm)
+[![codecov](https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg)](https://codecov.io/github/jinseob2kim/jskm)
+[![GitHub
+issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/issues)
+[![GitHub
+stars](https://img.shields.io/github/stars/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/stargazers)
+[![GitHub
+license](https://img.shields.io/github/license/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/blob/master/LICENSE)
 
-Install
--------
+## Install
 
 ``` r
 install.packages("jskm")
@@ -18,8 +30,7 @@ remotes::install_github("jinseob2kim/jskm")
 library(jskm)
 ```
 
-Example
--------
+## Example
 
 ### Survival probability
 
@@ -33,7 +44,7 @@ fit <- survfit(Surv(time,status)~rx, data=colon)
 jskm(fit)
 ```
 
-![](man/figures/README-unnamed-chunk-1-1.png)
+![](man/figures/README-unnamed-chunk-1-1.png)<!-- -->
 
 ``` r
 jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8, 
@@ -41,7 +52,7 @@ jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8
      marks = F, timeby = 365, xlims = c(0, 3000), ylims = c(0.25, 1))
 ```
 
-![](man/figures/README-unnamed-chunk-1-2.png)
+![](man/figures/README-unnamed-chunk-1-2.png)<!-- -->
 
 ### Cumulative hazard: 1- Survival probability
 
@@ -49,7 +60,15 @@ jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8
 jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
-![](man/figures/README-unnamed-chunk-2-1.png)
+![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
+
+### Landmark analysis
+
+``` r
+jskm(fit, mark = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 500)
+```
+
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
 ### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
 
@@ -68,31 +87,38 @@ s2 <-svykm(Surv(time,status>0) ~ sex, design = dpbc)
 svyjskm(s1)
 ```
 
-![](man/figures/README-unnamed-chunk-3-1.png)
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 svyjskm(s2, pval = T,  table = T, design = dpbc)
 ```
 
-![](man/figures/README-unnamed-chunk-3-2.png)
+![](man/figures/README-unnamed-chunk-4-2.png)<!-- -->
 
 ``` r
 svyjskm(s2, cumhaz = T, ylab = "Cumulative (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7)) 
 ```
 
-![](man/figures/README-unnamed-chunk-3-3.png)
+![](man/figures/README-unnamed-chunk-4-3.png)<!-- -->
 
-If you want to get **confidence interval**, you should apply `se = T` option to `svykm` object.
+If you want to get **confidence interval**, you should apply `se = T`
+option to `svykm` object.
 
 ``` r
 s3 <- svykm(Surv(time,status>0) ~ sex, design=dpbc, se = T)
 svyjskm(s3)
 ```
 
-![](man/figures/README-unnamed-chunk-4-1.png)
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
 svyjskm(s3, ci = F)
 ```
 
-![](man/figures/README-unnamed-chunk-4-2.png)
+![](man/figures/README-unnamed-chunk-5-2.png)<!-- -->
+
+``` r
+svyjskm(s3, ci = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 1000)
+```
+
+![](man/figures/README-unnamed-chunk-5-3.png)<!-- -->

@@ -1,6 +1,6 @@
 # jskm 0.4.0
 
-* Add landmark analysis: **cut.landmark** option to `jskm`.
+* Add landmark analysis: **cut.landmark** option.
 
 # jskm 0.3.9
 

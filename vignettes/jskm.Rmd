@@ -49,6 +49,12 @@ jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8
 jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative hazard (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
+### Landmark analysis 
+
+```{r}
+jskm(fit, mark = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 500)
+```
+
 
 ### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
 
@@ -75,5 +81,6 @@ If you want to get **confidence interval**, you should apply `se = T` option to 
 s3 <- svykm(Surv(time,status>0) ~ sex, design=dpbc, se = T)
 svyjskm(s3)
 svyjskm(s3, ci = F)
+svyjskm(s3, ci = F,  surv.scale = "percent", pval = T, table = T, cut.landmark = 1000)
 ```
 
