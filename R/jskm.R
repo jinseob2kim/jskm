@@ -70,7 +70,6 @@
 #' @importFrom ggplot2 geom_ribbon
 #' @importFrom grid unit
 #' @importFrom gridExtra grid.arrange
-#' @importFrom plyr rbind.fill
 #' @importFrom stats pchisq time as.formula
 #' @importFrom survival survfit survdiff coxph Surv cluster frailty
 #' @export
