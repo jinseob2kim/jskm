@@ -29,7 +29,8 @@
 #' @param cumhaz Show cumulaive hazard function, Default: F
 #' @param cluster.option Cluster option for p value, Option: "None", "cluster", "frailty", Default: "None"
 #' @param cluster.var Cluster variable
-#' @param data select specific data - for reactive input. Default = NULL
+#' @param data select specific data - for reactive input, Default = NULL
+#' @param cut.landmark cut-off for landmark analysis, Default = NULL
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -104,6 +105,7 @@ jskm <- function(sfit,
                  cluster.option = "None",
                  cluster.var = NULL,
                  data = NULL,
+                 cut.landmark = NULL,
                  ...) {
   
   
@@ -183,11 +185,44 @@ jskm <- function(sfit,
     upper = sfit$upper[subs2],
     lower = sfit$lower[subs2]
   )
+
+  if (!is.null(cut.landmark)){
+    if (is.null(data)){
+      stop("Landmark analysis requires data object. please check 'data' option")
+    }
+    
+    var.time <- as.character(sfit$call$formula[[2]][[2]])
+    var.event <- as.character(sfit$call$formula[[2]][[3]])
+    data1 <- data
+    data1[[var.event]][data1[[var.time]] >= cut.landmark] <- 0
+    data1[[var.time]][data1[[var.time]] >= cut.landmark] <- cut.landmark
+  
+    sfit1 <- survfit(as.formula(sfit$call$formula), data1)
+    sfit2 <- survfit(as.formula(sfit$call$formula), data[data[[var.time]] >= cut.landmark, ])
+    
+    if (levels(Factor) == "All"){
+      df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")], 
+                   data.frame(time = sfit2$time, surv = sfit2$surv, strata = "All", upper = sfit2$upper, lower = sfit2$lower), 
+                   by = c("time", "strata"))
+    } else{
+      df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")], 
+                   data.frame(time = sfit2$time, surv = sfit2$surv, strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper, lower = sfit2$lower), 
+                   by = c("time", "strata"))
+    }
+    
+    
+    
+    df11 <- rbind(subset(df, time < cut.landmark), df2) 
+    df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk,  n.event = 0, n.censor = 0, surv = 1, strata = factor(ystratalabs, levels = levels(df$strata)), upper = 1, lower = 1))
+  }
+  
   
   if (cumhaz){
-    df$surv = 1 - sfit$surv[subs2]
-    df$lower = 1 - sfit$upper[subs2]
-    df$upper = 1 - sfit$lower[subs2]
+    upper.new <- 1 - df$lower
+    lower.new <- 1 - df$upper
+    df$surv = 1 - df$surv
+    df$lower = lower.new
+    df$upper = upper.new
     
   }
   
@@ -270,6 +305,10 @@ jskm <- function(sfit,
     } 
   }
   
+  if (!is.null(cut.landmark)){
+    p <- p + geom_vline(xintercept = cut.landmark, lty = 2)
+  }
+  
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +
     geom_blank() + theme_void() +             ## Remove gray color
@@ -282,7 +321,8 @@ jskm <- function(sfit,
   # p-value placement #
   #####################a
   
-  if(length(levels(summary(sfit)$strata)) == 0) pval <- FALSE
+  if(length(levels(summary(sfit)$strata)) == 0) pval <- F
+  if(!is.null(cut.landmark)) pval <- F
   
   if(pval == TRUE) {
     if (is.null(data)){

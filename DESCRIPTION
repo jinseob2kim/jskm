@@ -1,7 +1,7 @@
 Package: jskm
 Title: Kaplan-Meier Plot with 'ggplot2'
-Version: 0.3.9
-Date: 2020-05-17
+Version: 0.4.0
+Date: 2020-08-16
 Authors@R: c(person("Jinseob", "Kim", email = "jinseob2kim@gmail.com", role = c("aut", "cre"),  comment = c(ORCID = "0000-0002-9403-605X")),
              person("Zarathu", role = c("cph", "fnd"))
              )
@@ -11,7 +11,7 @@ License: Apache License 2.0
 Encoding: UTF-8
 LazyData: true
 Imports: ggplot2, gridExtra, plyr, survival, survey, scales
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 URL: https://github.com/jinseob2kim/jskm
 BugReports: https://github.com/jinseob2kim/jstable/issues
 Suggests: 

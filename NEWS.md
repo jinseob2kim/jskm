@@ -1,3 +1,7 @@
+# jskm 0.4.0
+
+* Add landmark analysis: **cut.landmark** option to `jskm`.
+
 # jskm 0.3.9
 
 * Bug fixes: show p value "< 0.001" when p < 0.001

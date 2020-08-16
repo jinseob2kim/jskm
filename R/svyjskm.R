@@ -25,6 +25,7 @@
 #' @param table logical: Create a table graphic below the K-M plot, indicating at-risk numbers?
 #' @param label.nrisk Numbers at risk label. Default = "Numbers at risk"
 #' @param size.label.nrisk Font size of label.nrisk. Default = 10
+#' @param cut.landmark cut-off for landmark analysis, Default = NULL
 #' @param ... PARAM_DESCRIPTION
 #' @return plot
 #' @details DETAILS
@@ -69,6 +70,7 @@ svyjskm <- function(sfit,
                     table = F,
                     label.nrisk = "Numbers at risk",
                     size.label.nrisk = 10,
+                    cut.landmark = NULL,
                     ...) {
   
   surv <- strata <- lower <- upper <- NULL
@@ -140,8 +142,10 @@ svyjskm <- function(sfit,
   if (cumhaz){
     df$surv <- 1 - df$surv
     if (ci){
-      df$lower <- 1 - df$upper
-      df$upper <- 1 - df$lower
+      upper.new <- 1 - df$lower
+      lower.new <- 1 - df$upper
+      df$lower = lower.new
+      df$upper = upper.new
     }
     }
   

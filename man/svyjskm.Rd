@@ -4,15 +4,35 @@
 \alias{svyjskm}
 \title{Creates a Weighted Kaplan-Meier plot - svykm.object in survey package}
 \usage{
-svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival probability",
-  xlims = NULL, ylims = c(0, 1), ystratalabs = NULL,
-  ystrataname = NULL, surv.scale = c("default", "percent"),
-  timeby = NULL, main = "", pval = FALSE, pval.size = 5,
-  pval.coord = c(NULL, NULL), pval.testname = F, legend = TRUE,
-  legendposition = c(0.85, 0.8), ci = NULL, linecols = "Set1",
-  dashed = FALSE, cumhaz = F, design = NULL, subs = NULL,
-  table = F, label.nrisk = "Numbers at risk", size.label.nrisk = 10,
-  ...)
+svyjskm(
+  sfit,
+  xlabs = "Time-to-event",
+  ylabs = "Survival probability",
+  xlims = NULL,
+  ylims = c(0, 1),
+  ystratalabs = NULL,
+  ystrataname = NULL,
+  surv.scale = c("default", "percent"),
+  timeby = NULL,
+  main = "",
+  pval = FALSE,
+  pval.size = 5,
+  pval.coord = c(NULL, NULL),
+  pval.testname = F,
+  legend = TRUE,
+  legendposition = c(0.85, 0.8),
+  ci = NULL,
+  linecols = "Set1",
+  dashed = FALSE,
+  cumhaz = F,
+  design = NULL,
+  subs = NULL,
+  table = F,
+  label.nrisk = "Numbers at risk",
+  size.label.nrisk = 10,
+  cut.landmark = NULL,
+  ...
+)
 }
 \arguments{
 \item{sfit}{a svykm object}
@@ -64,6 +84,8 @@ svyjskm(sfit, xlabs = "Time-to-event", ylabs = "Survival probability",
 \item{label.nrisk}{Numbers at risk label. Default = "Numbers at risk"}
 
 \item{size.label.nrisk}{Font size of label.nrisk. Default = 10}
+
+\item{cut.landmark}{cut-off for landmark analysis, Default = NULL}
 
 \item{...}{PARAM_DESCRIPTION}
 }

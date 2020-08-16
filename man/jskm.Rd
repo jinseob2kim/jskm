@@ -4,17 +4,39 @@
 \alias{jskm}
 \title{Creates a Kaplan-Meier plot for survfit object.}
 \usage{
-jskm(sfit, table = FALSE, xlabs = "Time-to-event",
-  ylabs = "Survival probability", xlims = c(0, max(sfit$time)),
-  ylims = c(0, 1), surv.scale = c("default", "percent"),
-  ystratalabs = names(sfit$strata), ystrataname = "Strata",
-  timeby = signif(max(sfit$time)/7, 1), main = "", pval = FALSE,
-  pval.size = 5, pval.coord = c(NULL, NULL), pval.testname = F,
-  marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85,
-  0.8), ci = FALSE, subs = NULL, label.nrisk = "Numbers at risk",
-  size.label.nrisk = 10, linecols = "Set1", dashed = FALSE,
-  cumhaz = F, cluster.option = "None", cluster.var = NULL,
-  data = NULL, ...)
+jskm(
+  sfit,
+  table = FALSE,
+  xlabs = "Time-to-event",
+  ylabs = "Survival probability",
+  xlims = c(0, max(sfit$time)),
+  ylims = c(0, 1),
+  surv.scale = c("default", "percent"),
+  ystratalabs = names(sfit$strata),
+  ystrataname = "Strata",
+  timeby = signif(max(sfit$time)/7, 1),
+  main = "",
+  pval = FALSE,
+  pval.size = 5,
+  pval.coord = c(NULL, NULL),
+  pval.testname = F,
+  marks = TRUE,
+  shape = 3,
+  legend = TRUE,
+  legendposition = c(0.85, 0.8),
+  ci = FALSE,
+  subs = NULL,
+  label.nrisk = "Numbers at risk",
+  size.label.nrisk = 10,
+  linecols = "Set1",
+  dashed = FALSE,
+  cumhaz = F,
+  cluster.option = "None",
+  cluster.var = NULL,
+  data = NULL,
+  cut.landmark = NULL,
+  ...
+)
 }
 \arguments{
 \item{sfit}{a survfit object}
@@ -73,7 +95,9 @@ jskm(sfit, table = FALSE, xlabs = "Time-to-event",
 
 \item{cluster.var}{Cluster variable}
 
-\item{data}{select specific data - for reactive input. Default = NULL}
+\item{data}{select specific data - for reactive input, Default = NULL}
+
+\item{cut.landmark}{cut-off for landmark analysis, Default = NULL}
 
 \item{...}{PARAM_DESCRIPTION}
 }
