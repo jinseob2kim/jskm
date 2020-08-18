@@ -296,9 +296,16 @@ jskm <- function(sfit,
     p <- p + theme(legend.position="none")
   
   #Add lines too plot
-  p <- p + geom_step(size = 0.75) +
-    scale_linetype_manual(name = ystrataname, values=linetype) +
-    scale_colour_brewer(name = ystrataname, palette=linecols)
+  if (is.null(cut.landmark)){
+    p <- p + geom_step(size = 0.75) +
+      scale_linetype_manual(name = ystrataname, values=linetype) +
+      scale_colour_brewer(name = ystrataname, palette=linecols)
+  } else{
+    p <- p + geom_step(data = subset(df, time < cut.landmark), size = 0.75) + geom_step(data = subset(df, time >= cut.landmark), size = 0.75) + 
+      scale_linetype_manual(name = ystrataname, values=linetype) +
+      scale_colour_brewer(name = ystrataname, palette=linecols)
+  }
+  
   
   #Add censoring marks to the line:
   if(marks == TRUE)
