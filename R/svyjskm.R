@@ -442,7 +442,7 @@ svyjskm <- function(sfit,
     
     # ADJUST POSITION OF TABLE FOR AT RISK
     data.table <- data.table +
-      theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 2.5, 3.5) - 0.15 * m), "lines"))
+      theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 3.1, 4.3) - 0.38 * m), "lines"))
   }
   
   #######################
