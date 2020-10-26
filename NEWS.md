@@ -1,3 +1,7 @@
+# jskm 0.4.1
+
+* Update: Align risktable with plot.
+
 # jskm 0.4.0
 
 * Add landmark analysis: **cut.landmark** option.
