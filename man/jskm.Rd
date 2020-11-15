@@ -35,6 +35,7 @@ jskm(
   cluster.var = NULL,
   data = NULL,
   cut.landmark = NULL,
+  showpercent = F,
   ...
 )
 }
@@ -89,7 +90,7 @@ jskm(
 
 \item{dashed}{logical. Should a variety of linetypes be used to identify lines. Default = FALSE}
 
-\item{cumhaz}{Show cumulaive hazard function, Default: F}
+\item{cumhaz}{Show cumulative incidence function, Default: F}
 
 \item{cluster.option}{Cluster option for p value, Option: "None", "cluster", "frailty", Default: "None"}
 
@@ -98,6 +99,8 @@ jskm(
 \item{data}{select specific data - for reactive input, Default = NULL}
 
 \item{cut.landmark}{cut-off for landmark analysis, Default = NULL}
+
+\item{showpercent}{Shows the percentages on the right side.}
 
 \item{...}{PARAM_DESCRIPTION}
 }

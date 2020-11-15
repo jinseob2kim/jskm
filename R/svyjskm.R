@@ -19,13 +19,14 @@
 #' @param legendposition numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)
 #' @param linecols Character. Colour brewer pallettes too colour lines. Default: 'Set1', "black" for black with dashed line.
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default: FALSE
-#' @param cumhaz Show cumulaive hazard function, Default: F
+#' @param cumhaz Show cumulaive incidence function, Default: F
 #' @param design Data design for reactive design data , Default: NULL
 #' @param subs = NULL,
 #' @param table logical: Create a table graphic below the K-M plot, indicating at-risk numbers?
 #' @param label.nrisk Numbers at risk label. Default = "Numbers at risk"
 #' @param size.label.nrisk Font size of label.nrisk. Default = 10
 #' @param cut.landmark cut-off for landmark analysis, Default = NULL
+#' @param showpercent Shows the percentages on the right side.
 #' @param ... PARAM_DESCRIPTION
 #' @return plot
 #' @details DETAILS
@@ -71,6 +72,7 @@ svyjskm <- function(sfit,
                     label.nrisk = "Numbers at risk",
                     size.label.nrisk = 10,
                     cut.landmark = NULL,
+                    showpercent = F,
                     ...) {
   
   surv <- strata <- lower <- upper <- NULL
@@ -353,6 +355,22 @@ svyjskm <- function(sfit,
     }
     
   }
+  
+  if (showpercent == TRUE){
+    if (is.null(cut.landmark)){
+      y.percent <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
+      p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label= paste0(round(100 * y.percent, 1), "%"), color = "black")
+    } else{
+      df.cut <- df[df$time < cut.landmark, ]
+      y.percent1 <- df.cut[df.cut$time %in% tapply(df.cut$time, df.cut$strata, max), "surv"]
+      y.percent2 <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
+      p <- p + annotate(geom = "text", x = cut.landmark, y = y.percent1, label= paste0(round(100 * y.percent1, 1), "%"), color = "black") +
+        annotate(geom = "text", x = xlims[2], y = y.percent2, label= paste0(round(100 * y.percent2, 1), "%"), color = "black")
+    }
+    
+  }
+  
+  
   
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +

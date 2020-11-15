@@ -31,6 +31,7 @@ svyjskm(
   label.nrisk = "Numbers at risk",
   size.label.nrisk = 10,
   cut.landmark = NULL,
+  showpercent = F,
   ...
 )
 }
@@ -73,7 +74,7 @@ svyjskm(
 
 \item{dashed}{logical. Should a variety of linetypes be used to identify lines. Default: FALSE}
 
-\item{cumhaz}{Show cumulaive hazard function, Default: F}
+\item{cumhaz}{Show cumulaive incidence function, Default: F}
 
 \item{design}{Data design for reactive design data , Default: NULL}
 
@@ -86,6 +87,8 @@ svyjskm(
 \item{size.label.nrisk}{Font size of label.nrisk. Default = 10}
 
 \item{cut.landmark}{cut-off for landmark analysis, Default = NULL}
+
+\item{showpercent}{Shows the percentages on the right side.}
 
 \item{...}{PARAM_DESCRIPTION}
 }

@@ -26,11 +26,12 @@
 #' @param size.label.nrisk Font size of label.nrisk. Default = 10
 #' @param linecols Character. Colour brewer pallettes too colour lines. Default ="Set1", "black" for black with dashed line.
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default = FALSE
-#' @param cumhaz Show cumulaive hazard function, Default: F
+#' @param cumhaz Show cumulative incidence function, Default: F
 #' @param cluster.option Cluster option for p value, Option: "None", "cluster", "frailty", Default: "None"
 #' @param cluster.var Cluster variable
 #' @param data select specific data - for reactive input, Default = NULL
 #' @param cut.landmark cut-off for landmark analysis, Default = NULL
+#' @param showpercent Shows the percentages on the right side.
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -105,6 +106,7 @@ jskm <- function(sfit,
                  cluster.var = NULL,
                  data = NULL,
                  cut.landmark = NULL,
+                 showpercent = F,
                  ...) {
   
   
@@ -324,6 +326,22 @@ jskm <- function(sfit,
     p <- p + geom_vline(xintercept = cut.landmark, lty = 2)
   }
   
+  if (showpercent == TRUE){
+    if (is.null(cut.landmark)){
+      y.percent <- summary(sfit, times = xlims[2], extend = T)$surv
+      if (cumhaz == TRUE) y.percent <- 1 - y.percent
+      p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label= paste0(round(100 * y.percent, 1), "%"), color = "black")
+    } else{
+      y.percent1 <- summary(sfit, times = cut.landmark, extend = T)$surv
+      y.percent2 <- summary(sfit2, times = xlims[2], extend = T)$surv
+      if (cumhaz == TRUE) {y.percent1 <- 1 - y.percent1;y.percent2 <- 1 - y.percent2}
+      p <- p + annotate(geom = "text", x = cut.landmark, y = y.percent1, label= paste0(round(100 * y.percent1, 1), "%"), color = "black") +
+        annotate(geom = "text", x = xlims[2], y = y.percent2, label= paste0(round(100 * y.percent2, 1), "%"), color = "black")
+    }
+    
+  }
+  
+  
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +
     geom_blank() + theme_void() +             ## Remove gray color
@@ -381,9 +399,9 @@ jskm <- function(sfit,
       ## cluster option
       if (cluster.option == "cluster" & !is.null(cluster.var)){
         form.old <- as.character(form)
-        form.new <- paste(form.old[2], form.old[1], " + ", form.old[3], " + cluster(", cluster.var, ")", sep="")
-        sdiff1 <- survival::coxph(as.formula(form.new), data = data1, model = T, robust = T)
-        sdiff2 <- survival::coxph(as.formula(form.new), data = data[data[[var.time]] >= cut.landmark, ], model = T, robust = T)
+        form.new <- paste(form.old[2], form.old[1], " + ", form.old[3], sep="")
+        sdiff1 <- survival::coxph(as.formula(form.new), data = data1, model = T, cluster = get(cluster.var))
+        sdiff2 <- survival::coxph(as.formula(form.new), data = data[data[[var.time]] >= cut.landmark, ], model = T, cluster = get(cluster.var))
         pvalue <- sapply(list(sdiff1, sdiff2), function(x){summary(x)$robscore["pvalue"]})
       } else if (cluster.option == "frailty" & !is.null(cluster.var)){
         form.old <- as.character(form)
