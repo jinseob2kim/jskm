@@ -1,3 +1,7 @@
+# jskm 0.4.2
+
+* Update: Add option to show percent(%)
+
 # jskm 0.4.1
 
 * Update: Align risktable with plot.
