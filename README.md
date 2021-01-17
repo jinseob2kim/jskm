@@ -8,6 +8,8 @@ Kaplan-Meier Plot with ‘ggplot2’: ‘survfit’ and ‘svykm’ objects from
 Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&svg=true)](https://ci.appveyor.com/project/jinseob2kim/jskm)
+[![Github
+action](https://github.com/jinseob2kim/jskm/workflows/R-CMD-check/badge.svg)](https://github.com/jinseob2kim/jskm/actions)
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/jskm)](https://cran.r-project.org/package=jskm)
 [![CRAN\_Download\_Badge](https://cranlogs.r-pkg.org/badges/jskm)](https://CRAN.R-project.org/package=jskm)
 [![codecov](https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg)](https://codecov.io/github/jinseob2kim/jskm)
