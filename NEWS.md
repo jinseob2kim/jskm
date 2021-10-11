@@ -1,3 +1,7 @@
+# jskm 0.4.3
+
+* Bugfix: `svyjskm` **ystratalab** problem with releveled factor variable.
+
 # jskm 0.4.2
 
 * Update: Add option to show percent(%)

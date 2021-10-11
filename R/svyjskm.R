@@ -148,10 +148,10 @@ svyjskm <- function(sfit,
       }
     }
     
-    df$strata <- as.factor(df$strata)
+    df$strata <- factor(df$strata, levels = names(sfit))
     times <- seq(0, max(sapply(sfit, function(x){max(x$time)})), by = timeby)
     if (is.null(ystratalabs)){
-      ystratalabs <- names(sfit)
+      ystratalabs <- levels(df$strata)
     }
     if (is.null(xlims)){
       xlims <- c(0,max(sapply(sfit, function(x){max(x$time)})))
