@@ -1,13 +1,13 @@
 context("Kaplan-meier plot")
 
 library(survival)
-data(colon);data(pbc)
+#data(colon);data(pbc)
 
 test_that("Run jskm", {
   fit <- survfit(Surv(time,status)~rx, data=colon)
-  expect_is(jskm(fit, timeby=500, table = T, pval = T), "gtable")
+  expect_is(jskm(fit, timeby=500, table = T, pval = T), "gg")
   expect_is(jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", timeby = 365, xlabs = "Time(Day)", ylabs = "Survival", marks = F, xlims = c(0, 3500), ylims = c(0.25, 1),
-       ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx"), "gtable")
+       ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx"), "gg")
   expect_is(jskm(fit, timeby=500), "gg")
   expect_is(jskm(fit, timeby=500, main = "kaplan", xlabs = "time", ylabs = "Suvrival (%)", surv.scale = "percent"), "gg")
   expect_is(jskm(fit, pval.size = 7, pval.coord = c(100, 0.2),  pval.testname = T, showpercent = T), "gg")
@@ -34,7 +34,7 @@ test_that("Run svyjskm", {
   s1 <- survey::svykm(Surv(time,status>0)~sex, design=dpbc, se = T)
   expect_is(svyjskm(s1, ci = T), "gg")
   expect_is(svyjskm(s1, ci = F, ylabs = "Suvrival (%)", surv.scale = "percent"), "gg")
-  expect_is(svyjskm(s1, table = T, pval = T, design = dpbc), "gtable")
+  expect_is(svyjskm(s1, table = T, pval = T, design = dpbc), "gg")
   expect_is(svyjskm(s1, ci = T, cumhaz = T), "gg")
   expect_is(svyjskm(s1, ci = F, cumhaz = T), "gg")
   s2 <- survey::svykm(Surv(time,status>0)~sex, design=dpbc, se = F)

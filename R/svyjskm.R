@@ -44,6 +44,7 @@
 #' @importFrom stats formula
 #' @importFrom survey svyranktest
 #' @importFrom survival Surv
+#' @importFrom ggpubr ggarrange
 #' @export 
 
 svyjskm <- function(sfit,
@@ -255,15 +256,15 @@ svyjskm <- function(sfit,
   p <- p + theme_bw() +
     theme(axis.title.x = element_text(vjust = 0.7),
           panel.grid.minor = element_blank(),
-          axis.line = element_line(size =0.5, colour = "black"),
+          axis.line = element_line(linewidth =0.5, colour = "black"),
           legend.position = legendposition,
           legend.background = element_rect(fill = NULL),
           legend.key = element_rect(colour = NA),
           panel.border = element_blank(),
           plot.margin = unit(c(0, 1, .5,ifelse(m < 10, 1.5, 2.5)),"lines"),
           panel.grid.major = element_blank(),
-          axis.line.x = element_line(size = 0.5, linetype = "solid", colour = "black"),
-          axis.line.y = element_line(size = 0.5, linetype = "solid", colour = "black")) +
+          axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
+          axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")) +
     scale_x_continuous(xlabs, breaks = times, limits = xlims) +
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   
@@ -275,11 +276,11 @@ svyjskm <- function(sfit,
   
   #Add lines too plot
   if (is.null(cut.landmark)){
-    p <- p + geom_step(size = 0.75) +
+    p <- p + geom_step(linewidth = 0.75) +
       scale_linetype_manual(name = ystrataname, values=linetype) +
       scale_colour_brewer(name = ystrataname, palette=linecols)
   } else{
-    p <- p + geom_step(data = subset(df, time < cut.landmark), size = 0.75) + geom_step(data = subset(df, time >= cut.landmark), size = 0.75) + 
+    p <- p + geom_step(data = subset(df, time < cut.landmark), linewidth = 0.75) + geom_step(data = subset(df, time >= cut.landmark), linewidth = 0.75) + 
       scale_linetype_manual(name = ystrataname, values=linetype) +
       scale_colour_brewer(name = ystrataname, palette=linecols)
   }
@@ -468,8 +469,8 @@ svyjskm <- function(sfit,
   #######################
   
   if(table == TRUE){
-    grid.arrange(p, blank.pic, data.table, clip = FALSE, nrow = 3,
-                 ncol = 1, heights = unit(c(2, .1, .25),c("null", "null", "null")))
+    ggpubr::ggarrange(p, blank.pic, data.table, nrow = 3, align = "v", 
+                      heights = c(2, .1, .25))
   } else {
     p
   }

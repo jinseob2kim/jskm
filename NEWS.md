@@ -1,3 +1,7 @@
+# jskm 0.4.4
+
+* Fix: align plot with table
+
 # jskm 0.4.3
 
 * Bugfix: `svyjskm` **ystratalab** problem with releveled factor variable.
