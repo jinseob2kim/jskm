@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -83,18 +83,19 @@
 <div id="jskm" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#jskm" class="anchor"></a>jskm</h1></div>
-<p>Kaplan-Meier Plot with ‘ggplot2’: ‘survfit’ and ‘svykm’ objects from ‘survival’ and ‘survey’ packages.</p>
+<p>Kaplan-Meier Plot with ‘ggplot2’: ‘survfit’ and ‘svykm’ objects from
+‘survival’ and ‘survey’ packages.</p>
 <p><a href="https://travis-ci.org/jinseob2kim/jskm"><img src="https://travis-ci.org/jinseob2kim/jskm.svg?branch=master" alt="Build Status"></a> <a href="https://ci.appveyor.com/project/jinseob2kim/jskm"><img src="https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&amp;svg=true" alt="AppVeyor build status"></a> <a href="https://github.com/jinseob2kim/jskm/actions"><img src="https://github.com/jinseob2kim/jskm/workflows/R-CMD-check/badge.svg" alt="Github action"></a> <a href="https://cran.r-project.org/package=jskm"><img src="https://www.r-pkg.org/badges/version/jskm" alt="CRAN_Status_Badge"></a> <a href="https://CRAN.R-project.org/package=jskm"><img src="https://cranlogs.r-pkg.org/badges/jskm" alt="CRAN_Download_Badge"></a> <a href="https://codecov.io/github/jinseob2kim/jskm"><img src="https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg" alt="codecov"></a> <a href="https://github.com/jinseob2kim/jskm/issues"><img src="https://img.shields.io/github/issues/jinseob2kim/jskm.svg" alt="GitHub issues"></a> <a href="https://github.com/jinseob2kim/jskm/stargazers"><img src="https://img.shields.io/github/stars/jinseob2kim/jskm.svg" alt="GitHub stars"></a> <a href="https://github.com/jinseob2kim/jskm/blob/master/LICENSE"><img src="https://img.shields.io/github/license/jinseob2kim/jskm.svg" alt="GitHub license"></a></p>
 <div id="install" class="section level2">
 <h2 class="hasAnchor">
 <a href="#install" class="anchor"></a>Install</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"jskm"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="co">## From github: latest version</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"remotes"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a>remotes<span class="op">::</span><span class="kw"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"jinseob2kim/jskm"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(jskm)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"jskm"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## From github: latest version</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"jinseob2kim/jskm"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jskm)</span></code></pre></div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
@@ -102,60 +103,62 @@
 <div id="survival-probability" class="section level3">
 <h3 class="hasAnchor">
 <a href="#survival-probability" class="anchor"></a>Survival probability</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#Load dataset</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(survival)</span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(colon)</span>
-<span id="cb2-4"><a href="#cb2-4"></a>fit &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/survival/man/survfit.html">survfit</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(time,status)<span class="op">~</span>rx, <span class="dt">data=</span>colon)</span>
-<span id="cb2-5"><a href="#cb2-5"></a></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#Plot the data</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load dataset</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(colon)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time,status)<span class="sc">~</span>rx, <span class="at">data=</span>colon)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot the data</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-1-1.png"><!-- --></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">table =</span> T, <span class="dt">pval =</span> T, <span class="dt">label.nrisk =</span> <span class="st">"No. at risk"</span>, <span class="dt">size.label.nrisk =</span> <span class="dv">8</span>, </span>
-<span id="cb3-2"><a href="#cb3-2"></a>     <span class="dt">xlabs =</span> <span class="st">"Time(Day)"</span>, <span class="dt">ylabs =</span> <span class="st">"Survival"</span>, <span class="dt">ystratalabs =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Obs"</span>, <span class="st">"Lev"</span>, <span class="st">"Lev + 5FU"</span>), <span class="dt">ystrataname =</span> <span class="st">"rx"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>     <span class="dt">marks =</span> F, <span class="dt">timeby =</span> <span class="dv">365</span>, <span class="dt">xlims =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">3000</span>), <span class="dt">ylims =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.25</span>, <span class="dv">1</span>), <span class="dt">showpercent =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">table =</span> T, <span class="at">pval =</span> T, <span class="at">label.nrisk =</span> <span class="st">"No. at risk"</span>, <span class="at">size.label.nrisk =</span> <span class="dv">8</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlabs =</span> <span class="st">"Time(Day)"</span>, <span class="at">ylabs =</span> <span class="st">"Survival"</span>, <span class="at">ystratalabs =</span> <span class="fu">c</span>(<span class="st">"Obs"</span>, <span class="st">"Lev"</span>, <span class="st">"Lev + 5FU"</span>), <span class="at">ystrataname =</span> <span class="st">"rx"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">marks =</span> F, <span class="at">timeby =</span> <span class="dv">365</span>, <span class="at">xlims =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3000</span>), <span class="at">ylims =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="dv">1</span>), <span class="at">showpercent =</span> T)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-1-2.png"><!-- --></p>
 </div>
 <div id="cumulative-hazard-1--survival-probability" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cumulative-hazard-1--survival-probability" class="anchor"></a>Cumulative hazard: 1- Survival probability</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">ci =</span> T, <span class="dt">cumhaz =</span> T,  <span class="dt">mark =</span> F, <span class="dt">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span>T, <span class="dt">pval.size =</span> <span class="dv">6</span>, <span class="dt">pval.coord =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">300</span>, <span class="fl">0.7</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">ci =</span> T, <span class="at">cumhaz =</span> T,  <span class="at">mark =</span> F, <span class="at">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">pval.size =</span> <span class="dv">6</span>, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="fl">0.7</span>))</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-2-1.png"><!-- --></p>
 </div>
 <div id="landmark-analysis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#landmark-analysis" class="anchor"></a>Landmark analysis</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">mark =</span> F,  <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span>T, <span class="dt">table =</span> T, <span class="dt">cut.landmark =</span> <span class="dv">500</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">mark =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">500</span>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png"><!-- --></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw"><a href="reference/jskm.html">jskm</a></span>(fit, <span class="dt">mark =</span> F,  <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span>T, <span class="dt">table =</span> T, <span class="dt">cut.landmark =</span> <span class="dv">500</span>, <span class="dt">showpercent =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">mark =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">500</span>, <span class="at">showpercent =</span> T)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-2.png"><!-- --></p>
 </div>
 <div id="weighted-kaplan-meier-plot---svykmobject-in-survey-package" class="section level3">
 <h3 class="hasAnchor">
-<a href="#weighted-kaplan-meier-plot---svykmobject-in-survey-package" class="anchor"></a>Weighted Kaplan-Meier plot - <code>svykm.object</code> in <strong>survey</strong> package</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(survey)</span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(pbc, <span class="dt">package=</span><span class="st">"survival"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3"></a>pbc<span class="op">$</span>randomized &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/with.html">with</a></span>(pbc, <span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(trt) <span class="op">&amp;</span><span class="st"> </span>trt<span class="op">&gt;</span><span class="dv">0</span>)</span>
-<span id="cb7-4"><a href="#cb7-4"></a>biasmodel &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(randomized<span class="op">~</span>age<span class="op">*</span>edema,<span class="dt">data=</span>pbc)</span>
-<span id="cb7-5"><a href="#cb7-5"></a>pbc<span class="op">$</span>randprob &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span>(biasmodel)</span>
-<span id="cb7-6"><a href="#cb7-6"></a></span>
-<span id="cb7-7"><a href="#cb7-7"></a>dpbc&lt;-<span class="kw"><a href="https://rdrr.io/pkg/survey/man/svydesign.html">svydesign</a></span>(<span class="dt">id=</span><span class="op">~</span><span class="dv">1</span>, <span class="dt">prob=</span><span class="op">~</span>randprob, <span class="dt">strata=</span><span class="op">~</span>edema, <span class="dt">data=</span><span class="kw"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(pbc,randomized))</span>
-<span id="cb7-8"><a href="#cb7-8"></a></span>
-<span id="cb7-9"><a href="#cb7-9"></a>s1 &lt;-<span class="kw"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(time,status<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">design =</span> dpbc)</span>
-<span id="cb7-10"><a href="#cb7-10"></a>s2 &lt;-<span class="kw"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(time,status<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span>sex, <span class="dt">design =</span> dpbc)</span>
-<span id="cb7-11"><a href="#cb7-11"></a></span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s1)</span></code></pre></div>
+<a href="#weighted-kaplan-meier-plot---svykmobject-in-survey-package" class="anchor"></a>Weighted Kaplan-Meier plot - <code>svykm.object</code> in
+<strong>survey</strong> package</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(pbc, <span class="at">package=</span><span class="st">"survival"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randomized <span class="ot">&lt;-</span> <span class="fu">with</span>(pbc, <span class="sc">!</span><span class="fu">is.na</span>(trt) <span class="sc">&amp;</span> trt<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>biasmodel <span class="ot">&lt;-</span> <span class="fu">glm</span>(randomized<span class="sc">~</span>age<span class="sc">*</span>edema,<span class="at">data=</span>pbc)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randprob <span class="ot">&lt;-</span> <span class="fu">fitted</span>(biasmodel)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>dpbc<span class="ot">&lt;-</span><span class="fu">svydesign</span>(<span class="at">id=</span><span class="sc">~</span><span class="dv">1</span>, <span class="at">prob=</span><span class="sc">~</span>randprob, <span class="at">strata=</span><span class="sc">~</span>edema, <span class="at">data=</span><span class="fu">subset</span>(pbc,randomized))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">design =</span> dpbc)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design =</span> dpbc)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s1)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png"><!-- --></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s2, <span class="dt">pval =</span> T,  <span class="dt">table =</span> T, <span class="dt">design =</span> dpbc)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">pval =</span> T,  <span class="at">table =</span> T, <span class="at">design =</span> dpbc)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-2.png"><!-- --></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s2, <span class="dt">cumhaz =</span> T, <span class="dt">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span> T, <span class="dt">design =</span> dpbc, <span class="dt">pval.coord =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">300</span>, <span class="fl">0.7</span>), <span class="dt">showpercent =</span> T) </span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">cumhaz =</span> T, <span class="at">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span> T, <span class="at">design =</span> dpbc, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="fl">0.7</span>), <span class="at">showpercent =</span> T) </span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-3.png"><!-- --></p>
-<p>If you want to get <strong>confidence interval</strong>, you should apply <code>se = T</code> option to <code>svykm</code> object.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>s3 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/survey/man/svykm.html">svykm</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/survival/man/Surv.html">Surv</a></span>(time,status<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span>sex, <span class="dt">design=</span>dpbc, <span class="dt">se =</span> T)</span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s3)</span></code></pre></div>
+<p>If you want to get <strong>confidence interval</strong>, you should
+apply <code>se = T</code> option to <code>svykm</code> object.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">&lt;-</span> <span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design=</span>dpbc, <span class="at">se =</span> T)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-1.png"><!-- --></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s3, <span class="dt">ci =</span> F)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-2.png"><!-- --></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw"><a href="reference/svyjskm.html">svyjskm</a></span>(s3, <span class="dt">ci =</span> F,  <span class="dt">surv.scale =</span> <span class="st">"percent"</span>, <span class="dt">pval =</span>T, <span class="dt">table =</span> T, <span class="dt">cut.landmark =</span> <span class="dv">1000</span>, <span class="dt">showpercent =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">1000</span>, <span class="at">showpercent =</span> T)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-3.png"><!-- --></p>
 </div>
 </div>
