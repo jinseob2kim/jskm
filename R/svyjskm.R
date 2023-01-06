@@ -80,18 +80,18 @@ svyjskm <- function(sfit,
   
   
   if (is.null(timeby)){
-    if (class(sfit) == "svykmlist"){
+    if (inherits(sfit, "svykmlist")){
       timeby <- signif(max(sapply(sfit, function(x){max(x$time)}))/7, 1)
-    } else if(class(sfit) == "svykm"){
+    } else if(inherits(sfit, "svykm")){
       
       timeby <- signif(max(sfit$time)/7, 1)
       }
   }
   
   if (is.null(ci)){
-    if (class(sfit) == "svykmlist"){
+    if (inherits(sfit, "svykmlist")){
       ci <- "varlog" %in% names(sfit[[1]])
-    } else if (class(sfit) == "svykm"){
+    } else if (inherits(sfit, "svykm")){
       ci <- "varlog" %in% names(sfit)
     }
   }
@@ -120,7 +120,7 @@ svyjskm <- function(sfit,
   
   
   
-  if (class(sfit) == "svykmlist"){
+  if (inherits(sfit, "svykmlist")){
     if(is.null(ystrataname)) ystrataname <- as.character(formula(sfit)[[3]])
 
     if (ci){
@@ -158,7 +158,7 @@ svyjskm <- function(sfit,
       xlims <- c(0,max(sapply(sfit, function(x){max(x$time)})))
     }
     
-  } else if(class(sfit) == "svykm"){
+  } else if(inherits(sfit, "svykm")){
     if(is.null(ystrataname)) ystrataname <- "Strata"
 
     if (ci){
@@ -299,7 +299,7 @@ svyjskm <- function(sfit,
   }
   
   ## p-value
-  if(class(sfit) == "svykm") pval <- FALSE
+  if(inherits(sfit, "svykm")) pval <- FALSE
   #if(is.null(design)) pval <- FALSE
   
   if(pval) {
