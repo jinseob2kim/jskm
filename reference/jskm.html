@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5</span>
       </span>
     </div>
 
@@ -136,7 +136,7 @@
   <span class='no'>sfit</span>,
   <span class='kw'>table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>xlabs</span> <span class='kw'>=</span> <span class='st'>"Time-to-event"</span>,
-  <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='st'>"Survival probability"</span>,
+  <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)),
   <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
   <span class='kw'>surv.scale</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"default"</span>, <span class='st'>"percent"</span>),
@@ -164,6 +164,7 @@
   <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cut.landmark</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>showpercent</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>status.cmprsk</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -293,6 +294,10 @@
     <tr>
       <th>showpercent</th>
       <td><p>Shows the percentages on the right side.</p></td>
+    </tr>
+    <tr>
+      <th>status.cmprsk</th>
+      <td><p>Status value when competing risk analysis, Default = 2nd level of status variable</p></td>
     </tr>
     <tr>
       <th>...</th>

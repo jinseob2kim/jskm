@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5</span>
       </span>
     </div>
 
@@ -130,36 +130,51 @@
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">mark =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">500</span>, <span class="at">showpercent =</span> T)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-2.png"><!-- --></p>
 </div>
+<div id="competing-risk-analysis" class="section level3">
+<h3 class="hasAnchor">
+<a href="#competing-risk-analysis" class="anchor"></a>Competing risk analysis</h3>
+<p><code>status2</code> variable: 0 - censoring, 1 - event, 2 -
+competing risk</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Make competing risk variable, Not real</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>colon<span class="sc">$</span>status2 <span class="ot">&lt;-</span> colon<span class="sc">$</span>status</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>colon<span class="sc">$</span>status2[<span class="dv">1</span><span class="sc">:</span><span class="dv">400</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>colon<span class="sc">$</span>status2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(colon<span class="sc">$</span>status2)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time,status2)<span class="sc">~</span>rx, <span class="at">data=</span>colon)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit2, <span class="at">mark =</span> F, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">table =</span> T)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-4-1.png"><!-- --></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit2, <span class="at">mark =</span> F, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">table =</span> T, <span class="at">showpercent =</span> T, <span class="at">cut.landmark =</span> <span class="dv">500</span>)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-4-2.png"><!-- --></p>
+</div>
 <div id="weighted-kaplan-meier-plot---svykmobject-in-survey-package" class="section level3">
 <h3 class="hasAnchor">
 <a href="#weighted-kaplan-meier-plot---svykmobject-in-survey-package" class="anchor"></a>Weighted Kaplan-Meier plot - <code>svykm.object</code> in
 <strong>survey</strong> package</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(pbc, <span class="at">package=</span><span class="st">"survival"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randomized <span class="ot">&lt;-</span> <span class="fu">with</span>(pbc, <span class="sc">!</span><span class="fu">is.na</span>(trt) <span class="sc">&amp;</span> trt<span class="sc">&gt;</span><span class="dv">0</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>biasmodel <span class="ot">&lt;-</span> <span class="fu">glm</span>(randomized<span class="sc">~</span>age<span class="sc">*</span>edema,<span class="at">data=</span>pbc)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randprob <span class="ot">&lt;-</span> <span class="fu">fitted</span>(biasmodel)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>dpbc<span class="ot">&lt;-</span><span class="fu">svydesign</span>(<span class="at">id=</span><span class="sc">~</span><span class="dv">1</span>, <span class="at">prob=</span><span class="sc">~</span>randprob, <span class="at">strata=</span><span class="sc">~</span>edema, <span class="at">data=</span><span class="fu">subset</span>(pbc,randomized))</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">design =</span> dpbc)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design =</span> dpbc)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s1)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-1.png"><!-- --></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">pval =</span> T,  <span class="at">table =</span> T, <span class="at">design =</span> dpbc)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-2.png"><!-- --></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">cumhaz =</span> T, <span class="at">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span> T, <span class="at">design =</span> dpbc, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="fl">0.7</span>), <span class="at">showpercent =</span> T) </span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-3.png"><!-- --></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(pbc, <span class="at">package=</span><span class="st">"survival"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randomized <span class="ot">&lt;-</span> <span class="fu">with</span>(pbc, <span class="sc">!</span><span class="fu">is.na</span>(trt) <span class="sc">&amp;</span> trt<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>biasmodel <span class="ot">&lt;-</span> <span class="fu">glm</span>(randomized<span class="sc">~</span>age<span class="sc">*</span>edema,<span class="at">data=</span>pbc)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randprob <span class="ot">&lt;-</span> <span class="fu">fitted</span>(biasmodel)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>dpbc<span class="ot">&lt;-</span><span class="fu">svydesign</span>(<span class="at">id=</span><span class="sc">~</span><span class="dv">1</span>, <span class="at">prob=</span><span class="sc">~</span>randprob, <span class="at">strata=</span><span class="sc">~</span>edema, <span class="at">data=</span><span class="fu">subset</span>(pbc,randomized))</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">design =</span> dpbc)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design =</span> dpbc)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s1)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-1.png"><!-- --></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">pval =</span> T,  <span class="at">table =</span> T, <span class="at">design =</span> dpbc)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-2.png"><!-- --></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">cumhaz =</span> T, <span class="at">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span> T, <span class="at">design =</span> dpbc, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="fl">0.7</span>), <span class="at">showpercent =</span> T) </span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-3.png"><!-- --></p>
 <p>If you want to get <strong>confidence interval</strong>, you should
 apply <code>se = T</code> option to <code>svykm</code> object.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">&lt;-</span> <span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design=</span>dpbc, <span class="at">se =</span> T)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-5-1.png"><!-- --></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-5-2.png"><!-- --></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">1000</span>, <span class="at">showpercent =</span> T)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-5-3.png"><!-- --></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">&lt;-</span> <span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design=</span>dpbc, <span class="at">se =</span> T)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-1.png"><!-- --></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-2.png"><!-- --></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">1000</span>, <span class="at">showpercent =</span> T)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-3.png"><!-- --></p>
 </div>
 </div>
 </div>
