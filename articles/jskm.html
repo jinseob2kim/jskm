@@ -135,43 +135,58 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">mark =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">500</span>, <span class="at">showpercent =</span> T)</span></code></pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
+<div id="competing-risk-analysis" class="section level3">
+<h3 class="hasAnchor">
+<a href="#competing-risk-analysis" class="anchor"></a>Competing risk analysis</h3>
+<p><code>status2</code> variable: 0 - censoring, 1 - event, 2 -
+competing risk</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Make competing risk variable, Not real</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>colon<span class="sc">$</span>status2 <span class="ot">&lt;-</span> colon<span class="sc">$</span>status</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>colon<span class="sc">$</span>status2[<span class="dv">1</span><span class="sc">:</span><span class="dv">400</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>colon<span class="sc">$</span>status2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(colon<span class="sc">$</span>status2)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time,status2)<span class="sc">~</span>rx, <span class="at">data=</span>colon)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit2, <span class="at">mark =</span> F, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">table =</span> T)</span></code></pre></div>
+<p><img src="jskm_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit2, <span class="at">mark =</span> F, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">table =</span> T, <span class="at">showpercent =</span> T, <span class="at">cut.landmark =</span> <span class="dv">500</span>)</span></code></pre></div>
+<p><img src="jskm_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
+</div>
 <div id="weighted-kaplan-meier-plot---svykm-object-in-survey-package" class="section level3">
 <h3 class="hasAnchor">
 <a href="#weighted-kaplan-meier-plot---svykm-object-in-survey-package" class="anchor"></a>Weighted Kaplan-Meier plot - <code>svykm.object</code> in
 <strong>survey</strong> package</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required package: grid</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required package: Matrix</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: 'survey'</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from 'package:graphics':</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     dotchart</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(pbc, <span class="at">package=</span><span class="st">"survival"</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randomized <span class="ot">&lt;-</span> <span class="fu">with</span>(pbc, <span class="sc">!</span><span class="fu">is.na</span>(trt) <span class="sc">&amp;</span> trt<span class="sc">&gt;</span><span class="dv">0</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>biasmodel <span class="ot">&lt;-</span> <span class="fu">glm</span>(randomized<span class="sc">~</span>age<span class="sc">*</span>edema,<span class="at">data=</span>pbc)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randprob <span class="ot">&lt;-</span> <span class="fu">fitted</span>(biasmodel)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>dpbc<span class="ot">&lt;-</span><span class="fu">svydesign</span>(<span class="at">id=</span><span class="sc">~</span><span class="dv">1</span>, <span class="at">prob=</span><span class="sc">~</span>randprob, <span class="at">strata=</span><span class="sc">~</span>edema, <span class="at">data=</span><span class="fu">subset</span>(pbc,randomized))</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">design =</span> dpbc)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design =</span> dpbc)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s1)</span></code></pre></div>
-<p><img src="jskm_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2)</span></code></pre></div>
-<p><img src="jskm_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">cumhaz =</span> T, <span class="at">ylab =</span> <span class="st">"Cumulative incidence(%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">showpercent =</span> T) </span></code></pre></div>
-<p><img src="jskm_files/figure-html/unnamed-chunk-4-3.png" width="700"></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required package: grid</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading required package: Matrix</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: 'survey'</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following object is masked from 'package:graphics':</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     dotchart</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(pbc, <span class="at">package=</span><span class="st">"survival"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randomized <span class="ot">&lt;-</span> <span class="fu">with</span>(pbc, <span class="sc">!</span><span class="fu">is.na</span>(trt) <span class="sc">&amp;</span> trt<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>biasmodel <span class="ot">&lt;-</span> <span class="fu">glm</span>(randomized<span class="sc">~</span>age<span class="sc">*</span>edema,<span class="at">data=</span>pbc)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>pbc<span class="sc">$</span>randprob <span class="ot">&lt;-</span> <span class="fu">fitted</span>(biasmodel)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>dpbc<span class="ot">&lt;-</span><span class="fu">svydesign</span>(<span class="at">id=</span><span class="sc">~</span><span class="dv">1</span>, <span class="at">prob=</span><span class="sc">~</span>randprob, <span class="at">strata=</span><span class="sc">~</span>edema, <span class="at">data=</span><span class="fu">subset</span>(pbc,randomized))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">design =</span> dpbc)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span><span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design =</span> dpbc)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s1)</span></code></pre></div>
+<p><img src="jskm_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2)</span></code></pre></div>
+<p><img src="jskm_files/figure-html/unnamed-chunk-5-2.png" width="700"></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">cumhaz =</span> T, <span class="at">ylab =</span> <span class="st">"Cumulative incidence(%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">showpercent =</span> T) </span></code></pre></div>
+<p><img src="jskm_files/figure-html/unnamed-chunk-5-3.png" width="700"></p>
 <p>If you want to get <strong>confidence interval</strong>, you should
 apply <code>se = T</code> option to <code>svykm</code> object.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">&lt;-</span> <span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design=</span>dpbc, <span class="at">se =</span> T)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3)</span></code></pre></div>
-<p><img src="jskm_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F, <span class="at">showpercent =</span> T)</span></code></pre></div>
-<p><img src="jskm_files/figure-html/unnamed-chunk-5-2.png" width="700"></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span> T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">1000</span>)</span></code></pre></div>
-<p><img src="jskm_files/figure-html/unnamed-chunk-5-3.png" width="700"></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">&lt;-</span> <span class="fu">svykm</span>(<span class="fu">Surv</span>(time,status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> sex, <span class="at">design=</span>dpbc, <span class="at">se =</span> T)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3)</span></code></pre></div>
+<p><img src="jskm_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F, <span class="at">showpercent =</span> T)</span></code></pre></div>
+<p><img src="jskm_files/figure-html/unnamed-chunk-6-2.png" width="700"></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s3, <span class="at">ci =</span> F,  <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span> T, <span class="at">table =</span> T, <span class="at">cut.landmark =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<p><img src="jskm_files/figure-html/unnamed-chunk-6-3.png" width="700"></p>
 </div>
 </div>
   </div>
