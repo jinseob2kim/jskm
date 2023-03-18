@@ -10,8 +10,8 @@ Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travi
 status](https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&svg=true)](https://ci.appveyor.com/project/jinseob2kim/jskm)
 [![Github
 action](https://github.com/jinseob2kim/jskm/workflows/R-CMD-check/badge.svg)](https://github.com/jinseob2kim/jskm/actions)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/jskm)](https://cran.r-project.org/package=jskm)
-[![CRAN\_Download\_Badge](https://cranlogs.r-pkg.org/badges/jskm)](https://CRAN.R-project.org/package=jskm)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/jskm)](https://cran.r-project.org/package=jskm)
+[![CRAN_Download_Badge](https://cranlogs.r-pkg.org/badges/jskm)](https://CRAN.R-project.org/package=jskm)
 [![codecov](https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg)](https://codecov.io/github/jinseob2kim/jskm)
 [![GitHub
 issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/issues)
@@ -78,6 +78,27 @@ jskm(fit, mark = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 
 
 ![](man/figures/README-unnamed-chunk-3-2.png)<!-- -->
 
+### Competing risk analysis
+
+`status2` variable: 0 - censoring, 1 - event, 2 - competing risk
+
+``` r
+## Make competing risk variable, Not real
+colon$status2 <- colon$status
+colon$status2[1:400] <- 2
+colon$status2 <- factor(colon$status2)
+fit2 <- survfit(Surv(time,status2)~rx, data=colon)
+jskm(fit2, mark = F, surv.scale = "percent", table = T)
+```
+
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+jskm(fit2, mark = F, surv.scale = "percent", table = T, showpercent = T, cut.landmark = 500)
+```
+
+![](man/figures/README-unnamed-chunk-4-2.png)<!-- -->
+
 ### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
 
 ``` r
@@ -95,19 +116,19 @@ s2 <-svykm(Surv(time,status>0) ~ sex, design = dpbc)
 svyjskm(s1)
 ```
 
-![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
 svyjskm(s2, pval = T,  table = T, design = dpbc)
 ```
 
-![](man/figures/README-unnamed-chunk-4-2.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-2.png)<!-- -->
 
 ``` r
 svyjskm(s2, cumhaz = T, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7), showpercent = T) 
 ```
 
-![](man/figures/README-unnamed-chunk-4-3.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-3.png)<!-- -->
 
 If you want to get **confidence interval**, you should apply `se = T`
 option to `svykm` object.
@@ -117,16 +138,16 @@ s3 <- svykm(Surv(time,status>0) ~ sex, design=dpbc, se = T)
 svyjskm(s3)
 ```
 
-![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 svyjskm(s3, ci = F)
 ```
 
-![](man/figures/README-unnamed-chunk-5-2.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-2.png)<!-- -->
 
 ``` r
 svyjskm(s3, ci = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 1000, showpercent = T)
 ```
 
-![](man/figures/README-unnamed-chunk-5-3.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-3.png)<!-- -->

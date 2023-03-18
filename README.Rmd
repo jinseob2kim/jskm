@@ -63,6 +63,20 @@ jskm(fit, mark = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 
 jskm(fit, mark = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 500, showpercent = T)
 ```
 
+### Competing risk analysis
+
+`status2` variable: 0 - censoring, 1 - event, 2 - competing risk
+```{r}
+## Make competing risk variable, Not real
+colon$status2 <- colon$status
+colon$status2[1:400] <- 2
+colon$status2 <- factor(colon$status2)
+fit2 <- survfit(Surv(time,status2)~rx, data=colon)
+jskm(fit2, mark = F, surv.scale = "percent", table = T)
+jskm(fit2, mark = F, surv.scale = "percent", table = T, showpercent = T, cut.landmark = 500)
+```
+
+
 ### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
 
 ```{r}

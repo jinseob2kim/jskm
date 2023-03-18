@@ -8,7 +8,7 @@ jskm(
   sfit,
   table = FALSE,
   xlabs = "Time-to-event",
-  ylabs = "Survival probability",
+  ylabs = NULL,
   xlims = c(0, max(sfit$time)),
   ylims = c(0, 1),
   surv.scale = c("default", "percent"),
@@ -36,6 +36,7 @@ jskm(
   data = NULL,
   cut.landmark = NULL,
   showpercent = F,
+  status.cmprsk = NULL,
   ...
 )
 }
@@ -101,6 +102,8 @@ jskm(
 \item{cut.landmark}{cut-off for landmark analysis, Default = NULL}
 
 \item{showpercent}{Shows the percentages on the right side.}
+
+\item{status.cmprsk}{Status value when competing risk analysis, Default = 2nd level of status variable}
 
 \item{...}{PARAM_DESCRIPTION}
 }

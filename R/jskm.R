@@ -32,6 +32,7 @@
 #' @param data select specific data - for reactive input, Default = NULL
 #' @param cut.landmark cut-off for landmark analysis, Default = NULL
 #' @param showpercent Shows the percentages on the right side.
+#' @param status.cmprsk Status value when competing risk analysis, Default = 2nd level of status variable
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -79,7 +80,7 @@
 jskm <- function(sfit,
                  table = FALSE,
                  xlabs = "Time-to-event",
-                 ylabs = "Survival probability",
+                 ylabs = NULL,
                  xlims = c(0,max(sfit$time)),
                  ylims = c(0,1),
                  surv.scale = c("default", "percent"),
@@ -107,6 +108,7 @@ jskm <- function(sfit,
                  data = NULL,
                  cut.landmark = NULL,
                  showpercent = F,
+                 status.cmprsk = NULL,
                  ...) {
   
   
@@ -148,12 +150,19 @@ jskm <- function(sfit,
     subs3 <- which(regexpr(ssvar,summary(sfit,times = times,extend = TRUE)$strata, perl=T)!=-1)
   }
   
-  if(!is.null(subs)) pval <- FALSE
+  if(!is.null(subs) | !is.null(sfit$states)) pval <- FALSE
   
   ##################################
   # data manipulation pre-plotting #
   ##################################
   
+  if (is.null(ylabs)){
+    if (cumhaz | !is.null(sfit$states)){
+      ylabs <- "Cumulative incidence"
+    } else{
+      ylabs <- "Survival probability"
+    }
+  }
   
   
   if(length(levels(summary(sfit)$strata)) == 0) {
@@ -171,21 +180,39 @@ jskm <- function(sfit,
   if(length(levels(summary(sfit)$strata)) == 0) {
     Factor <- factor(rep("All",length(subs2)))
   } else {
-    Factor <- factor(summary(sfit, censored = T)$strata[subs2])
+    Factor <- factor(summary(sfit, censored = T)$strata[subs2], levels = names(sfit$strata))
   }
   
   #Data to be used in the survival plot
   
-  df <- data.frame(
-    time = sfit$time[subs2],
-    n.risk = sfit$n.risk[subs2],
-    n.event = sfit$n.event[subs2],
-    n.censor = sfit$n.censor[subs2],
-    surv = sfit$surv[subs2],
-    strata = Factor,
-    upper = sfit$upper[subs2],
-    lower = sfit$lower[subs2]
-  )
+
+  if (is.null(sfit$state)){ # no cmprsk
+    df <- data.frame(
+      time = sfit$time[subs2],
+      n.risk = sfit$n.risk[subs2],
+      n.event = sfit$n.event[subs2],
+      n.censor = sfit$n.censor[subs2],
+      surv = sfit$surv[subs2],
+      strata = Factor,
+      upper = sfit$upper[subs2],
+      lower = sfit$lower[subs2]
+    ) 
+  } else { #cmprsk
+    if (is.null(status.cmprsk)){
+      status.cmprsk <- sfit$states[2]
+    }
+    col.cmprsk <- which(sfit$state == status.cmprsk)
+    df <- data.frame(
+      time = sfit$time[subs2],
+      n.risk = sfit$n.risk[, 1][subs2],
+      n.event = sfit$n.event[, col.cmprsk][subs2],
+      n.censor = sfit$n.censor[subs2],
+      surv = sfit$pstate[, col.cmprsk][subs2],
+      strata = Factor,
+      upper = sfit$upper[, col.cmprsk][subs2],
+      lower = sfit$lower[, col.cmprsk][subs2]
+    )
+  }
   
   form <- sfit$call$formula
 
@@ -210,24 +237,45 @@ jskm <- function(sfit,
     sfit1 <- survfit(as.formula(form), data1)
     sfit2 <- survfit(as.formula(form), data[data[[var.time]] >= cut.landmark, ])
     
-    if (length(levels(Factor)) == 1){
-      df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")], 
-                   data.frame(time = sfit2$time, surv = sfit2$surv, strata = "All", upper = sfit2$upper, lower = sfit2$lower), 
-                   by = c("time", "strata"))
+    if (is.null(sfit$states)){
+      if (length(levels(Factor)) == 1){
+        df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")], 
+                     data.frame(time = sfit2$time, surv = sfit2$surv, strata = "All", upper = sfit2$upper, lower = sfit2$lower), 
+                     by = c("time", "strata")) 
+        
+      } else{
+        df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")], 
+                     data.frame(time = sfit2$time, surv = sfit2$surv, strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper, lower = sfit2$lower), 
+                     by = c("time", "strata"))
+      }
+      
+      df11 <- rbind(subset(df, time < cut.landmark), df2[, names(df)]) 
+      df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]],  n.event = 0, n.censor = 0, surv = 1, strata = factor(ystratalabs, levels = levels(df$strata)), upper = 1, lower = 1))
     } else{
-      df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")], 
-                   data.frame(time = sfit2$time, surv = sfit2$surv, strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper, lower = sfit2$lower), 
-                   by = c("time", "strata"))
-    }
+      if (is.null(status.cmprsk)){
+        status.cmprsk <- sfit$states[2]
+      }
+      col.cmprsk <- which(sfit$state == status.cmprsk)
+      
+      if (length(levels(Factor)) == 1){
+        df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")], 
+                     data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = "All", upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]), 
+                     by = c("time", "strata")) 
+        
+      } else{
+        df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")], 
+                     data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]), 
+                     by = c("time", "strata"))
+      }
+      df11 <- rbind(subset(df, time < cut.landmark), df2[, names(df)]) 
+      df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]],  n.event = 0, n.censor = 0, surv = 0, strata = factor(ystratalabs, levels = levels(df$strata)), upper = 0, lower = 0))
+    }  
     
     
-    
-    df11 <- rbind(subset(df, time < cut.landmark), df2) 
-    df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk,  n.event = 0, n.censor = 0, surv = 1, strata = factor(ystratalabs, levels = levels(df$strata)), upper = 1, lower = 1))
   }
   
   
-  if (cumhaz){
+  if (cumhaz & is.null(sfit$states)){
     upper.new <- 1 - df$lower
     lower.new <- 1 - df$upper
     df$surv = 1 - df$surv
@@ -241,10 +289,10 @@ jskm <- function(sfit,
   zeros <- data.frame(time = 0, n.risk = NA, n.event = NA, n.censor = NA, surv = 1,
                       strata = factor(ystratalabs, levels=levels(df$strata)),
                       upper = 1, lower = 1)
-  if (cumhaz){
-    zeros$surv = 0
-    zeros$lower = 0
-    zeros$upper = 0
+  if (cumhaz | !is.null(sfit$states)){
+    zeros$surv <- 0
+    zeros$lower <- 0
+    zeros$upper <- 0
   }
   
   df <- rbind(zeros, df)
@@ -326,15 +374,22 @@ jskm <- function(sfit,
     p <- p + geom_vline(xintercept = cut.landmark, lty = 2)
   }
   
-  if (showpercent == TRUE){
+  if (showpercent == T){
     if (is.null(cut.landmark)){
       y.percent <- summary(sfit, times = xlims[2], extend = T)$surv
-      if (cumhaz == TRUE) y.percent <- 1 - y.percent
+      if (!is.null(sfit$states)){
+        y.percent <- summary(sfit, times = xlims[2], extend = T)$pstate[, col.cmprsk]
+      }
+      if (cumhaz == T & is.null(sfit$states)) y.percent <- 1 - y.percent
       p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label= paste0(round(100 * y.percent, 1), "%"), color = "black")
     } else{
       y.percent1 <- summary(sfit, times = cut.landmark, extend = T)$surv
       y.percent2 <- summary(sfit2, times = xlims[2], extend = T)$surv
-      if (cumhaz == TRUE) {y.percent1 <- 1 - y.percent1;y.percent2 <- 1 - y.percent2}
+      if (!is.null(sfit$states)){
+        y.percent1 <- summary(sfit, times = cut.landmark, extend = T)$pstate[, col.cmprsk]
+        y.percent2 <- summary(sfit2, times = xlims[2], extend = T)$pstate[, col.cmprsk]
+      }
+      if (cumhaz == T & is.null(sfit$states)) {y.percent1 <- 1 - y.percent1;y.percent2 <- 1 - y.percent2}
       p <- p + annotate(geom = "text", x = cut.landmark, y = y.percent1, label= paste0(round(100 * y.percent1, 1), "%"), color = "black") +
         annotate(geom = "text", x = xlims[2], y = y.percent2, label= paste0(round(100 * y.percent2, 1), "%"), color = "black")
     }

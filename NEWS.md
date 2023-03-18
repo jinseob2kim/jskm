@@ -1,3 +1,7 @@
+# jskm 0.5
+
+* Add competing risk analysis to `jskm`
+
 # jskm 0.4.4
 
 * Fix: align plot with table
