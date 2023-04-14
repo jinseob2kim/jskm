@@ -4,8 +4,6 @@ jskm
 Kaplan-Meier Plot with ‘ggplot2’: ‘survfit’ and ‘svykm’ objects from
 ‘survival’ and ‘survey’ packages.
 
-[![Build
-Status](https://travis-ci.org/jinseob2kim/jskm.svg?branch=master)](https://travis-ci.org/jinseob2kim/jskm)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&svg=true)](https://ci.appveyor.com/project/jinseob2kim/jskm)
 [![Github
