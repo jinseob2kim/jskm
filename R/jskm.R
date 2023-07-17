@@ -351,8 +351,9 @@ jskm <- function(sfit,
       scale_linetype_manual(name = ystrataname, values=linetype) +
       scale_colour_brewer(name = ystrataname, palette=linecols)
   } else{
-    p <- p + geom_step(data = subset(df, time < cut.landmark), linewidth = 0.75) + geom_step(data = subset(df, time >= cut.landmark), linewidth = 0.75) + 
-      scale_linetype_manual(name = ystrataname, values=linetype) +
+    p <- p +
+      scale_linetype_manual(name = ystrataname, values=linetype) +  
+      geom_step(data = subset(df, time < cut.landmark), linewidth = 0.75) + geom_step(data = subset(df, time >= cut.landmark), linewidth = 0.75) + 
       scale_colour_brewer(name = ystrataname, palette=linecols)
   }
   
