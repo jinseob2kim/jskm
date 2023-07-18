@@ -1,3 +1,7 @@
+# jskm 0.5.1
+
+* Fix: line color problem when apply landmark analysis
+
 # jskm 0.5
 
 * Add competing risk analysis to `jskm`

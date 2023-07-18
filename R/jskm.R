@@ -250,7 +250,7 @@ jskm <- function(sfit,
       }
       
       df11 <- rbind(subset(df, time < cut.landmark), df2[, names(df)]) 
-      df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]],  n.event = 0, n.censor = 0, surv = 1, strata = factor(ystratalabs, levels = levels(df$strata)), upper = 1, lower = 1))
+      df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]],  n.event = 0, n.censor = 0, surv = 1, strata = levels(df$strata), upper = 1, lower = 1))
     } else{
       if (is.null(status.cmprsk)){
         status.cmprsk <- sfit$states[2]
@@ -268,7 +268,7 @@ jskm <- function(sfit,
                      by = c("time", "strata"))
       }
       df11 <- rbind(subset(df, time < cut.landmark), df2[, names(df)]) 
-      df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]],  n.event = 0, n.censor = 0, surv = 0, strata = factor(ystratalabs, levels = levels(df$strata)), upper = 0, lower = 0))
+      df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]],  n.event = 0, n.censor = 0, surv = 0, strata = levels(df$strata), upper = 0, lower = 0))
     }  
     
     
@@ -353,7 +353,7 @@ jskm <- function(sfit,
   } else{
     p <- p +
       scale_linetype_manual(name = ystrataname, values=linetype) +  
-      geom_step(data = subset(df, time < cut.landmark), linewidth = 0.75) + geom_step(data = subset(df, time >= cut.landmark), linewidth = 0.75) + 
+      geom_step(data = subset(df, time >= cut.landmark), linewidth = 0.75) + geom_step(data = subset(df, time < cut.landmark), linewidth = 0.75) + 
       scale_colour_brewer(name = ystrataname, palette=linecols)
   }
   
