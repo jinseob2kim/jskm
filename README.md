@@ -10,7 +10,7 @@ status](https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?bran
 action](https://github.com/jinseob2kim/jskm/workflows/R-CMD-check/badge.svg)](https://github.com/jinseob2kim/jskm/actions)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/jskm)](https://cran.r-project.org/package=jskm)
 [![CRAN_Download_Badge](https://cranlogs.r-pkg.org/badges/jskm)](https://CRAN.R-project.org/package=jskm)
-[![codecov](https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg)](https://codecov.io/github/jinseob2kim/jskm)
+[![codecov](https://codecov.io/github/jinseob2kim/jskm/branch/master/graphs/badge.svg)](https://app.codecov.io/github/jinseob2kim/jskm)
 [![GitHub
 issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/issues)
 [![GitHub
