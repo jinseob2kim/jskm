@@ -33,6 +33,7 @@
 #' @param cut.landmark cut-off for landmark analysis, Default = NULL
 #' @param showpercent Shows the percentages on the right side.
 #' @param status.cmprsk Status value when competing risk analysis, Default = 2nd level of status variable
+#' @param linewidth Line witdh, Default = 0.75
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -109,6 +110,7 @@ jskm <- function(sfit,
                  cut.landmark = NULL,
                  showpercent = F,
                  status.cmprsk = NULL,
+                 linewidth = 0.75,
                  ...) {
   
   
@@ -347,13 +349,13 @@ jskm <- function(sfit,
   
   #Add lines too plot
   if (is.null(cut.landmark)){
-    p <- p + geom_step(linewidth = 0.75) +
+    p <- p + geom_step(linewidth = linewidth) +
       scale_linetype_manual(name = ystrataname, values=linetype) +
       scale_colour_brewer(name = ystrataname, palette=linecols)
   } else{
     p <- p +
       scale_linetype_manual(name = ystrataname, values=linetype) +  
-      geom_step(data = subset(df, time >= cut.landmark), linewidth = 0.75) + geom_step(data = subset(df, time < cut.landmark), linewidth = 0.75) + 
+      geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth) + 
       scale_colour_brewer(name = ystrataname, palette=linecols)
   }
   

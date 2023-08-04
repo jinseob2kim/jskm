@@ -27,6 +27,7 @@
 #' @param size.label.nrisk Font size of label.nrisk. Default = 10
 #' @param cut.landmark cut-off for landmark analysis, Default = NULL
 #' @param showpercent Shows the percentages on the right side.
+#' @param linewidth Line witdh, Default = 0.75
 #' @param ... PARAM_DESCRIPTION
 #' @return plot
 #' @details DETAILS
@@ -74,6 +75,7 @@ svyjskm <- function(sfit,
                     size.label.nrisk = 10,
                     cut.landmark = NULL,
                     showpercent = F,
+                    linewidth = 0.75,
                     ...) {
   
   surv <- strata <- lower <- upper <- NULL
@@ -276,11 +278,11 @@ svyjskm <- function(sfit,
   
   #Add lines too plot
   if (is.null(cut.landmark)){
-    p <- p + geom_step(linewidth = 0.75) +
+    p <- p + geom_step(linewidth = linewidth) +
       scale_linetype_manual(name = ystrataname, values=linetype) +
       scale_colour_brewer(name = ystrataname, palette=linecols)
   } else{
-    p <- p + geom_step(data = subset(df, time < cut.landmark), linewidth = 0.75) + geom_step(data = subset(df, time >= cut.landmark), linewidth = 0.75) + 
+    p <- p + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + 
       scale_linetype_manual(name = ystrataname, values=linetype) +
       scale_colour_brewer(name = ystrataname, palette=linecols)
   }
