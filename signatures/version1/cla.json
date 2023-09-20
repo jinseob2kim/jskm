@@ -1,3 +1,12 @@
 {
-   "signedContributors": []
+  "signedContributors": [
+    {
+      "name": "ChangwooLim",
+      "id": 86377226,
+      "comment_id": 1726790050,
+      "created_at": "2023-09-20T02:32:01Z",
+      "repoId": 139862284,
+      "pullRequestNo": 15
+    }
+  ]
 }
