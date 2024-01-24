@@ -33,6 +33,10 @@
 #' @param showpercent Shows the percentages on the right side.
 #' @param status.cmprsk Status value when competing risk analysis, Default = 2nd level of status variable
 #' @param linewidth Line witdh, Default = 0.75
+#' @param theme Theme of the plot, Default = NULL, "nejm" for NEJMOA style, "jama" for JAMA style
+#' @param nejm.infigure.ratiow Ratio of infigure width to total width, Default = 0.6
+#' @param nejm.infigure.ratioh Ratio of infigure height to total height, Default = 0.5
+#' @param nejm.infigure.ylim y-axis limit of infigure, Default = c(0,1)
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -112,10 +116,9 @@ jskm <- function(sfit,
                  status.cmprsk = NULL,
                  linewidth = 0.75,
                  theme=NULL,
-                 ratiow=0.6,
-                 ratioh=0.5,
-                 nejmax=1,
-                 nejmin=0,
+                 nejm.infigure.ratiow=0.6,
+                 nejm.infigure.ratioh=0.5,
+                 nejm.infigure.ylim=c(0,1),
                  
                  ...) {
   #################################
@@ -125,7 +128,7 @@ jskm <- function(sfit,
   n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
 
   times <- seq(0, max(sfit$time), by = timeby)
-  if(!is.null(theme)&&theme=='nejmoa') legendposition<-'right'
+  if(!is.null(theme)&&theme=='nejm') legendposition<-'right'
   if (is.null(subs)) {
     if (length(levels(summary(sfit)$strata)) == 0) {
       subs1 <- 1
@@ -375,6 +378,7 @@ jskm <- function(sfit,
       scale_linetype_manual(name = ystrataname, values = linetype) +
       geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth) 
   }
+  
   if(!is.null(theme)&&theme=='jama'){
     p<-p+scale_color_manual(name=ystrataname, values = c("#00AFBB", "#E7B800", "#FC4E07"))
   }else{  
@@ -564,9 +568,9 @@ jskm <- function(sfit,
   # Plotting the graphs #
   #######################
   
-  if(!is.null(theme)&&theme == 'nejmoa') {
-    p2<-p+coord_cartesian(ylim=c(nejmin,nejmax))+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank())
-    p<- p + inset_element(p2, 1-ratiow,1-ratioh, 1, 1,align_to = 'panel')
+  if(!is.null(theme)&&theme == 'nejm') {
+    p2<-p+coord_cartesian(ylim=nejm.infigure.ylim)+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank())
+    p<- p + patchwork::inset_element(p2, 1-nejm.infigure.ratiow,1-nejm.infigure.ratioh, 1, 1,align_to = 'panel')
   }
   
   if (table == TRUE) {

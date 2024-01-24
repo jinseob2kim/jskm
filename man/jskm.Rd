@@ -37,6 +37,12 @@ jskm(
   cut.landmark = NULL,
   showpercent = F,
   status.cmprsk = NULL,
+  linewidth = 0.75,
+  theme = NULL,
+  nejm.infigure.ratiow = 0.6,
+  nejm.infigure.ratioh = 0.5,
+  nejm.infigure.ymax = 1,
+  nejm.infigure.ymin = 0,
   ...
 )
 }
@@ -105,6 +111,8 @@ jskm(
 
 \item{status.cmprsk}{Status value when competing risk analysis, Default = 2nd level of status variable}
 
+\item{linewidth}{Line witdh, Default = 0.75}
+
 \item{...}{PARAM_DESCRIPTION}
 }
 \value{
@@ -117,10 +125,10 @@ Creates a Kaplan-Meier plot with at risk tables below for survfit object.
 DETAILS
 }
 \examples{
- library(survival)
- data(colon)
- fit <- survfit(Surv(time,status)~rx, data=colon)
- jskm(fit, timeby=500)
+library(survival)
+data(colon)
+fit <- survfit(Surv(time, status) ~ rx, data = colon)
+jskm(fit, timeby = 500)
 }
 \author{
 Jinseob Kim, but heavily modified version of a script created by Michael Way.
