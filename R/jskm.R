@@ -73,6 +73,7 @@
 #' @importFrom grid unit
 #' @importFrom ggpubr ggarrange
 #' @importFrom stats pchisq time as.formula
+#' @importFrom patchwork inset_element
 #' @importFrom survival survfit survdiff coxph Surv cluster frailty
 #' @export
 
@@ -110,6 +111,12 @@ jskm <- function(sfit,
                  showpercent = F,
                  status.cmprsk = NULL,
                  linewidth = 0.75,
+                 theme=NULL,
+                 ratiow=0.6,
+                 ratioh=0.5,
+                 nejmax=1,
+                 nejmin=0,
+                 
                  ...) {
   #################################
   # sorting the use of subsetting #
@@ -118,7 +125,7 @@ jskm <- function(sfit,
   n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
 
   times <- seq(0, max(sfit$time), by = timeby)
-
+  if(!is.null(theme)&&theme=='nejmoa') legendposition<-'right'
   if (is.null(subs)) {
     if (length(levels(summary(sfit)$strata)) == 0) {
       subs1 <- 1
@@ -148,13 +155,13 @@ jskm <- function(sfit,
     subs2 <- which(regexpr(ssvar, summary(sfit, censored = T)$strata, perl = T) != -1)
     subs3 <- which(regexpr(ssvar, summary(sfit, times = times, extend = TRUE)$strata, perl = T) != -1)
   }
-
+  
   if (!is.null(subs) | !is.null(sfit$states)) pval <- FALSE
-
+  
   ##################################
   # data manipulation pre-plotting #
   ##################################
-
+  
   if (is.null(ylabs)) {
     if (cumhaz | !is.null(sfit$states)) {
       ylabs <- "Cumulative incidence"
@@ -162,8 +169,8 @@ jskm <- function(sfit,
       ylabs <- "Survival probability"
     }
   }
-
-
+  
+  
   if (length(levels(summary(sfit)$strata)) == 0) {
     # [subs1]
     if (is.null(ystratalabs)) ystratalabs <- as.character(sub("group=*", "", "All"))
@@ -171,20 +178,20 @@ jskm <- function(sfit,
     # [subs1]
     if (is.null(ystratalabs)) ystratalabs <- as.character(sub("group=*", "", names(sfit$strata)))
   }
-
+  
   if (is.null(ystrataname)) ystrataname <- "Strata"
   m <- max(nchar(ystratalabs))
   times <- seq(0, max(sfit$time), by = timeby)
-
+  
   if (length(levels(summary(sfit)$strata)) == 0) {
     Factor <- factor(rep("All", length(subs2)))
   } else {
     Factor <- factor(summary(sfit, censored = T)$strata[subs2], levels = names(sfit$strata))
   }
-
+  
   # Data to be used in the survival plot
-
-
+  
+  
   if (is.null(sfit$state)) { # no cmprsk
     df <- data.frame(
       time = sfit$time[subs2],
@@ -316,8 +323,8 @@ jskm <- function(sfit,
   scale_labels <- ggplot2::waiver()
   if (surv.scale == "percent") scale_labels <- scales::percent
 
-  p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata)) +
-    ggtitle(main)
+  p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata) ) + ggtitle(main)
+  
 
   linecols2 <- linecols
   if (linecols == "black") {
@@ -333,19 +340,26 @@ jskm <- function(sfit,
       axis.title.x = element_text(vjust = 0.7),
       panel.grid.minor = element_blank(),
       axis.line = element_line(linewidth = 0.5, colour = "black"),
-      legend.position = legendposition,
-      legend.background = element_rect(fill = NULL),
+    legend.position = legendposition,
+     legend.background = element_rect(fill = NULL),
       legend.key = element_rect(colour = NA),
       panel.border = element_blank(),
       plot.margin = unit(c(0, 1, .5, ifelse(m < 10, 1.5, 2.5)), "lines"),
-      panel.grid.major = element_blank(),
       axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
     scale_x_continuous(xlabs, breaks = times, limits = xlims) +
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
-
-
+  
+  if(!is.null(theme)&&theme=='jama'){
+    p<-p+theme(
+      panel.grid.major.x = element_blank()
+    )
+  } else{
+    p <- p + theme(
+      panel.grid.major = element_blank()
+    )}
+  
 
   # Removes the legend:
   if (legend == FALSE) {
@@ -355,13 +369,17 @@ jskm <- function(sfit,
   # Add lines too plot
   if (is.null(cut.landmark)) {
     p <- p + geom_step(linewidth = linewidth) +
-      scale_linetype_manual(name = ystrataname, values = linetype) +
-      scale_colour_brewer(name = ystrataname, palette = linecols)
+      scale_linetype_manual(name = ystrataname, values = linetype)    
   } else {
     p <- p +
       scale_linetype_manual(name = ystrataname, values = linetype) +
-      geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth) +
-      scale_colour_brewer(name = ystrataname, palette = linecols)
+      geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth) 
+  }
+  if(!is.null(theme)&&theme=='jama'){
+    p<-p+scale_color_manual(name=ystrataname, values = c("#00AFBB", "#E7B800", "#FC4E07"))
+  }else{  
+    p<-p+ scale_colour_brewer(name = ystrataname, palette = linecols)
+    
   }
 
 
@@ -545,13 +563,20 @@ jskm <- function(sfit,
   #######################
   # Plotting the graphs #
   #######################
-
+  
+  if(!is.null(theme)&&theme == 'nejmoa') {
+    p2<-p+coord_cartesian(ylim=c(nejmin,nejmax))+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank())
+    p<- p + inset_element(p2, 1-ratiow,1-ratioh, 1, 1,align_to = 'panel')
+  }
+  
   if (table == TRUE) {
     ggpubr::ggarrange(p, blank.pic, data.table,
       nrow = 3, align = "v",
       heights = c(2, .1, .25)
     )
   } else {
-    p
+    p 
   }
 }
+
+
