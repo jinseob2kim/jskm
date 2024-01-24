@@ -447,7 +447,7 @@ jskm <- function(sfit,
 
   if (length(levels(summary(sfit)$strata)) == 0) pval <- F
   # if(!is.null(cut.landmark)) pval <- F
-
+  p1<-p
   if (pval == TRUE) {
     if (is.null(data)) {
       data <- tryCatch(eval(sfit$call$data), error = function(e) e)
@@ -475,7 +475,7 @@ jskm <- function(sfit,
 
       pvaltxt <- ifelse(pvalue < 0.001, "p < 0.001", paste("p =", round(pvalue, 3)))
       if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")
-
+      
       # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
       if (is.null(pval.coord)) {
         p <- p + annotate("text", x = (as.integer(max(sfit$time) / 5)), y = 0.1 + ylims[1], label = pvaltxt, size = pval.size)
@@ -511,7 +511,7 @@ jskm <- function(sfit,
       pvaltxt <- ifelse(pvalue < 0.001, "p < 0.001", paste("p =", round(pvalue, 3)))
 
       if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")
-
+      
       if (is.null(pval.coord)) {
         p <- p + annotate("text", x = c(as.integer(max(sfit$time) / 10), as.integer(max(sfit$time) / 10) + cut.landmark), y = 0.1 + ylims[1], label = pvaltxt, size = pval.size)
       } else {
@@ -569,13 +569,14 @@ jskm <- function(sfit,
   #######################
   
   if(!is.null(theme)&&theme == 'nejm') {
-    p2<-p+coord_cartesian(ylim=nejm.infigure.ylim)+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank())
+    p2<-p1+coord_cartesian(ylim=nejm.infigure.ylim)+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank())
     p<- p + patchwork::inset_element(p2, 1-nejm.infigure.ratiow,1-nejm.infigure.ratioh, 1, 1,align_to = 'panel')
   }
   
   if (table == TRUE) {
     ggpubr::ggarrange(p, blank.pic, data.table,
-      nrow = 3, align = "v",
+      nrow = 3, 
+      #align = "v",
       heights = c(2, .1, .25)
     )
   } else {

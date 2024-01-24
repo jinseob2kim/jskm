@@ -331,7 +331,19 @@ svyjskm <- function(sfit,
   ## p-value
   if (inherits(sfit, "svykm")) pval <- FALSE
   # if(is.null(design)) pval <- FALSE
-
+  if (showpercent == TRUE) {
+    if (is.null(cut.landmark)) {
+      y.percent <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
+      p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black")
+    } else {
+      df.cut <- df[df$time < cut.landmark, ]
+      y.percent1 <- df.cut[df.cut$time %in% tapply(df.cut$time, df.cut$strata, max), "surv"]
+      y.percent2 <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
+      p <- p + annotate(geom = "text", x = cut.landmark, y = y.percent1, label = paste0(round(100 * y.percent1, 1), "%"), color = "black") +
+        annotate(geom = "text", x = xlims[2], y = y.percent2, label = paste0(round(100 * y.percent2, 1), "%"), color = "black")
+    }
+  }
+  p1<-p
   if (pval) {
     if (is.null(design)) {
       design <- tryCatch(get(as.character(attr(sfit, "call")$design)), error = function(e) e)
@@ -395,18 +407,7 @@ svyjskm <- function(sfit,
     }
   }
 
-  if (showpercent == TRUE) {
-    if (is.null(cut.landmark)) {
-      y.percent <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
-      p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black")
-    } else {
-      df.cut <- df[df$time < cut.landmark, ]
-      y.percent1 <- df.cut[df.cut$time %in% tapply(df.cut$time, df.cut$strata, max), "surv"]
-      y.percent2 <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
-      p <- p + annotate(geom = "text", x = cut.landmark, y = y.percent1, label = paste0(round(100 * y.percent1, 1), "%"), color = "black") +
-        annotate(geom = "text", x = xlims[2], y = y.percent2, label = paste0(round(100 * y.percent2, 1), "%"), color = "black")
-    }
-  }
+
 
 
 
@@ -512,13 +513,14 @@ svyjskm <- function(sfit,
   # Plotting the graphs #
   #######################
   if(!is.null(theme)&&theme == 'nejm') {
-    p2<-p+coord_cartesian(ylim=nejm.infigure.ylim)+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank())
+    p2<-p1+coord_cartesian(ylim=nejm.infigure.ylim)+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank())
     p<- p + patchwork::inset_element(p2, 1-nejm.infigure.ratiow,1-nejm.infigure.ratioh, 1, 1,align_to = 'panel')
   }
   
   if (table == TRUE) {
     ggpubr::ggarrange(p, blank.pic, data.table,
-      nrow = 3, align = "v",
+      nrow = 3, 
+      #align = "v",
       heights = c(2, .1, .25)
     )
   } else {
