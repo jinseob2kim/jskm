@@ -112,7 +112,7 @@ jskm(fit, theme='jama', cumhaz = T, table=T, mark = F, ylab = "Cumulative incide
 #### NEJM
 
 ``` r
-jskm(fit, theme='nejm', nejm.infigure.ratiow = 0.6, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0,0.7), cumhaz = T, table=T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme='nejm', nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0,0.7), cumhaz = T, table=T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
@@ -183,7 +183,7 @@ svyjskm(s2, theme='jama', pval = T,  table = T, design = dpbc)
 #### NEJM
 
 ``` r
-svyjskm(s2, theme='nejm', nejm.infigure.ratiow = 0.4, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0.2,1), pval = T,  table = T, design = dpbc)
+svyjskm(s2, theme='nejm', nejm.infigure.ratiow = 0.45, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0.2,1), pval = T,  table = T, design = dpbc)
 ```
 
 ![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->

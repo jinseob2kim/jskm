@@ -404,7 +404,7 @@ jskm <- function(sfit,
   if (!is.null(cut.landmark)) {
     p <- p + geom_vline(xintercept = cut.landmark, lty = 2)
   }
-
+  p1<-p
   if (showpercent == T) {
     if (is.null(cut.landmark)) {
       y.percent <- summary(sfit, times = xlims[2], extend = T)$surv
@@ -413,7 +413,11 @@ jskm <- function(sfit,
       }
       if (cumhaz == T & is.null(sfit$states)) y.percent <- 1 - y.percent
       p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black")
-    } else {
+      if(!is.null(theme)&&theme == 'nejm') {
+        p1 <- p1 + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black",size=nejm.infigure.ratiow*5)
+        
+      }
+        } else {
       y.percent1 <- summary(sfit, times = cut.landmark, extend = T)$surv
       y.percent2 <- summary(sfit2, times = xlims[2], extend = T)$surv
       if (!is.null(sfit$states)) {
@@ -426,7 +430,12 @@ jskm <- function(sfit,
       }
       p <- p + annotate(geom = "text", x = cut.landmark, y = y.percent1, label = paste0(round(100 * y.percent1, 1), "%"), color = "black") +
         annotate(geom = "text", x = xlims[2], y = y.percent2, label = paste0(round(100 * y.percent2, 1), "%"), color = "black")
-    }
+      if(!is.null(theme)&&theme == 'nejm') {
+        p1 <- p1 + annotate(geom = "text", x = cut.landmark, y = y.percent1, label = paste0(round(100 * y.percent1, 1), "%"), color = "black",size=nejm.infigure.ratiow*5) +
+          annotate(geom = "text", x = xlims[2], y = y.percent2, label = paste0(round(100 * y.percent2, 1), "%"), color = "black",size=nejm.infigure.ratiow*5)
+        
+      }
+       }
   }
 
 
@@ -447,7 +456,7 @@ jskm <- function(sfit,
 
   if (length(levels(summary(sfit)$strata)) == 0) pval <- F
   # if(!is.null(cut.landmark)) pval <- F
-  p1<-p
+  
   if (pval == TRUE) {
     if (is.null(data)) {
       data <- tryCatch(eval(sfit$call$data), error = function(e) e)
@@ -569,7 +578,8 @@ jskm <- function(sfit,
   #######################
   
   if(!is.null(theme)&&theme == 'nejm') {
-    p2<-p1+coord_cartesian(ylim=nejm.infigure.ylim)+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank())
+    p2<-p1+coord_cartesian(ylim=nejm.infigure.ylim)+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank(),
+                                                          axis.text= element_text(size=10*nejm.infigure.ratiow))
     p<- p + patchwork::inset_element(p2, 1-nejm.infigure.ratiow,1-nejm.infigure.ratioh, 1, 1,align_to = 'panel')
   }
   
