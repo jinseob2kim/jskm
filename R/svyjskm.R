@@ -286,13 +286,20 @@ svyjskm <- function(sfit,
       legend.key = element_rect(colour = NA),
       panel.border = element_blank(),
       plot.margin = unit(c(0, 1, .5, ifelse(m < 10, 1.5, 2.5)), "lines"),
-      panel.grid.major = element_blank(),
       axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
     scale_x_continuous(xlabs, breaks = times, limits = xlims) +
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
-
+  
+  if(!is.null(theme)&&theme=='jama'){
+    p<-p+theme(
+      panel.grid.major.x = element_blank()
+    )
+  } else{
+    p <- p + theme(
+      panel.grid.major = element_blank()
+    )}
 
 
   # Removes the legend:
