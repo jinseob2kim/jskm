@@ -1,6 +1,6 @@
 # jskm 0.5.3
 
-* Update: Add theme('jama','nejmoa') to `jskm` and `svyjskm`
+* Update: Add theme('JAMA','NEJM') to `jskm` and `svyjskm`
 
 # jskm 0.5.2
 

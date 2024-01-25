@@ -99,7 +99,9 @@ jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", sho
 
 ![](man/figures/README-unnamed-chunk-4-2.png)<!-- -->
 
-### Theme Jama
+### Theme
+
+#### JAMA
 
 ``` r
 jskm(fit, theme='jama', cumhaz = T, table=T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
@@ -107,7 +109,7 @@ jskm(fit, theme='jama', cumhaz = T, table=T, mark = F, ylab = "Cumulative incide
 
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
-### Theme Nejmoa
+#### NEJM
 
 ``` r
 jskm(fit, theme='nejm', nejm.infigure.ratiow = 0.6, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0,0.7), cumhaz = T, table=T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
@@ -168,7 +170,9 @@ svyjskm(s3, ci = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 
 
 ![](man/figures/README-unnamed-chunk-8-3.png)<!-- -->
 
-### Theme jama
+### Theme
+
+#### JAMA
 
 ``` r
 svyjskm(s2, theme='jama', pval = T,  table = T, design = dpbc)
@@ -176,7 +180,7 @@ svyjskm(s2, theme='jama', pval = T,  table = T, design = dpbc)
 
 ![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
 
-### Theme nejmoa
+#### NEJM
 
 ``` r
 svyjskm(s2, theme='nejm', nejm.infigure.ratiow = 0.4, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0.2,1), pval = T,  table = T, design = dpbc)
