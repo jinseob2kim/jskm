@@ -1,3 +1,7 @@
+# jskm 0.5.3
+
+* Update: Add theme('JAMA','NEJM') to `jskm` and `svyjskm`
+
 # jskm 0.5.2
 
 * Update: Add `linewidth` option

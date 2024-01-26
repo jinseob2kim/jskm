@@ -35,21 +35,23 @@ library(jskm)
 ### Survival probability
 
 ``` r
-#Load dataset
+# Load dataset
 library(survival)
 data(colon)
-fit <- survfit(Surv(time,status)~rx, data=colon)
+fit <- survfit(Surv(time, status) ~ rx, data = colon)
 
-#Plot the data
+# Plot the data
 jskm(fit)
 ```
 
 ![](man/figures/README-unnamed-chunk-1-1.png)<!-- -->
 
 ``` r
-jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8, 
-     xlabs = "Time(Day)", ylabs = "Survival", ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx",
-     marks = F, timeby = 365, xlims = c(0, 3000), ylims = c(0.25, 1), showpercent = T)
+jskm(fit,
+  table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8,
+  xlabs = "Time(Day)", ylabs = "Survival", ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx",
+  marks = F, timeby = 365, xlims = c(0, 3000), ylims = c(0.25, 1), showpercent = T
+)
 ```
 
 ![](man/figures/README-unnamed-chunk-1-2.png)<!-- -->
@@ -57,7 +59,7 @@ jskm(fit, table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8
 ### Cumulative hazard: 1- Survival probability
 
 ``` r
-jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, ci = T, cumhaz = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
@@ -65,13 +67,13 @@ jskm(fit, ci = T, cumhaz = T,  mark = F, ylab = "Cumulative incidence (%)", surv
 ### Landmark analysis
 
 ``` r
-jskm(fit, mark = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 500)
+jskm(fit, mark = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500)
 ```
 
 ![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
 ``` r
-jskm(fit, mark = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 500, showpercent = T)
+jskm(fit, mark = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500, showpercent = T)
 ```
 
 ![](man/figures/README-unnamed-chunk-3-2.png)<!-- -->
@@ -85,7 +87,7 @@ jskm(fit, mark = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 
 colon$status2 <- colon$status
 colon$status2[1:400] <- 2
 colon$status2 <- factor(colon$status2)
-fit2 <- survfit(Surv(time,status2)~rx, data=colon)
+fit2 <- survfit(Surv(time, status2) ~ rx, data = colon)
 jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1")
 ```
 
@@ -97,55 +99,91 @@ jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", sho
 
 ![](man/figures/README-unnamed-chunk-4-2.png)<!-- -->
 
-### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
+### Theme
+
+#### JAMA
 
 ``` r
-library(survey)
-data(pbc, package="survival")
-pbc$randomized <- with(pbc, !is.na(trt) & trt>0)
-biasmodel <- glm(randomized~age*edema,data=pbc)
-pbc$randprob <- fitted(biasmodel)
-
-dpbc<-svydesign(id=~1, prob=~randprob, strata=~edema, data=subset(pbc,randomized))
-
-s1 <-svykm(Surv(time,status>0) ~ 1, design = dpbc)
-s2 <-svykm(Surv(time,status>0) ~ sex, design = dpbc)
-
-svyjskm(s1)
+jskm(fit, theme='jama', cumhaz = T, table=T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
-``` r
-svyjskm(s2, pval = T,  table = T, design = dpbc)
-```
-
-![](man/figures/README-unnamed-chunk-5-2.png)<!-- -->
+#### NEJM
 
 ``` r
-svyjskm(s2, cumhaz = T, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7), showpercent = T) 
+jskm(fit, theme='nejm', nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0,0.7), cumhaz = T, table=T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
-![](man/figures/README-unnamed-chunk-5-3.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+
+### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
+
+``` r
+library(survey)
+data(pbc, package = "survival")
+pbc$randomized <- with(pbc, !is.na(trt) & trt > 0)
+biasmodel <- glm(randomized ~ age * edema, data = pbc)
+pbc$randprob <- fitted(biasmodel)
+
+dpbc <- svydesign(id = ~1, prob = ~randprob, strata = ~edema, data = subset(pbc, randomized))
+
+s1 <- svykm(Surv(time, status > 0) ~ 1, design = dpbc)
+s2 <- svykm(Surv(time, status > 0) ~ sex, design = dpbc)
+
+svyjskm(s1)
+```
+
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+svyjskm(s2, pval = T, table = T, design = dpbc)
+```
+
+![](man/figures/README-unnamed-chunk-7-2.png)<!-- -->
+
+``` r
+svyjskm(s2, cumhaz = T, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7), showpercent = T)
+```
+
+![](man/figures/README-unnamed-chunk-7-3.png)<!-- -->
 
 If you want to get **confidence interval**, you should apply `se = T`
 option to `svykm` object.
 
 ``` r
-s3 <- svykm(Surv(time,status>0) ~ sex, design=dpbc, se = T)
+s3 <- svykm(Surv(time, status > 0) ~ sex, design = dpbc, se = T)
 svyjskm(s3)
 ```
 
-![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 svyjskm(s3, ci = F)
 ```
 
-![](man/figures/README-unnamed-chunk-6-2.png)<!-- -->
+![](man/figures/README-unnamed-chunk-8-2.png)<!-- -->
 
 ``` r
-svyjskm(s3, ci = F,  surv.scale = "percent", pval =T, table = T, cut.landmark = 1000, showpercent = T)
+svyjskm(s3, ci = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 1000, showpercent = T)
 ```
 
-![](man/figures/README-unnamed-chunk-6-3.png)<!-- -->
+![](man/figures/README-unnamed-chunk-8-3.png)<!-- -->
+
+### Theme
+
+#### JAMA
+
+``` r
+svyjskm(s2, theme='jama', pval = T,  table = T, design = dpbc)
+```
+
+![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+
+#### NEJM
+
+``` r
+svyjskm(s2, theme='nejm', nejm.infigure.ratiow = 0.45, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0.2,1), pval = T,  table = T, design = dpbc)
+```
+
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->

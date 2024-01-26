@@ -32,6 +32,7 @@ svyjskm(
   size.label.nrisk = 10,
   cut.landmark = NULL,
   showpercent = F,
+  linewidth = 0.75,
   ...
 )
 }
@@ -90,6 +91,8 @@ svyjskm(
 
 \item{showpercent}{Shows the percentages on the right side.}
 
+\item{linewidth}{Line witdh, Default = 0.75}
+
 \item{...}{PARAM_DESCRIPTION}
 }
 \value{
@@ -102,12 +105,12 @@ Creates a Weighted Kaplan-Meier plot - svykm.object in survey package
 DETAILS
 }
 \examples{
- library(survey)
- data(pbc, package="survival")
- pbc$randomized <- with(pbc, !is.na(trt) & trt>0)
- biasmodel <- glm(randomized~age*edema,data=pbc)
- pbc$randprob <- fitted(biasmodel)
- dpbc <- svydesign(id=~1, prob=~randprob, strata=~edema, data=subset(pbc,randomized))
- s1 <- svykm(Surv(time,status>0)~sex, design=dpbc)
- svyjskm(s1)
+library(survey)
+data(pbc, package = "survival")
+pbc$randomized <- with(pbc, !is.na(trt) & trt > 0)
+biasmodel <- glm(randomized ~ age * edema, data = pbc)
+pbc$randprob <- fitted(biasmodel)
+dpbc <- svydesign(id = ~1, prob = ~randprob, strata = ~edema, data = subset(pbc, randomized))
+s1 <- svykm(Surv(time, status > 0) ~ sex, design = dpbc)
+svyjskm(s1)
 }

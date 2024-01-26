@@ -28,6 +28,10 @@
 #' @param cut.landmark cut-off for landmark analysis, Default = NULL
 #' @param showpercent Shows the percentages on the right side.
 #' @param linewidth Line witdh, Default = 0.75
+#' @param theme Theme of the plot, Default = NULL, "nejm" for NEJMOA style, "jama" for JAMA style
+#' @param nejm.infigure.ratiow Ratio of infigure width to total width, Default = 0.6
+#' @param nejm.infigure.ratioh Ratio of infigure height to total height, Default = 0.5
+#' @param nejm.infigure.ylim y-axis limit of infigure, Default = c(0,1)
 #' @param ... PARAM_DESCRIPTION
 #' @return plot
 #' @details DETAILS
@@ -46,9 +50,11 @@
 #' @importFrom survey svyranktest
 #' @importFrom survival Surv
 #' @importFrom ggpubr ggarrange
+#' @importFrom patchwork inset_element
 #' @export
 
 svyjskm <- function(sfit,
+                    theme=NULL,
                     xlabs = "Time-to-event",
                     ylabs = "Survival probability",
                     xlims = NULL,
@@ -76,10 +82,13 @@ svyjskm <- function(sfit,
                     cut.landmark = NULL,
                     showpercent = F,
                     linewidth = 0.75,
+                    nejm.infigure.ratiow = 0.6,
+                    nejm.infigure.ratioh = 0.5,
+                    nejm.infigure.ylim = c(0, 1),
                     ...) {
   surv <- strata <- lower <- upper <- NULL
 
-
+  if(!is.null(theme)&&theme=='nejm') legendposition<-'right'
   if (is.null(timeby)) {
     if (inherits(sfit, "svykmlist")) {
       timeby <- signif(max(sapply(sfit, function(x) {
@@ -277,13 +286,20 @@ svyjskm <- function(sfit,
       legend.key = element_rect(colour = NA),
       panel.border = element_blank(),
       plot.margin = unit(c(0, 1, .5, ifelse(m < 10, 1.5, 2.5)), "lines"),
-      panel.grid.major = element_blank(),
       axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
     scale_x_continuous(xlabs, breaks = times, limits = xlims) +
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
-
+  
+  if(!is.null(theme)&&theme=='jama'){
+    p<-p+theme(
+      panel.grid.major.x = element_blank()
+    )
+  } else{
+    p <- p + theme(
+      panel.grid.major = element_blank()
+    )}
 
 
   # Removes the legend:
@@ -294,14 +310,18 @@ svyjskm <- function(sfit,
   # Add lines too plot
   if (is.null(cut.landmark)) {
     p <- p + geom_step(linewidth = linewidth) +
-      scale_linetype_manual(name = ystrataname, values = linetype) +
-      scale_colour_brewer(name = ystrataname, palette = linecols)
+      scale_linetype_manual(name = ystrataname, values = linetype) 
   } else {
     p <- p + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) +
-      scale_linetype_manual(name = ystrataname, values = linetype) +
-      scale_colour_brewer(name = ystrataname, palette = linecols)
+      scale_linetype_manual(name = ystrataname, values = linetype) 
   }
 
+  if(!is.null(theme)&&theme=='jama'){
+    p<-p+scale_color_manual(name=ystrataname, values = c("#00AFBB", "#E7B800", "#FC4E07"))
+  }else{  
+    p<-p+ scale_colour_brewer(name = ystrataname, palette = linecols)
+  }
+  
   # Add 95% CI to plot
   if (ci) {
     if (linecols2 == "black") {
@@ -314,11 +334,31 @@ svyjskm <- function(sfit,
   if (!is.null(cut.landmark)) {
     p <- p + geom_vline(xintercept = cut.landmark, lty = 2)
   }
-
+  
+  p1<-p
   ## p-value
   if (inherits(sfit, "svykm")) pval <- FALSE
   # if(is.null(design)) pval <- FALSE
-
+  if (showpercent == TRUE) {
+    if (is.null(cut.landmark)) {
+      y.percent <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
+      p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black")
+      if(!is.null(theme)&&theme == 'nejm') {
+        p1 <- p1 + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black",size=nejm.infigure.ratiow*5)
+      }
+      } else {
+      df.cut <- df[df$time < cut.landmark, ]
+      y.percent1 <- df.cut[df.cut$time %in% tapply(df.cut$time, df.cut$strata, max), "surv"]
+      y.percent2 <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
+      p <- p + annotate(geom = "text", x = cut.landmark, y = y.percent1, label = paste0(round(100 * y.percent1, 1), "%"), color = "black") +
+        annotate(geom = "text", x = xlims[2], y = y.percent2, label = paste0(round(100 * y.percent2, 1), "%"), color = "black")
+      if(!is.null(theme)&&theme == 'nejm') {
+        p1 <- p1 + annotate(geom = "text", x = cut.landmark, y = y.percent1, label = paste0(round(100 * y.percent1, 1), "%"), color = "black",size=nejm.infigure.ratiow*5) +
+          annotate(geom = "text", x = xlims[2], y = y.percent2, label = paste0(round(100 * y.percent2, 1), "%"), color = "black",size=nejm.infigure.ratiow*5)
+        
+      }
+      }
+  }
   if (pval) {
     if (is.null(design)) {
       design <- tryCatch(get(as.character(attr(sfit, "call")$design)), error = function(e) e)
@@ -382,18 +422,7 @@ svyjskm <- function(sfit,
     }
   }
 
-  if (showpercent == TRUE) {
-    if (is.null(cut.landmark)) {
-      y.percent <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
-      p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black")
-    } else {
-      df.cut <- df[df$time < cut.landmark, ]
-      y.percent1 <- df.cut[df.cut$time %in% tapply(df.cut$time, df.cut$strata, max), "surv"]
-      y.percent2 <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
-      p <- p + annotate(geom = "text", x = cut.landmark, y = y.percent1, label = paste0(round(100 * y.percent1, 1), "%"), color = "black") +
-        annotate(geom = "text", x = xlims[2], y = y.percent2, label = paste0(round(100 * y.percent2, 1), "%"), color = "black")
-    }
-  }
+
 
 
 
@@ -498,10 +527,16 @@ svyjskm <- function(sfit,
   #######################
   # Plotting the graphs #
   #######################
-
+  if(!is.null(theme)&&theme == 'nejm') {
+    p2<-p1+coord_cartesian(ylim=nejm.infigure.ylim)+theme(legend.position='none',axis.title.x = element_blank(),axis.title.y=element_blank()
+                                                          ,axis.text= element_text(size=10*nejm.infigure.ratiow))
+    p<- p + patchwork::inset_element(p2, 1-nejm.infigure.ratiow,1-nejm.infigure.ratioh, 1, 1,align_to = 'panel')
+  }
+  
   if (table == TRUE) {
     ggpubr::ggarrange(p, blank.pic, data.table,
-      nrow = 3, align = "v",
+      nrow = 3, 
+      #align = "v",
       heights = c(2, .1, .25)
     )
   } else {
