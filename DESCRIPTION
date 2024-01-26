@@ -3,7 +3,7 @@ Title: Kaplan-Meier Plot with 'ggplot2'
 Version: 0.5.3
 Date: 2024-01-24
 Authors@R: c(person("Jinseob", "Kim", email = "jinseob2kim@gmail.com", role = c("aut", "cre"),  comment = c(ORCID = "0000-0002-9403-605X")),
-             person("yoonkyoung", "Chun", email = "rachel200357@gmail.com"),
+             person("yoonkyoung", "Chun", email = "rachel200357@gmail.com", role = "aut"),
              person("Zarathu", role = c("cph", "fnd"))
              )
 Description: The function 'jskm()' creates publication quality Kaplan-Meier plot with at risk tables below. 'svyjskm()' provides plot for weighted Kaplan-Meier estimator. 
