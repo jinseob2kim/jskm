@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
       </span>
     </div>
 
@@ -160,6 +160,7 @@
   <span class='kw'>size.label.nrisk</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>cut.landmark</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>showpercent</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>linewidth</span> <span class='kw'>=</span> <span class='fl'>0.75</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -275,6 +276,10 @@
       <td><p>Shows the percentages on the right side.</p></td>
     </tr>
     <tr>
+      <th>linewidth</th>
+      <td><p>Line witdh, Default = 0.75</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
@@ -288,16 +293,16 @@
     <p>DETAILS</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>survey</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: grid</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: Matrix</span></div><div class='output co'>#&gt; <span class='message'></span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>survey</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: grid</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: Matrix</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘survey’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:graphics’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    dotchart</span></div><div class='input'> <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>pbc</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"survival"</span>)
- <span class='no'>pbc</span>$<span class='no'>randomized</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span>(<span class='no'>pbc</span>, !<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>trt</span>) <span class='kw'>&amp;</span> <span class='no'>trt</span><span class='kw'>&gt;</span><span class='fl'>0</span>)
- <span class='no'>biasmodel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='no'>randomized</span>~<span class='no'>age</span>*<span class='no'>edema</span>,<span class='kw'>data</span><span class='kw'>=</span><span class='no'>pbc</span>)
- <span class='no'>pbc</span>$<span class='no'>randprob</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted</a></span>(<span class='no'>biasmodel</span>)
- <span class='no'>dpbc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survey/man/svydesign.html'>svydesign</a></span>(<span class='kw'>id</span><span class='kw'>=</span>~<span class='fl'>1</span>, <span class='kw'>prob</span><span class='kw'>=</span>~<span class='no'>randprob</span>, <span class='kw'>strata</span><span class='kw'>=</span>~<span class='no'>edema</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>pbc</span>,<span class='no'>randomized</span>))
- <span class='no'>s1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survey/man/svykm.html'>svykm</a></span>(<span class='fu'>Surv</span>(<span class='no'>time</span>,<span class='no'>status</span><span class='kw'>&gt;</span><span class='fl'>0</span>)~<span class='no'>sex</span>, <span class='kw'>design</span><span class='kw'>=</span><span class='no'>dpbc</span>)
- <span class='fu'>svyjskm</span>(<span class='no'>s1</span>)</div><div class='img'><img src='svyjskm-1.png' alt='' width='700' height='433' /></div></pre>
+#&gt; <span class='message'>    dotchart</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>pbc</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"survival"</span>)
+<span class='no'>pbc</span>$<span class='no'>randomized</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>with</a></span>(<span class='no'>pbc</span>, !<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>trt</span>) <span class='kw'>&amp;</span> <span class='no'>trt</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>)
+<span class='no'>biasmodel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/glm.html'>glm</a></span>(<span class='no'>randomized</span> ~ <span class='no'>age</span> * <span class='no'>edema</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>pbc</span>)
+<span class='no'>pbc</span>$<span class='no'>randprob</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/fitted.values.html'>fitted</a></span>(<span class='no'>biasmodel</span>)
+<span class='no'>dpbc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survey/man/svydesign.html'>svydesign</a></span>(<span class='kw'>id</span> <span class='kw'>=</span> ~<span class='fl'>1</span>, <span class='kw'>prob</span> <span class='kw'>=</span> ~<span class='no'>randprob</span>, <span class='kw'>strata</span> <span class='kw'>=</span> ~<span class='no'>edema</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>pbc</span>, <span class='no'>randomized</span>))
+<span class='no'>s1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survey/man/svykm.html'>svykm</a></span>(<span class='fu'>Surv</span>(<span class='no'>time</span>, <span class='no'>status</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>) ~ <span class='no'>sex</span>, <span class='kw'>design</span> <span class='kw'>=</span> <span class='no'>dpbc</span>)
+<span class='fu'>svyjskm</span>(<span class='no'>s1</span>)</div><div class='img'><img src='svyjskm-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

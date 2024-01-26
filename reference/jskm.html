@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
       </span>
     </div>
 
@@ -165,6 +165,12 @@
   <span class='kw'>cut.landmark</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>showpercent</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>status.cmprsk</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>linewidth</span> <span class='kw'>=</span> <span class='fl'>0.75</span>,
+  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nejm.infigure.ratiow</span> <span class='kw'>=</span> <span class='fl'>0.6</span>,
+  <span class='kw'>nejm.infigure.ratioh</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>nejm.infigure.ymax</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>nejm.infigure.ymin</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -300,6 +306,10 @@
       <td><p>Status value when competing risk analysis, Default = 2nd level of status variable</p></td>
     </tr>
     <tr>
+      <th>linewidth</th>
+      <td><p>Line witdh, Default = 0.75</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
@@ -313,9 +323,9 @@
     <p>DETAILS</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>survival</span>)
- <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>colon</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: data set ‘colon’ not found</span></div><div class='input'> <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survival/man/survfit.html'>survfit</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='no'>time</span>,<span class='no'>status</span>)~<span class='no'>rx</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='no'>colon</span>)
- <span class='fu'>jskm</span>(<span class='no'>fit</span>, <span class='kw'>timeby</span><span class='kw'>=</span><span class='fl'>500</span>)</div><div class='img'><img src='jskm-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>survival</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>colon</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: data set ‘colon’ not found</span></div><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/survival/man/survfit.html'>survfit</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/survival/man/Surv.html'>Surv</a></span>(<span class='no'>time</span>, <span class='no'>status</span>) ~ <span class='no'>rx</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>colon</span>)
+<span class='fu'>jskm</span>(<span class='no'>fit</span>, <span class='kw'>timeby</span> <span class='kw'>=</span> <span class='fl'>500</span>)</div><div class='img'><img src='jskm-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
