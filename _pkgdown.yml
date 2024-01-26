@@ -16,9 +16,3 @@ authors:
 
 template:
   bootstrap: 5
-  params:
-    docsearch:
-      api_key: 538f16a56ef7a039ccb18b348432cbd3
-      index_name: jskm
-
-
