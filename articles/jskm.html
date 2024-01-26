@@ -155,13 +155,13 @@ competing risk</p>
 <div id="theme-jama" class="section level3">
 <h3 class="hasAnchor">
 <a href="#theme-jama" class="anchor"></a>Theme Jama</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">theme=</span><span class="st">'jama'</span>, <span class="at">cumhaz =</span> T, <span class="at">table=</span>T, <span class="at">mark =</span> F, <span class="at">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">pval.size =</span> <span class="dv">6</span>, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="fl">0.7</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">theme =</span> <span class="st">"jama"</span>, <span class="at">cumhaz =</span> T, <span class="at">table =</span> T, <span class="at">mark =</span> F, <span class="at">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span> T, <span class="at">pval.size =</span> <span class="dv">6</span>, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="fl">0.7</span>))</span></code></pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 </div>
 <div id="theme-nejmoa" class="section level3">
 <h3 class="hasAnchor">
 <a href="#theme-nejmoa" class="anchor"></a>Theme Nejmoa</h3>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">theme=</span><span class="st">'nejm'</span>, <span class="at">nejm.infigure.ratiow =</span> <span class="fl">0.6</span>, <span class="at">nejm.infigure.ratioh =</span> <span class="fl">0.4</span>, <span class="at">nejm.infigure.ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.7</span>), <span class="at">cumhaz =</span> T, <span class="at">table=</span>T, <span class="at">mark =</span> F, <span class="at">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span>T, <span class="at">pval.size =</span> <span class="dv">6</span>, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="fl">0.7</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jskm</span>(fit, <span class="at">theme =</span> <span class="st">"nejm"</span>, <span class="at">nejm.infigure.ratiow =</span> <span class="fl">0.6</span>, <span class="at">nejm.infigure.ratioh =</span> <span class="fl">0.4</span>, <span class="at">nejm.infigure.ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.7</span>), <span class="at">cumhaz =</span> T, <span class="at">table =</span> T, <span class="at">mark =</span> F, <span class="at">ylab =</span> <span class="st">"Cumulative incidence (%)"</span>, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">pval =</span> T, <span class="at">pval.size =</span> <span class="dv">6</span>, <span class="at">pval.coord =</span> <span class="fu">c</span>(<span class="dv">300</span>, <span class="fl">0.7</span>))</span></code></pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
 <div id="weighted-kaplan-meier-plot---svykm-object-in-survey-package" class="section level3">
@@ -208,13 +208,13 @@ apply <code>se = T</code> option to <code>svykm</code> object.</p>
 <div id="jama" class="section level4">
 <h4 class="hasAnchor">
 <a href="#jama" class="anchor"></a>JAMA</h4>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">theme=</span><span class="st">'jama'</span>, <span class="at">pval =</span> T,  <span class="at">table =</span> T, <span class="at">design =</span> dpbc)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">theme =</span> <span class="st">"jama"</span>, <span class="at">pval =</span> T, <span class="at">table =</span> T, <span class="at">design =</span> dpbc)</span></code></pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
 <div id="nejm" class="section level4">
 <h4 class="hasAnchor">
 <a href="#nejm" class="anchor"></a>NEJM</h4>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">theme=</span><span class="st">'nejm'</span>, <span class="at">nejm.infigure.ratiow =</span> <span class="fl">0.4</span>, <span class="at">nejm.infigure.ratioh =</span> <span class="fl">0.4</span>, <span class="at">nejm.infigure.ylim =</span> <span class="fu">c</span>(<span class="fl">0.2</span>,<span class="dv">1</span>), <span class="at">pval =</span> T,  <span class="at">table =</span> T, <span class="at">design =</span> dpbc)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svyjskm</span>(s2, <span class="at">theme =</span> <span class="st">"nejm"</span>, <span class="at">nejm.infigure.ratiow =</span> <span class="fl">0.4</span>, <span class="at">nejm.infigure.ratioh =</span> <span class="fl">0.4</span>, <span class="at">nejm.infigure.ylim =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="dv">1</span>), <span class="at">pval =</span> T, <span class="at">table =</span> T, <span class="at">design =</span> dpbc)</span></code></pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 </div>
@@ -238,7 +238,7 @@ apply <code>se = T</code> option to <code>svykm</code> object.</p>
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://github.com/jinseob2kim">Jinseob Kim</a>, <a href="https://www.zarathu.com"><img src="https://raw.githubusercontent.com/zarathucorp/zarathu/master/Color%20logo%20-%20no%20background.png" height="24"></a>.</p>
+  <p>Developed by <a href="https://github.com/jinseob2kim">Jinseob Kim</a>, yoonkyoung Chun, <a href="https://www.zarathu.com"><img src="https://raw.githubusercontent.com/zarathucorp/zarathu/master/Color%20logo%20-%20no%20background.png" height="24"></a>.</p>
 </div>
 
 <div class="pkgdown">

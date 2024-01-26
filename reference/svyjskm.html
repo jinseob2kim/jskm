@@ -134,6 +134,7 @@
 
     <pre class="usage"><span class='fu'>svyjskm</span>(
   <span class='no'>sfit</span>,
+  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xlabs</span> <span class='kw'>=</span> <span class='st'>"Time-to-event"</span>,
   <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='st'>"Survival probability"</span>,
   <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -161,6 +162,9 @@
   <span class='kw'>cut.landmark</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>showpercent</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>linewidth</span> <span class='kw'>=</span> <span class='fl'>0.75</span>,
+  <span class='kw'>nejm.infigure.ratiow</span> <span class='kw'>=</span> <span class='fl'>0.6</span>,
+  <span class='kw'>nejm.infigure.ratioh</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
+  <span class='kw'>nejm.infigure.ylim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
   <span class='no'>...</span>
 )</pre>
 
@@ -170,6 +174,10 @@
     <tr>
       <th>sfit</th>
       <td><p>a svykm object</p></td>
+    </tr>
+    <tr>
+      <th>theme</th>
+      <td><p>Theme of the plot, Default = NULL, "nejm" for NEJMOA style, "jama" for JAMA style</p></td>
     </tr>
     <tr>
       <th>xlabs</th>
@@ -280,6 +288,18 @@
       <td><p>Line witdh, Default = 0.75</p></td>
     </tr>
     <tr>
+      <th>nejm.infigure.ratiow</th>
+      <td><p>Ratio of infigure width to total width, Default = 0.6</p></td>
+    </tr>
+    <tr>
+      <th>nejm.infigure.ratioh</th>
+      <td><p>Ratio of infigure height to total height, Default = 0.5</p></td>
+    </tr>
+    <tr>
+      <th>nejm.infigure.ylim</th>
+      <td><p>y-axis limit of infigure, Default = c(0,1)</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
@@ -319,7 +339,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://github.com/jinseob2kim'>Jinseob Kim</a>, <a href='https://www.zarathu.com'><img src="https://raw.githubusercontent.com/zarathucorp/zarathu/master/Color%20logo%20-%20no%20background.png" height="24" /></a>.</p>
+  <p>Developed by <a href='https://github.com/jinseob2kim'>Jinseob Kim</a>, yoonkyoung Chun, <a href='https://www.zarathu.com'><img src="https://raw.githubusercontent.com/zarathucorp/zarathu/master/Color%20logo%20-%20no%20background.png" height="24" /></a>.</p>
 </div>
 
 <div class="pkgdown">
