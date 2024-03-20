@@ -4,6 +4,7 @@ jskm
 Kaplan-Meier Plot with ‘ggplot2’: ‘survfit’ and ‘svykm’ objects from
 ‘survival’ and ‘survey’ packages.
 
+<!-- badges: start -->
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&svg=true)](https://ci.appveyor.com/project/jinseob2kim/jskm)
 [![Github
@@ -17,6 +18,8 @@ issues](https://img.shields.io/github/issues/jinseob2kim/jskm.svg)](https://gith
 stars](https://img.shields.io/github/stars/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/stargazers)
 [![GitHub
 license](https://img.shields.io/github/license/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/blob/master/LICENSE)
+<!-- badges: end -->
+
 
 ## Install
 
