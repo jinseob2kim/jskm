@@ -23,7 +23,7 @@
 #' @param subs = NULL,
 #' @param label.nrisk Numbers at risk label. Default = "Numbers at risk"
 #' @param size.label.nrisk Font size of label.nrisk. Default = 10
-#' @param linecols Character. Colour brewer pallettes too colour lines. Default ="Set1", "black" for black with dashed line.
+#' @param linecols Character or Character vector. Colour brewer pallettes too colour lines. Default ="Set1", "black" for black with dashed line, character vector for the customization of line colors.
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default = FALSE
 #' @param cumhaz Show cumulative incidence function, Default: F
 #' @param cluster.option Cluster option for p value, Option: "None", "cluster", "frailty", Default: "None"
@@ -313,7 +313,7 @@ jskm <- function(sfit,
   # specifying axis parameteres etc #
   ###################################
 
-  if (dashed == TRUE | linecols == "black") {
+  if (dashed == TRUE | all(linecols == "black")) {
     linetype <- c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash", "1F", "F1", "4C88C488", "12345678")
   } else {
     linetype <- c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
@@ -330,7 +330,7 @@ jskm <- function(sfit,
 
 
   linecols2 <- linecols
-  if (linecols == "black") {
+  if (all(linecols == "black")) {
     linecols <- "Set1"
     p <- ggplot2::ggplot(df, aes(x = time, y = surv, linetype = strata)) +
       ggtitle(main)
@@ -380,12 +380,25 @@ jskm <- function(sfit,
       geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth)
   }
 
+  brewer.palette <- c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", 
+                      "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
+                      "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd")
+  
   if (!is.null(theme) && theme == "jama") {
-    p <- p + scale_color_manual(name = ystrataname, values = c("#00AFBB", "#E7B800", "#FC4E07"))
+    col.pal <- c("#00AFBB", "#E7B800", "#FC4E07")
+    col.pal <- rep(col.pal, ceiling(length(ystratalabs)/3))
+  } else if (all(linecols %in% brewer.palette)) {
+    col.pal <- NULL
   } else {
-    p <- p + scale_colour_brewer(name = ystrataname, palette = linecols)
+    col.pal <- linecols
+    col.pal <- rep(col.pal, ceiling(length(ystratalabs)/length(linecols)))
   }
-
+  
+  if (is.null(col.pal)) {
+    p <- p + scale_colour_brewer(name = ystrataname, palette = linecols)
+  } else {
+    p <- p + scale_color_manual(name = ystrataname, values = col.pal)
+  }
 
   # Add censoring marks to the line:
   if (marks == TRUE) {
@@ -394,10 +407,12 @@ jskm <- function(sfit,
 
   # Add 95% CI to plot
   if (ci == TRUE) {
-    if (linecols2 == "black") {
+    if (all(linecols2 == "black")) {
       p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
-    } else {
+    } else if (is.null(col.pal)) {
       p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_brewer(name = ystrataname, palette = linecols)
+    } else {
+      p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_manual(name = ystrataname, values = col.pal)
     }
   }
 
