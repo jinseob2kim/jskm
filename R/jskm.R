@@ -380,20 +380,22 @@ jskm <- function(sfit,
       geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth)
   }
 
-  brewer.palette <- c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", 
-                      "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
-                      "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd")
-  
+  brewer.palette <- c(
+    "BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2",
+    "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
+    "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"
+  )
+
   if (!is.null(theme) && theme == "jama") {
     col.pal <- c("#00AFBB", "#E7B800", "#FC4E07")
-    col.pal <- rep(col.pal, ceiling(length(ystratalabs)/3))
+    col.pal <- rep(col.pal, ceiling(length(ystratalabs) / 3))
   } else if (all(linecols %in% brewer.palette)) {
     col.pal <- NULL
   } else {
     col.pal <- linecols
-    col.pal <- rep(col.pal, ceiling(length(ystratalabs)/length(linecols)))
+    col.pal <- rep(col.pal, ceiling(length(ystratalabs) / length(linecols)))
   }
-  
+
   if (is.null(col.pal)) {
     p <- p + scale_colour_brewer(name = ystrataname, palette = linecols)
   } else {
