@@ -14,6 +14,8 @@
 #' @param pval.size numeric value specifying the p-value text size. Default is 5.
 #' @param pval.coord numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL
 #' @param pval.testname logical: add '(Log-rank)' text to p-value. Default = F
+#' @param marks logical: should censoring marks be added?
+#' @param shape what shape should the censoring marks be, default is a vertical line
 #' @param legend logical. should a legend be added to the plot? Default: TRUE
 #' @param ci logical. Should confidence intervals be plotted. Default = NULL
 #' @param legendposition numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)
@@ -68,6 +70,8 @@ svyjskm <- function(sfit,
                     pval.size = 5,
                     pval.coord = c(NULL, NULL),
                     pval.testname = F,
+                    marks = TRUE,
+                    shape = 3,
                     legend = TRUE,
                     legendposition = c(0.85, 0.8),
                     ci = NULL,
@@ -86,7 +90,7 @@ svyjskm <- function(sfit,
                     nejm.infigure.ratioh = 0.5,
                     nejm.infigure.ylim = c(0, 1),
                     ...) {
-  surv <- strata <- lower <- upper <- NULL
+  n.censor <- surv <- strata <- lower <- upper <- NULL
 
   if (!is.null(theme) && theme == "nejm") legendposition <- "right"
   if (is.null(timeby)) {
@@ -129,9 +133,7 @@ svyjskm <- function(sfit,
 
     sfit2 <- survey::svykm(formula(sfit), design = subset(design, get(var.time) >= cut.landmark), se = T)
   }
-
-
-
+  
 
   if (inherits(sfit, "svykmlist")) {
     if (is.null(ystrataname)) ystrataname <- as.character(formula(sfit)[[3]])
@@ -338,7 +340,18 @@ svyjskm <- function(sfit,
   } else {
     p <- p + scale_color_manual(name = ystrataname, values = col.pal)
   }
-
+  
+  # Add censoring marks to the line:
+  if (marks == TRUE) {
+    if (is.null(design)) {
+    sfit2 <- survival::survfit(formula(sfit), data = get(as.character(attr(sfit, "call")$design))$variables)
+  } else {
+    sfit2 <- survival::survfit(formula(sfit), data = design$variables)}
+    
+    df[['n.censor']] <- c(0, 0, sfit2$n.censor)
+    
+    p <- p + geom_point(data = subset(df, n.censor >= 1), aes(x = time, y = surv, colour = strata), shape = shape)  }
+  
   # Add 95% CI to plot
   if (ci == TRUE) {
     if (all(linecols2 == "black")) {
