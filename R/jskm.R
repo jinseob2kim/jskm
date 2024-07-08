@@ -404,7 +404,8 @@ jskm <- function(sfit,
 
   # Add censoring marks to the line:
   if (marks == TRUE) {
-    p <- p + geom_point(data = subset(df, n.censor >= 1), aes(x = time, y = surv, colour = strata), shape = shape)  }
+    p <- p + geom_point(data = subset(df, n.censor >= 1), aes(x = time, y = surv, colour = strata), shape = shape)
+  }
 
   # Add 95% CI to plot
   if (ci == TRUE) {
