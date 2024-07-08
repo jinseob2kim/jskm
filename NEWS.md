@@ -1,3 +1,7 @@
+# jskm 0.5.5
+
+* Update: Align color of censoring marks with color of lines in `jskm`.
+
 # jskm 0.5.4
 
 * Update: Add customization of line colors to `jskm` and `svyjskm`

@@ -20,6 +20,8 @@ svyjskm(
   pval.size = 5,
   pval.coord = c(NULL, NULL),
   pval.testname = F,
+  marks = TRUE,
+  shape = 3,
   legend = TRUE,
   legendposition = c(0.85, 0.8),
   ci = NULL,
@@ -77,7 +79,7 @@ svyjskm(
 
 \item{ci}{logical. Should confidence intervals be plotted. Default = NULL}
 
-\item{linecols}{Character. Colour brewer pallettes too colour lines. Default: 'Set1', "black" for black with dashed line.}
+\item{linecols}{Character or Character vector. Colour brewer pallettes too colour lines. Default ="Set1", "black" for black with dashed line, character vector for the customization of line colors.}
 
 \item{dashed}{logical. Should a variety of linetypes be used to identify lines. Default: FALSE}
 
