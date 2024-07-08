@@ -1,8 +1,6 @@
 # jskm 0.5.5
 
-* Update: Add censoring marks to and `svyjskm`.
-
-* Update: Align color of censoring marks with color of lines in `jskm` and `svyjskm`.
+* Update: Align color of censoring marks with color of lines in `jskm`.
 
 # jskm 0.5.4
 

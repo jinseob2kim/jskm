@@ -14,8 +14,6 @@
 #' @param pval.size numeric value specifying the p-value text size. Default is 5.
 #' @param pval.coord numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL
 #' @param pval.testname logical: add '(Log-rank)' text to p-value. Default = F
-#' @param marks logical: should censoring marks be added?
-#' @param shape what shape should the censoring marks be, default is a vertical line
 #' @param legend logical. should a legend be added to the plot? Default: TRUE
 #' @param ci logical. Should confidence intervals be plotted. Default = NULL
 #' @param legendposition numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)
@@ -70,8 +68,6 @@ svyjskm <- function(sfit,
                     pval.size = 5,
                     pval.coord = c(NULL, NULL),
                     pval.testname = F,
-                    marks = TRUE,
-                    shape = 3,
                     legend = TRUE,
                     legendposition = c(0.85, 0.8),
                     ci = NULL,
@@ -90,8 +86,8 @@ svyjskm <- function(sfit,
                     nejm.infigure.ratioh = 0.5,
                     nejm.infigure.ylim = c(0, 1),
                     ...) {
-  n.censor <- surv <- strata <- lower <- upper <- NULL
-
+  surv <- strata <- lower <- upper <- NULL
+  
   if (!is.null(theme) && theme == "nejm") legendposition <- "right"
   if (is.null(timeby)) {
     if (inherits(sfit, "svykmlist")) {
@@ -102,7 +98,7 @@ svyjskm <- function(sfit,
       timeby <- signif(max(sfit$time) / 7, 1)
     }
   }
-
+  
   if (is.null(ci)) {
     if (inherits(sfit, "svykmlist")) {
       ci <- "varlog" %in% names(sfit[[1]])
@@ -110,8 +106,8 @@ svyjskm <- function(sfit,
       ci <- "varlog" %in% names(sfit)
     }
   }
-
-
+  
+  
   if (ci & !is.null(cut.landmark)) {
     if (is.null(design)) {
       design <- tryCatch(get(as.character(attr(sfit, "call")$design)), error = function(e) e)
@@ -130,14 +126,16 @@ svyjskm <- function(sfit,
     design1 <- design
     design1$variables[[var.event]][design1$variables[[var.time]] >= cut.landmark] <- 0
     design1$variables[[var.time]][design1$variables[[var.time]] >= cut.landmark] <- cut.landmark
-
+    
     sfit2 <- survey::svykm(formula(sfit), design = subset(design, get(var.time) >= cut.landmark), se = T)
   }
   
-
+  
+  
+  
   if (inherits(sfit, "svykmlist")) {
     if (is.null(ystrataname)) ystrataname <- as.character(formula(sfit)[[3]])
-
+    
     if (ci) {
       if ("varlog" %in% names(sfit[[1]])) {
         df <- do.call(rbind, lapply(names(sfit), function(x) {
@@ -163,12 +161,12 @@ svyjskm <- function(sfit,
           } else {
             df[df$time == cut.landmark & df$strata == v, "surv"] <- 1
           }
-
+          
           df[df$time > cut.landmark & df$strata == v, "surv"] <- df[df$time > cut.landmark & df$strata == v, "surv"] / min(df[df$time < cut.landmark & df$strata == v, "surv"])
         }
       }
     }
-
+    
     df$strata <- factor(df$strata, levels = names(sfit))
     times <- seq(0, max(sapply(sfit, function(x) {
       max(x$time)
@@ -183,7 +181,7 @@ svyjskm <- function(sfit,
     }
   } else if (inherits(sfit, "svykm")) {
     if (is.null(ystrataname)) ystrataname <- "Strata"
-
+    
     if (ci) {
       if ("varlog" %in% names(sfit)) {
         df <- data.frame("strata" = "All", "time" = sfit$time, "surv" = sfit$surv, "lower" = pmax(0, exp(log(sfit$surv) - 1.96 * sqrt(sfit$varlog))), "upper" = pmax(0, exp(log(sfit$surv) + 1.96 * sqrt(sfit$varlog))))
@@ -202,11 +200,11 @@ svyjskm <- function(sfit,
         } else {
           df[df$time == cut.landmark, "surv"] <- 1
         }
-
+        
         df[df$time > cut.landmark, "surv"] <- df[df$time > cut.landmark, "surv"] / min(df[df$time < cut.landmark, "surv"])
       }
     }
-
+    
     times <- seq(0, max(sfit$time), by = timeby)
     if (is.null(ystratalabs)) {
       ystratalabs <- "All"
@@ -215,13 +213,13 @@ svyjskm <- function(sfit,
       xlims <- c(0, max(sfit$time))
     }
   }
-
+  
   m <- max(nchar(ystratalabs))
-
-
-
-
-
+  
+  
+  
+  
+  
   if (cumhaz) {
     df$surv <- 1 - df$surv
     if (ci) {
@@ -231,7 +229,7 @@ svyjskm <- function(sfit,
       df$upper <- upper.new
     }
   }
-
+  
   # Final changes to data for survival plot
   levels(df$strata) <- ystratalabs
   zeros <- data.frame("strata" = factor(ystratalabs, levels = levels(df$strata)), "time" = 0, "surv" = 1)
@@ -239,7 +237,7 @@ svyjskm <- function(sfit,
     zeros$upper <- 1
     zeros$lower <- 1
   }
-
+  
   if (cumhaz) {
     zeros$surv <- 0
     if (ci) {
@@ -247,27 +245,27 @@ svyjskm <- function(sfit,
       zeros$upper <- 0
     }
   }
-
+  
   df <- rbind(zeros, df)
   d <- length(levels(df$strata))
-
+  
   ###################################
   # specifying axis parameteres etc #
   ###################################
-
+  
   if (dashed == TRUE | all(linecols == "black")) {
     linetype <- c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash", "1F", "F1", "4C88C488", "12345678")
   } else {
     linetype <- c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
   }
-
+  
   # Scale transformation
   # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   surv.scale <- match.arg(surv.scale)
   scale_labels <- ggplot2::waiver()
   if (surv.scale == "percent") scale_labels <- scales::percent
-
-
+  
+  
   p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata)) +
     ggtitle(main)
   linecols2 <- linecols
@@ -276,7 +274,7 @@ svyjskm <- function(sfit,
     p <- ggplot2::ggplot(df, aes(x = time, y = surv, linetype = strata)) +
       ggtitle(main)
   }
-
+  
   # Set up theme elements
   p <- p + theme_bw() +
     theme(
@@ -293,7 +291,7 @@ svyjskm <- function(sfit,
     ) +
     scale_x_continuous(xlabs, breaks = times, limits = xlims) +
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
-
+  
   if (!is.null(theme) && theme == "jama") {
     p <- p + theme(
       panel.grid.major.x = element_blank()
@@ -303,13 +301,13 @@ svyjskm <- function(sfit,
       panel.grid.major = element_blank()
     )
   }
-
-
+  
+  
   # Removes the legend:
   if (legend == FALSE) {
     p <- p + theme(legend.position = "none")
   }
-
+  
   # Add lines too plot
   if (is.null(cut.landmark)) {
     p <- p + geom_step(linewidth = linewidth) +
@@ -318,13 +316,13 @@ svyjskm <- function(sfit,
     p <- p + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) +
       scale_linetype_manual(name = ystrataname, values = linetype)
   }
-
+  
   brewer.palette <- c(
     "BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2",
     "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
     "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"
   )
-
+  
   if (!is.null(theme) && theme == "jama") {
     col.pal <- c("#00AFBB", "#E7B800", "#FC4E07")
     col.pal <- rep(col.pal, ceiling(length(ystratalabs) / 3))
@@ -334,23 +332,12 @@ svyjskm <- function(sfit,
     col.pal <- linecols
     col.pal <- rep(col.pal, ceiling(length(ystratalabs) / length(linecols)))
   }
-
+  
   if (is.null(col.pal)) {
     p <- p + scale_colour_brewer(name = ystrataname, palette = linecols)
   } else {
     p <- p + scale_color_manual(name = ystrataname, values = col.pal)
   }
-  
-  # Add censoring marks to the line:
-  if (marks == TRUE) {
-    if (is.null(design)) {
-    sfit2 <- survival::survfit(formula(sfit), data = get(as.character(attr(sfit, "call")$design))$variables)
-  } else {
-    sfit2 <- survival::survfit(formula(sfit), data = design$variables)}
-    
-    df[['n.censor']] <- c(0, 0, sfit2$n.censor)
-    
-    p <- p + geom_point(data = subset(df, n.censor >= 1), aes(x = time, y = surv, colour = strata), shape = shape)  }
   
   # Add 95% CI to plot
   if (ci == TRUE) {
@@ -362,11 +349,11 @@ svyjskm <- function(sfit,
       p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_manual(name = ystrataname, values = col.pal)
     }
   }
-
+  
   if (!is.null(cut.landmark)) {
     p <- p + geom_vline(xintercept = cut.landmark, lty = 2)
   }
-
+  
   p1 <- p
   ## p-value
   if (inherits(sfit, "svykm")) pval <- FALSE
@@ -397,14 +384,14 @@ svyjskm <- function(sfit,
         stop("'pval' option requires design object. please input 'design' option")
       }
     }
-
+    
     if (is.null(cut.landmark)) {
       sdiff <- survey::svylogrank(formula(sfit), design = design)
       pvalue <- sdiff[[2]][2]
-
+      
       pvaltxt <- ifelse(pvalue < 0.001, "p < 0.001", paste("p =", round(pvalue, 3)))
       if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")
-
+      
       # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
       if (is.null(pval.coord)) {
         p <- p + annotate("text", x = as.integer(max(sapply(sfit, function(x) {
@@ -431,16 +418,16 @@ svyjskm <- function(sfit,
       design1 <- design
       design1$variables[[var.event]][design1$variables[[var.time]] >= cut.landmark] <- 0
       design1$variables[[var.time]][design1$variables[[var.time]] >= cut.landmark] <- cut.landmark
-
+      
       sdiff1 <- survey::svylogrank(formula(sfit), design = design1)
       sdiff2 <- survey::svylogrank(formula(sfit), design = subset(design, get(var.time) >= cut.landmark))
       pvalue <- sapply(list(sdiff1, sdiff2), function(x) {
         x[[2]][2]
       })
-
+      
       pvaltxt <- ifelse(pvalue < 0.001, "p < 0.001", paste("p =", round(pvalue, 3)))
       if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")
-
+      
       if (is.null(pval.coord)) {
         p <- p + annotate("text", x = c(as.integer(max(sapply(sfit, function(x) {
           max(x$time) / 10
@@ -452,11 +439,11 @@ svyjskm <- function(sfit,
       }
     }
   }
-
-
-
-
-
+  
+  
+  
+  
+  
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +
     geom_blank() +
@@ -467,11 +454,11 @@ svyjskm <- function(sfit,
       axis.ticks = element_blank(),
       panel.grid.major = element_blank(), panel.border = element_blank()
     )
-
+  
   ###################################################
   # Create table graphic to include at-risk numbers #
   ###################################################
-
+  
   n.risk <- NULL
   if (table == TRUE) {
     if (is.null(design)) {
@@ -479,9 +466,9 @@ svyjskm <- function(sfit,
     } else {
       sfit2 <- survival::survfit(formula(sfit), data = design$variables)
     }
-
+    
     # times <- seq(0, max(sfit2$time), by = timeby)
-
+    
     if (is.null(subs)) {
       if (length(levels(summary(sfit2)$strata)) == 0) {
         subs1 <- 1
@@ -511,27 +498,27 @@ svyjskm <- function(sfit,
       subs2 <- which(regexpr(ssvar, summary(sfit2, censored = T)$strata, perl = T) != -1)
       subs3 <- which(regexpr(ssvar, summary(sfit2, times = times, extend = TRUE)$strata, perl = T) != -1)
     }
-
+    
     if (!is.null(subs)) pval <- FALSE
-
-
-
+    
+    
+    
     if (length(levels(summary(sfit2)$strata)) == 0) {
       Factor <- factor(rep("All", length(subs3)))
     } else {
       Factor <- factor(summary(sfit2, times = times, extend = TRUE)$strata[subs3])
     }
-
-
+    
+    
     risk.data <- data.frame(
       strata = Factor,
       time = summary(sfit2, times = times, extend = TRUE)$time[subs3],
       n.risk = summary(sfit2, times = times, extend = TRUE)$n.risk[subs3]
     )
-
-
+    
+    
     risk.data$strata <- factor(risk.data$strata, levels = rev(levels(risk.data$strata)))
-
+    
     data.table <- ggplot(risk.data, aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) +
       geom_text(size = 3.5) +
       theme_bw() +
@@ -548,13 +535,13 @@ svyjskm <- function(sfit,
       )
     data.table <- data.table +
       theme(legend.position = "none") + xlab(NULL) + ylab(NULL)
-
-
+    
+    
     # ADJUST POSITION OF TABLE FOR AT RISK
     data.table <- data.table +
       theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 3.1, 4.3) - 0.38 * m), "lines"))
   }
-
+  
   #######################
   # Plotting the graphs #
   #######################
@@ -565,12 +552,12 @@ svyjskm <- function(sfit,
     )
     p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
-
+  
   if (table == TRUE) {
     ggpubr::ggarrange(p, blank.pic, data.table,
-      nrow = 3,
-      # align = "v",
-      heights = c(2, .1, .25)
+                      nrow = 3,
+                      # align = "v",
+                      heights = c(2, .1, .25)
     )
   } else {
     p
