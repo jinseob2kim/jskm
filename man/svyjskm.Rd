@@ -20,8 +20,6 @@ svyjskm(
   pval.size = 5,
   pval.coord = c(NULL, NULL),
   pval.testname = F,
-  marks = TRUE,
-  shape = 3,
   legend = TRUE,
   legendposition = c(0.85, 0.8),
   ci = NULL,
