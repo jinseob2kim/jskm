@@ -1,6 +1,7 @@
-context("Kaplan-meier plot")
+#context("Kaplan-meier plot")
 
 library(survival)
+library(ggplot2)
 # data(colon);data(pbc)
 
 test_that("Run jskm", {
