@@ -7,7 +7,7 @@ library(ggplot2)
 test_that("Run jskm", {
   fit <- survfit(Surv(time, status) ~ rx, data = colon)
   expect_is(jskm(fit, timeby = 500, table = T, pval = T), "gg")
-  expect_is(jskm(fit,
+  expect_is(jskm(fit, med = T,
     table = T, pval = T, label.nrisk = "No. at risk", timeby = 365, xlabs = "Time(Day)", ylabs = "Survival", marks = F, xlims = c(0, 3500), ylims = c(0.25, 1),
     ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx"
   ), "gg")
@@ -37,7 +37,7 @@ test_that("Run svyjskm", {
   s1 <- survey::svykm(Surv(time, status > 0) ~ sex, design = dpbc, se = T)
   expect_is(svyjskm(s1, ci = T), "gg")
   expect_is(svyjskm(s1, ci = F, ylabs = "Suvrival (%)", surv.scale = "percent"), "gg")
-  expect_is(svyjskm(s1, table = T, pval = T, design = dpbc), "gg")
+  expect_is(svyjskm(s1, table = T, pval = T, design = dpbc, med = T), "gg")
   expect_is(svyjskm(s1, ci = T, cumhaz = T), "gg")
   expect_is(svyjskm(s1, ci = F, cumhaz = T), "gg")
   s2 <- survey::svykm(Surv(time, status > 0) ~ sex, design = dpbc, se = F)

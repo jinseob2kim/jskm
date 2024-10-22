@@ -129,7 +129,7 @@ jskm <- function(sfit,
   n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
   
   times <- seq(0, max(sfit$time), by = timeby)
-  if (!is.null(theme) && theme == "nejm") legendposition <- c(1, 0.5)
+  if (!is.null(theme) && theme == "nejm") legendposition <- legendposition
   if (is.null(subs)) {
     if (length(levels(summary(sfit)$strata)) == 0) {
       subs1 <- 1
@@ -190,7 +190,7 @@ jskm <- function(sfit,
       L <- summary(sfit)$table["0.95LCL"][[1]]
       U <- summary(sfit)$table["0.95UCL"][[1]]
       median_time <- summary(sfit)$table["median"][[1]]
-      ystratalabs2 <- paste0(ystratalabs, " (median : ", median_time, ", 0.95 CI : ",L, "-", U, ")")
+      ystratalabs2 <- paste0(ystratalabs, " (median : ", median_time, ", 95%CI : ",L, "-", U, ")")
     } else {
       # [subs1]
       if (is.null(ystratalabs)) 
@@ -200,7 +200,7 @@ jskm <- function(sfit,
         L <- summary(sfit)$table[,"0.95LCL"][[i]]
         U <- summary(sfit)$table[,"0.95UCL"][[i]]
         median_time <- summary(sfit)$table[,"median"][[i]]
-        ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", median_time, ", 0.95 CI : ",L, "-", U, ")"))
+        ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", median_time, ", 95%CI : ",L, "-", U, ")"))
       }
     }
   }
@@ -377,6 +377,10 @@ jskm <- function(sfit,
     scale_x_continuous(xlabs, breaks = times, limits = xlims) +
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   
+  
+  
+  
+  
   if (!is.null(theme) && theme == "jama") {
     p <- p + theme(
       panel.grid.major.x = element_blank()
@@ -467,6 +471,8 @@ jskm <- function(sfit,
   }
   
   # Add median value
+  
+  
   if (med == TRUE & is.null(cut.landmark) & is.null(status.cmprsk)){
     if (length(levels(summary(sfit)$strata)) == 0) {
       median_time <- summary(sfit)$table["median"][[1]]
@@ -506,7 +512,7 @@ jskm <- function(sfit,
   
   # Add 95% CI to plot
   if (ci == TRUE) {
-    if (med == FALSE | !is.null(status.cmprsk)) {
+    if (med == FALSE | !is.null(status.cmprsk) | (!is.null(theme) && theme == "nejm")) {
       if (all(linecols2 == "black")) {
         p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
       } else if (is.null(col.pal)) {
@@ -705,7 +711,8 @@ jskm <- function(sfit,
   
   if (!is.null(theme) && theme == "nejm") {
     p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(axis.title.x = element_blank(), axis.title.y = element_blank(),
-                                                                  axis.text = element_text(size = 10 * nejm.infigure.ratiow)
+                                                                  axis.text = element_text(size = 10 * nejm.infigure.ratiow), 
+                                                                  
     ) + guides(colour = "none", linetype = "none")
     p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
@@ -720,3 +727,4 @@ jskm <- function(sfit,
     p
   }
 }
+

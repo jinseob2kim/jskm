@@ -90,7 +90,7 @@ svyjskm <- function(sfit,
                     ...) {
   surv <- strata <- lower <- upper <- NULL
   
-  if (!is.null(theme) && theme == "nejm") legendposition <- c(1, 0.5)
+  if (!is.null(theme) && theme == "nejm") legendposition <- legendposition
   if (is.null(timeby)) {
     if (inherits(sfit, "svykmlist")) {
       timeby <- signif(max(sapply(sfit, function(x) {
@@ -264,7 +264,7 @@ svyjskm <- function(sfit,
     times <- seq(0, max(sfit$time), by = timeby)
     if (is.null(ystratalabs)) {
       ystratalabs <- "All"
-      ystratalabs2 <- paste0(ystratalabs, " (median : ", unique(df3$med), ")")
+      ystratalabs2 <- paste0(ystratalabs, " (median : ", unique(df$med), ")")
     }
     if (is.null(xlims)) {
       xlims <- c(0, max(sfit$time))
@@ -289,14 +289,14 @@ svyjskm <- function(sfit,
   
   # Final changes to data for survival plot
   levels(df$strata) <- ystratalabs
-  zeros <- if (med == T){
+  zeros <- if (med == T & is.null(cut.landmark)){
     data.frame("strata" = factor(ystratalabs, levels = levels(df$strata)), "time" = 0, "surv" = 1, "med" = 0.5)
   } else {
     data.frame("strata" = factor(ystratalabs, levels = levels(df$strata)), "time" = 0, "surv" = 1)
   }
   
   if (ci) {
-    if (med == T){
+    if (med == T & is.null(cut.landmark)){
       zeros$med <- NULL  
       zeros$upper <- 1
       zeros$lower <- 1
