@@ -1,3 +1,11 @@
+# jskm 0.5.6
+
+* Update: Add median expression to the graph in `jskm` and `svyjskm`. 
+
+# jskm 0.5.5
+
+* Update: Align color of censoring marks with color of lines in `jskm`.
+
 # jskm 0.5.5
 
 * Update: Align color of censoring marks with color of lines in `jskm`.

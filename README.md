@@ -5,6 +5,7 @@ Kaplan-Meier Plot with ‘ggplot2’: ‘survfit’ and ‘svykm’ objects from
 ‘survival’ and ‘survey’ packages.
 
 <!-- badges: start -->
+
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/jinseob2kim/jskm?branch=master&svg=true)](https://ci.appveyor.com/project/jinseob2kim/jskm)
 [![Github
@@ -19,7 +20,6 @@ stars](https://img.shields.io/github/stars/jinseob2kim/jskm.svg)](https://github
 [![GitHub
 license](https://img.shields.io/github/license/jinseob2kim/jskm.svg)](https://github.com/jinseob2kim/jskm/blob/master/LICENSE)
 <!-- badges: end -->
-
 
 ## Install
 
@@ -51,7 +51,7 @@ jskm(fit)
 
 ``` r
 jskm(fit,
-  table = T, pval = T, label.nrisk = "No. at risk", size.label.nrisk = 8,
+  table = T, pval = T, med = T, label.nrisk = "No. at risk", size.label.nrisk = 8,
   xlabs = "Time(Day)", ylabs = "Survival", ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx",
   marks = F, timeby = 365, xlims = c(0, 3000), ylims = c(0.25, 1), showpercent = T
 )
@@ -107,7 +107,7 @@ jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", sho
 #### JAMA
 
 ``` r
-jskm(fit, theme='jama', cumhaz = T, table=T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme = "jama", cumhaz = T, table = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
@@ -115,7 +115,7 @@ jskm(fit, theme='jama', cumhaz = T, table=T, mark = F, ylab = "Cumulative incide
 #### NEJM
 
 ``` r
-jskm(fit, theme='nejm', nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0,0.7), cumhaz = T, table=T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval =T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme = "nejm", nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0, 0.7), cumhaz = T, table = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
@@ -178,7 +178,7 @@ svyjskm(s3, ci = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 
 #### JAMA
 
 ``` r
-svyjskm(s2, theme='jama', pval = T,  table = T, design = dpbc)
+svyjskm(s2, theme = "jama", pval = T, table = T, design = dpbc)
 ```
 
 ![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
@@ -186,7 +186,7 @@ svyjskm(s2, theme='jama', pval = T,  table = T, design = dpbc)
 #### NEJM
 
 ``` r
-svyjskm(s2, theme='nejm', nejm.infigure.ratiow = 0.45, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0.2,1), pval = T,  table = T, design = dpbc)
+svyjskm(s2, theme = "nejm", nejm.infigure.ratiow = 0.45, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0.2, 1), pval = T, table = T, design = dpbc)
 ```
 
 ![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->

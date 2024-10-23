@@ -17,6 +17,7 @@
 #' @param pval.testname logical: add '(Log-rank)' text to p-value. Default = F
 #' @param marks logical: should censoring marks be added?
 #' @param shape what shape should the censoring marks be, default is a vertical line
+#' @param med should a median line be added to the plot? Default = F
 #' @param legend logical. should a legend be added to the plot?
 #' @param legendposition numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
 #' @param ci logical. Should confidence intervals be plotted. Default = FALSE
@@ -89,7 +90,7 @@ jskm <- function(sfit,
                  xlims = c(0, max(sfit$time)),
                  ylims = c(0, 1),
                  surv.scale = c("default", "percent"),
-                 ystratalabs = names(sfit$strata),
+                 ystratalabs = NULL,
                  ystrataname = "Strata",
                  timeby = signif(max(sfit$time) / 7, 1),
                  main = "",
@@ -99,6 +100,7 @@ jskm <- function(sfit,
                  pval.testname = F,
                  marks = TRUE,
                  shape = 3,
+                 med = FALSE,
                  legend = TRUE,
                  legendposition = c(0.85, 0.8),
                  ci = FALSE,
@@ -123,11 +125,11 @@ jskm <- function(sfit,
   #################################
   # sorting the use of subsetting #
   #################################
-
+  
   n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
-
+  
   times <- seq(0, max(sfit$time), by = timeby)
-  if (!is.null(theme) && theme == "nejm") legendposition <- "right"
+  if (!is.null(theme) && theme == "nejm") legendposition <- legendposition
   if (is.null(subs)) {
     if (length(levels(summary(sfit)$strata)) == 0) {
       subs1 <- 1
@@ -157,13 +159,13 @@ jskm <- function(sfit,
     subs2 <- which(regexpr(ssvar, summary(sfit, censored = T)$strata, perl = T) != -1)
     subs3 <- which(regexpr(ssvar, summary(sfit, times = times, extend = TRUE)$strata, perl = T) != -1)
   }
-
+  
   if (!is.null(subs) | !is.null(sfit$states)) pval <- FALSE
-
+  
   ##################################
   # data manipulation pre-plotting #
   ##################################
-
+  
   if (is.null(ylabs)) {
     if (cumhaz | !is.null(sfit$states)) {
       ylabs <- "Cumulative incidence"
@@ -171,29 +173,50 @@ jskm <- function(sfit,
       ylabs <- "Survival probability"
     }
   }
-
-
-  if (length(levels(summary(sfit)$strata)) == 0) {
-    # [subs1]
-    if (is.null(ystratalabs)) ystratalabs <- as.character(sub("group=*", "", "All"))
+  
+  if (!is.null(status.cmprsk)){
+    if (length(levels(summary(sfit)$strata)) == 0) {
+      # [subs1]
+      if (is.null(ystratalabs)) ystratalabs <- as.character("All")
+    } else {
+      # [subs1]
+      if (is.null(ystratalabs)) ystratalabs <- as.character(names(sfit$strata))
+    }
   } else {
-    # [subs1]
-    if (is.null(ystratalabs)) ystratalabs <- as.character(sub("group=*", "", names(sfit$strata)))
+    if (length(levels(summary(sfit)$strata)) == 0) {
+      # [subs1]
+      if (is.null(ystratalabs))
+        ystratalabs <- as.character("All")
+      L <- summary(sfit)$table["0.95LCL"][[1]]
+      U <- summary(sfit)$table["0.95UCL"][[1]]
+      median_time <- summary(sfit)$table["median"][[1]]
+      ystratalabs2 <- paste0(ystratalabs, " (median : ", median_time, ", 95%CI : ",L, "-", U, ")")
+    } else {
+      # [subs1]
+      if (is.null(ystratalabs)) 
+        ystratalabs <- as.character(names(sfit$strata))
+      ystratalabs2 <- NULL
+      for (i in 1:length(levels(summary(sfit)$strata))) {
+        L <- summary(sfit)$table[,"0.95LCL"][[i]]
+        U <- summary(sfit)$table[,"0.95UCL"][[i]]
+        median_time <- summary(sfit)$table[,"median"][[i]]
+        ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", median_time, ", 95%CI : ",L, "-", U, ")"))
+      }
+    }
   }
-
   if (is.null(ystrataname)) ystrataname <- "Strata"
   m <- max(nchar(ystratalabs))
   times <- seq(0, max(sfit$time), by = timeby)
-
+  
   if (length(levels(summary(sfit)$strata)) == 0) {
     Factor <- factor(rep("All", length(subs2)))
   } else {
     Factor <- factor(summary(sfit, censored = T)$strata[subs2], levels = names(sfit$strata))
   }
-
+  
   # Data to be used in the survival plot
-
-
+  
+  
   if (is.null(sfit$state)) { # no cmprsk
     df <- data.frame(
       time = sfit$time[subs2],
@@ -221,9 +244,9 @@ jskm <- function(sfit,
       lower = sfit$lower[, col.cmprsk][subs2]
     )
   }
-
+  
   form <- sfit$call$formula
-
+  
   if (!is.null(cut.landmark)) {
     if (is.null(data)) {
       data <- tryCatch(eval(sfit$call$data), error = function(e) e)
@@ -231,7 +254,7 @@ jskm <- function(sfit,
         stop("Landmark analysis requires data object. please input 'data' option")
       }
     }
-
+    
     var.time <- as.character(form[[2]][[2]])
     var.event <- as.character(form[[2]][[3]])
     if (length(var.event) > 1) {
@@ -243,23 +266,23 @@ jskm <- function(sfit,
     data1 <- data
     data1[[var.event]][data1[[var.time]] >= cut.landmark] <- 0
     data1[[var.time]][data1[[var.time]] >= cut.landmark] <- cut.landmark
-
+    
     sfit1 <- survfit(as.formula(form), data1)
     sfit2 <- survfit(as.formula(form), data[data[[var.time]] >= cut.landmark, ])
-
+    
     if (is.null(sfit$states)) {
       if (length(levels(Factor)) == 1) {
         df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")],
-          data.frame(time = sfit2$time, surv = sfit2$surv, strata = "All", upper = sfit2$upper, lower = sfit2$lower),
-          by = c("time", "strata")
+                     data.frame(time = sfit2$time, surv = sfit2$surv, strata = "All", upper = sfit2$upper, lower = sfit2$lower),
+                     by = c("time", "strata")
         )
       } else {
         df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")],
-          data.frame(time = sfit2$time, surv = sfit2$surv, strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper, lower = sfit2$lower),
-          by = c("time", "strata")
+                     data.frame(time = sfit2$time, surv = sfit2$surv, strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper, lower = sfit2$lower),
+                     by = c("time", "strata")
         )
       }
-
+      
       df11 <- rbind(subset(df, time < cut.landmark), df2[, names(df)])
       df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]], n.event = 0, n.censor = 0, surv = 1, strata = levels(df$strata), upper = 1, lower = 1))
     } else {
@@ -267,24 +290,24 @@ jskm <- function(sfit,
         status.cmprsk <- sfit$states[2]
       }
       col.cmprsk <- which(sfit$state == status.cmprsk)
-
+      
       if (length(levels(Factor)) == 1) {
         df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")],
-          data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = "All", upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]),
-          by = c("time", "strata")
+                     data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = "All", upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]),
+                     by = c("time", "strata")
         )
       } else {
         df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")],
-          data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]),
-          by = c("time", "strata")
+                     data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]),
+                     by = c("time", "strata")
         )
       }
       df11 <- rbind(subset(df, time < cut.landmark), df2[, names(df)])
       df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]], n.event = 0, n.censor = 0, surv = 0, strata = levels(df$strata), upper = 0, lower = 0))
     }
   }
-
-
+  
+  
   if (cumhaz & is.null(sfit$states)) {
     upper.new <- 1 - df$lower
     lower.new <- 1 - df$upper
@@ -292,7 +315,7 @@ jskm <- function(sfit,
     df$lower <- lower.new
     df$upper <- upper.new
   }
-
+  
   # Final changes to data for survival plot
   levels(df$strata) <- ystratalabs
   zeros <- data.frame(
@@ -305,55 +328,59 @@ jskm <- function(sfit,
     zeros$lower <- 0
     zeros$upper <- 0
   }
-
+  
   df <- rbind(zeros, df)
   d <- length(levels(df$strata))
-
+  
   ###################################
   # specifying axis parameteres etc #
   ###################################
-
+  
   if (dashed == TRUE | all(linecols == "black")) {
     linetype <- c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash", "1F", "F1", "4C88C488", "12345678")
   } else {
     linetype <- c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
   }
-
+  
   # Scale transformation
   # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   surv.scale <- match.arg(surv.scale)
   scale_labels <- ggplot2::waiver()
   if (surv.scale == "percent") scale_labels <- scales::percent
-
+  
   p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata)) +
     ggtitle(main)
-
-
+  
+  
   linecols2 <- linecols
   if (all(linecols == "black")) {
     linecols <- "Set1"
     p <- ggplot2::ggplot(df, aes(x = time, y = surv, linetype = strata)) +
       ggtitle(main)
   }
-
-
+  
   # Set up theme elements
   p <- p + theme_bw() +
     theme(
       axis.title.x = element_text(vjust = 0.7),
       panel.grid.minor = element_blank(),
       axis.line = element_line(linewidth = 0.5, colour = "black"),
-      legend.position = legendposition,
+      legend.position = "inside",
+      legend.position.inside = legendposition,
       legend.background = element_rect(fill = NULL),
       legend.key = element_rect(colour = NA),
       panel.border = element_blank(),
-      plot.margin = unit(c(0, 1, .5, ifelse(m < 10, 1.5, 2.5)), "lines"),
+      #plot.margin = unit(c(0, 1, .5, ifelse(m < 10, 1.5, 2.5)), "lines"),
       axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
     scale_x_continuous(xlabs, breaks = times, limits = xlims) +
     scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
-
+  
+  
+  
+  
+  
   if (!is.null(theme) && theme == "jama") {
     p <- p + theme(
       panel.grid.major.x = element_blank()
@@ -363,29 +390,40 @@ jskm <- function(sfit,
       panel.grid.major = element_blank()
     )
   }
-
-
+  
+  
   # Removes the legend:
   if (legend == FALSE) {
-    p <- p + theme(legend.position = "none")
+    p <- p + guides(colour = "none", linetype = "none")
   }
-
+  
   # Add lines too plot
   if (is.null(cut.landmark)) {
-    p <- p + geom_step(linewidth = linewidth) +
-      scale_linetype_manual(name = ystrataname, values = linetype)
+    if(med == T & is.null(status.cmprsk)){
+      p <- p + geom_step(linewidth = linewidth) +
+        scale_linetype_manual(name = ystrataname, values = linetype, labels = ystratalabs2)
+    } else {
+      p <- p + geom_step(linewidth = linewidth) +
+        scale_linetype_manual(name = ystrataname, values = linetype, labels = ystratalabs)
+    }
   } else {
-    p <- p +
-      scale_linetype_manual(name = ystrataname, values = linetype) +
-      geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth)
+    if(med == T & is.null(status.cmprsk)){
+      p <- p +
+        scale_linetype_manual(name = ystrataname, values = linetype, labels = ystratalabs2) +
+        geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth)
+    } else {
+      p <- p +
+        scale_linetype_manual(name = ystrataname, values = linetype, labels = ystratalabs) +
+        geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth)
+    }
   }
-
+  
   brewer.palette <- c(
     "BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2",
     "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
     "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"
   )
-
+  
   if (!is.null(theme) && theme == "jama") {
     col.pal <- c("#00AFBB", "#E7B800", "#FC4E07")
     col.pal <- rep(col.pal, ceiling(length(ystratalabs) / 3))
@@ -395,29 +433,108 @@ jskm <- function(sfit,
     col.pal <- linecols
     col.pal <- rep(col.pal, ceiling(length(ystratalabs) / length(linecols)))
   }
-
-  if (is.null(col.pal)) {
-    p <- p + scale_colour_brewer(name = ystrataname, palette = linecols)
+  
+  
+  if (is.null(cut.landmark)) {
+    if (med == T & is.null(status.cmprsk)){
+      if (is.null(col.pal)) {
+        p <- p + scale_colour_brewer(name = ystrataname, palette = linecols, labels = ystratalabs2)
+      } else {
+        p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = ystratalabs2)
+      }
+    } else {
+      if (is.null(col.pal)) {
+        p <- p + scale_colour_brewer(name = ystrataname, palette = linecols, labels = ystratalabs)
+      } else {
+        p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = ystratalabs)
+      }
+    }
   } else {
-    p <- p + scale_color_manual(name = ystrataname, values = col.pal)
+    if (med == T & is.null(status.cmprsk)){
+      if (is.null(col.pal)) {
+        p <- p + scale_colour_brewer(name = ystrataname, palette = linecols, labels = ystratalabs2)
+      } else {
+        p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = ystratalabs2)
+      }
+    } else {
+      if (is.null(col.pal)) {
+        p <- p + scale_colour_brewer(name = ystrataname, palette = linecols, labels = ystratalabs)
+      } else {
+        p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = ystratalabs)
+      }
+    }
   }
-
+  
   # Add censoring marks to the line:
   if (marks == TRUE) {
     p <- p + geom_point(data = subset(df, n.censor >= 1), aes(x = time, y = surv, colour = strata), shape = shape)
   }
-
-  # Add 95% CI to plot
-  if (ci == TRUE) {
-    if (all(linecols2 == "black")) {
-      p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
-    } else if (is.null(col.pal)) {
-      p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_brewer(name = ystrataname, palette = linecols)
+  
+  # Add median value
+  
+  
+  if (med == TRUE & is.null(cut.landmark) & is.null(status.cmprsk)){
+    if (length(levels(summary(sfit)$strata)) == 0) {
+      median_time <- summary(sfit)$table["median"][[1]]
+      if(!is.na(median_time))
+        p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + 
+          annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed") 
     } else {
-      p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_manual(name = ystrataname, values = col.pal)
+      for (i in 1:length(levels(summary(sfit)$strata))){
+        median_time <- summary(sfit)$table[,"median"][[i]]
+        if(!is.na(median_time)){
+          p <- p +
+            annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") +
+            annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed")
+        }
+      }
     }
   }
-
+  
+  if (med == TRUE & !is.null(cut.landmark) & is.null(status.cmprsk)){
+    if (length(levels(summary(sfit)$strata)) == 0) {
+      median_time <- summary(sfit1)$table[,"median"][[1]]
+      if(!is.na(median_time)) {p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + annotate("segment", x = median_time, xend = median_time, y = ylims[1] , yend = 0.5, linewidth = 0.3, linetype = "dashed") }
+      median_time <- summary(sfit2)$table[,"median"][[1]]
+      if(!is.na(median_time)) {p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed") }
+      
+    } else {
+      for (i in 1:length(levels(summary(sfit)$strata))){
+        median_time <- summary(sfit1)$table[,"median"][[i]]
+        if(!is.na(median_time)) {p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed") }
+        median_time <- summary(sfit2)$table[,"median"][[i]]
+        if(!is.na(median_time)) {p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed") }
+      }
+    }
+  }
+  
+  
+  
+  # Add 95% CI to plot
+  if (ci == TRUE) {
+    if (med == FALSE | !is.null(status.cmprsk) | (!is.null(theme) && theme == "nejm")) {
+      if (all(linecols2 == "black")) {
+        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
+      } else if (is.null(col.pal)) {
+        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_brewer(name = ystrataname, palette = linecols)
+      } else {
+        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_manual(name = ystrataname, values = col.pal)
+      }
+    } else {
+      if (all(linecols2 == "black")) {
+        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
+      } else if (is.null(col.pal)) {
+        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_brewer(name = ystrataname, palette = linecols, labels = ystratalabs2)
+      } else {
+        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_manual(name = ystrataname, values = col.pal, labels = ystratalabs2)
+      }
+    }
+  }
+  
+  
+  
+  
+  
   if (!is.null(cut.landmark)) {
     p <- p + geom_vline(xintercept = cut.landmark, lty = 2)
   }
@@ -452,8 +569,8 @@ jskm <- function(sfit,
       }
     }
   }
-
-
+  
+  
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +
     geom_blank() +
@@ -464,14 +581,14 @@ jskm <- function(sfit,
       axis.ticks = element_blank(),
       panel.grid.major = element_blank(), panel.border = element_blank()
     )
-
+  
   #####################
   # p-value placement #
   ##################### a
-
+  
   if (length(levels(summary(sfit)$strata)) == 0) pval <- F
   # if(!is.null(cut.landmark)) pval <- F
-
+  
   if (pval == TRUE) {
     if (is.null(data)) {
       data <- tryCatch(eval(sfit$call$data), error = function(e) e)
@@ -479,11 +596,11 @@ jskm <- function(sfit,
         stop("'pval' option requires data object. please input 'data' option")
       }
     }
-
+    
     if (is.null(cut.landmark)) {
       sdiff <- survival::survdiff(as.formula(form), data = data)
       pvalue <- pchisq(sdiff$chisq, length(sdiff$n) - 1, lower.tail = FALSE)
-
+      
       ## cluster option
       if (cluster.option == "cluster" & !is.null(cluster.var)) {
         form.old <- as.character(form)
@@ -496,10 +613,10 @@ jskm <- function(sfit,
         sdiff <- survival::coxph(as.formula(form.new), data = data, model = T)
         pvalue <- summary(sdiff)$logtest["pvalue"]
       }
-
+      
       pvaltxt <- ifelse(pvalue < 0.001, "p < 0.001", paste("p =", round(pvalue, 3)))
       if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")
-
+      
       # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
       if (is.null(pval.coord)) {
         p <- p + annotate("text", x = (as.integer(max(sfit$time) / 5)), y = 0.1 + ylims[1], label = pvaltxt, size = pval.size)
@@ -512,7 +629,7 @@ jskm <- function(sfit,
       pvalue <- sapply(list(sdiff1, sdiff2), function(x) {
         pchisq(x$chisq, length(x$n) - 1, lower.tail = FALSE)
       })
-
+      
       ## cluster option
       if (cluster.option == "cluster" & !is.null(cluster.var)) {
         form.old <- as.character(form)
@@ -531,11 +648,11 @@ jskm <- function(sfit,
           summary(x)$logtest["pvalue"]
         })
       }
-
+      
       pvaltxt <- ifelse(pvalue < 0.001, "p < 0.001", paste("p =", round(pvalue, 3)))
-
+      
       if (pval.testname) pvaltxt <- paste0(pvaltxt, " (Log-rank)")
-
+      
       if (is.null(pval.coord)) {
         p <- p + annotate("text", x = c(as.integer(max(sfit$time) / 10), as.integer(max(sfit$time) / 10) + cut.landmark), y = 0.1 + ylims[1], label = pvaltxt, size = pval.size)
       } else {
@@ -543,27 +660,27 @@ jskm <- function(sfit,
       }
     }
   }
-
+  
   ###################################################
   # Create table graphic to include at-risk numbers #
   ###################################################
-
+  
   n.risk <- NULL
   if (length(levels(summary(sfit)$strata)) == 0) {
     Factor <- factor(rep("All", length(subs3)))
   } else {
     Factor <- factor(summary(sfit, times = times, extend = TRUE)$strata[subs3])
   }
-
+  
   if (table == TRUE) {
     risk.data <- data.frame(
       strata = Factor,
       time = summary(sfit, times = times, extend = TRUE)$time[subs3],
       n.risk = summary(sfit, times = times, extend = TRUE)$n.risk[subs3]
     )
-
+    
     risk.data$strata <- factor(risk.data$strata, levels = rev(levels(risk.data$strata)))
-
+    
     data.table <- ggplot(risk.data, aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) +
       geom_text(size = 3.5) +
       theme_bw() +
@@ -579,34 +696,35 @@ jskm <- function(sfit,
         axis.ticks = element_blank(), axis.text.y = element_text(face = "bold", hjust = 1)
       )
     data.table <- data.table +
-      theme(legend.position = "none") + xlab(NULL) + ylab(NULL)
-
-
+      guides(colour = "none", linetype = "none")+ xlab(NULL) + ylab(NULL)
+    
+    
     # ADJUST POSITION OF TABLE FOR AT RISK
     data.table <- data.table +
       theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 3.1, 4.3) - 0.38 * m), "lines"))
   }
-
-
+  
+  
   #######################
   # Plotting the graphs #
   #######################
-
+  
   if (!is.null(theme) && theme == "nejm") {
-    p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(
-      legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_blank(),
-      axis.text = element_text(size = 10 * nejm.infigure.ratiow)
-    )
+    p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(axis.title.x = element_blank(), axis.title.y = element_blank(),
+                                                                  axis.text = element_text(size = 10 * nejm.infigure.ratiow), 
+                                                                  
+    ) + guides(colour = "none", linetype = "none")
     p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
-
+  
   if (table == TRUE) {
     ggpubr::ggarrange(p, blank.pic, data.table,
-      nrow = 3,
-      # align = "v",
-      heights = c(2, .1, .25)
+                      nrow = 3,
+                      # align = "v",
+                      heights = c(2, .1, .25)
     )
   } else {
     p
   }
 }
+
