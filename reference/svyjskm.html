@@ -136,6 +136,7 @@
   <span class='kw'>pval.size</span> <span class='kw'>=</span> <span class='fl'>5</span>,
   <span class='kw'>pval.coord</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>NULL</span>, <span class='kw'>NULL</span>),
   <span class='kw'>pval.testname</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>med</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.85</span>, <span class='fl'>0.8</span>),
   <span class='kw'>ci</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -220,12 +221,16 @@
       <td><p>logical: add '(Log-rank)' text to p-value. Default = F</p></td>
     </tr>
     <tr>
+      <th>med</th>
+      <td><p>should a median line be added to the plot? Default = F</p></td>
+    </tr>
+    <tr>
       <th>legend</th>
-      <td><p>logical. should a legend be added to the plot? Default: TRUE</p></td>
+      <td><p>logical. should a legend be added to the plot?</p></td>
     </tr>
     <tr>
       <th>legendposition</th>
-      <td><p>numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)</p></td>
+      <td><p>numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)</p></td>
     </tr>
     <tr>
       <th>ci</th>

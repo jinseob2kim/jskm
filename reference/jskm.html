@@ -128,7 +128,7 @@
   <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)),
   <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
   <span class='kw'>surv.scale</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"default"</span>, <span class='st'>"percent"</span>),
-  <span class='kw'>ystratalabs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>sfit</span>$<span class='no'>strata</span>),
+  <span class='kw'>ystratalabs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ystrataname</span> <span class='kw'>=</span> <span class='st'>"Strata"</span>,
   <span class='kw'>timeby</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)/<span class='fl'>7</span>, <span class='fl'>1</span>),
   <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>""</span>,
@@ -138,6 +138,7 @@
   <span class='kw'>pval.testname</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>marks</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fl'>3</span>,
+  <span class='kw'>med</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>legendposition</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.85</span>, <span class='fl'>0.8</span>),
   <span class='kw'>ci</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -231,6 +232,10 @@
     <tr>
       <th>shape</th>
       <td><p>what shape should the censoring marks be, default is a vertical line</p></td>
+    </tr>
+    <tr>
+      <th>med</th>
+      <td><p>should a median line be added to the plot? Default = F</p></td>
     </tr>
     <tr>
       <th>legend</th>
