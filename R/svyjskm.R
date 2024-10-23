@@ -37,13 +37,13 @@
 #' @return plot
 #' @details DETAILS
 #' @examples
-# library(survey)
-# data(pbc, package = "survival")
-# pbc$randomized <- with(pbc, !is.na(trt) & trt > 0)
-# biasmodel <- glm(randomized ~ age * edema, data = pbc)
-# pbc$randprob <- fitted(biasmodel)
-# dpbc <- svydesign(id = ~1, prob = ~randprob, strata = ~edema, data = subset(pbc, randomized))
-# s1 <- svykm(Surv(time, status > 0) ~ sex, design = dpbc)
+#' library(survey)
+#' data(pbc, package = "survival")
+#' pbc$randomized <- with(pbc, !is.na(trt) & trt > 0)
+#' biasmodel <- glm(randomized ~ age * edema, data = pbc)
+#' pbc$randprob <- fitted(biasmodel)
+#' dpbc <- svydesign(id = ~1, prob = ~randprob, strata = ~edema, data = subset(pbc, randomized))
+#' s1 <- svykm(Surv(time, status > 0) ~ sex, design = dpbc)
 #' svyjskm(s1)
 #' @rdname svyjskm
 #' @import ggplot2
@@ -207,7 +207,7 @@ svyjskm <- function(sfit,
       if (med == TRUE){
         ystratalabs2 <-NULL
         for (i in 1:length(names(sfit))) {
-          median_time <- df3[df3$strata == names(sfit)[[i]], "med"] %>% unique
+          median_time <- unique(df3[df3$strata == names(sfit)[[i]], "med"])
           ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", median_time, ")"))
         }
       }
@@ -396,12 +396,13 @@ svyjskm <- function(sfit,
   if (med == TRUE & is.null(cut.landmark)){
     df3 <- df[-c(1,2),]
     if (inherits(sfit, "svykm")) {
-      median_time <- df3$med %>% unique
+      median_time <- unique(df3$med)
+
       if(!is.na(median_time))
         p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed") 
     } else {
       for (i in 1:length(names(sfit))){
-        median_time <- df3[df3$strata == names(sfit)[[i]], "med"] %>% unique
+        median_time <- unique(df3[df3$strata == names(sfit)[[i]], "med"])
         if(!is.na(median_time)){
           p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed")
         }
