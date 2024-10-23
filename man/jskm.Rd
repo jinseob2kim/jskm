@@ -12,7 +12,7 @@ jskm(
   xlims = c(0, max(sfit$time)),
   ylims = c(0, 1),
   surv.scale = c("default", "percent"),
-  ystratalabs = names(sfit$strata),
+  ystratalabs = NULL,
   ystrataname = "Strata",
   timeby = signif(max(sfit$time)/7, 1),
   main = "",
@@ -22,6 +22,7 @@ jskm(
   pval.testname = F,
   marks = TRUE,
   shape = 3,
+  med = FALSE,
   legend = TRUE,
   legendposition = c(0.85, 0.8),
   ci = FALSE,
@@ -79,6 +80,8 @@ jskm(
 \item{marks}{logical: should censoring marks be added?}
 
 \item{shape}{what shape should the censoring marks be, default is a vertical line}
+
+\item{med}{should a median line be added to the plot? Default = F}
 
 \item{legend}{logical. should a legend be added to the plot?}
 

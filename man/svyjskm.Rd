@@ -20,6 +20,7 @@ svyjskm(
   pval.size = 5,
   pval.coord = c(NULL, NULL),
   pval.testname = F,
+  med = FALSE,
   legend = TRUE,
   legendposition = c(0.85, 0.8),
   ci = NULL,
@@ -71,9 +72,11 @@ svyjskm(
 
 \item{pval.testname}{logical: add '(Log-rank)' text to p-value. Default = F}
 
-\item{legend}{logical. should a legend be added to the plot? Default: TRUE}
+\item{med}{should a median line be added to the plot? Default = F}
 
-\item{legendposition}{numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)}
+\item{legend}{logical. should a legend be added to the plot?}
+
+\item{legendposition}{numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)}
 
 \item{ci}{logical. Should confidence intervals be plotted. Default = NULL}
 
@@ -117,12 +120,5 @@ Creates a Weighted Kaplan-Meier plot - svykm.object in survey package
 DETAILS
 }
 \examples{
-library(survey)
-data(pbc, package = "survival")
-pbc$randomized <- with(pbc, !is.na(trt) & trt > 0)
-biasmodel <- glm(randomized ~ age * edema, data = pbc)
-pbc$randprob <- fitted(biasmodel)
-dpbc <- svydesign(id = ~1, prob = ~randprob, strata = ~edema, data = subset(pbc, randomized))
-s1 <- svykm(Surv(time, status > 0) ~ sex, design = dpbc)
 svyjskm(s1)
 }
