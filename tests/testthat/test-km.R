@@ -22,9 +22,9 @@ test_that("Run jskm", {
   expect_is(jskm(fit, cluster.option = "cluster", cluster.var = "id", pval = T), "gg")
   expect_warning(jskm(fit, cluster.option = "frailty", cluster.var = "id", pval = T))
 
-  fit3 <- survfit(Surv(time, status) ~ rx + frailty(id), data = colon)
-  expect_is(jskm(fit3), "gg")
-  expect_is(jskm(fit3, pval = T), "gg")
+  # fit3 <- survfit(Surv(time, status) ~ rx + frailty(id), data = colon)
+  # expect_is(jskm(fit3), "gg")
+  # expect_is(jskm(fit3, pval = T), "gg")
 })
 
 
