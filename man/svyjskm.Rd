@@ -20,6 +20,7 @@ svyjskm(
   pval.size = 5,
   pval.coord = c(NULL, NULL),
   pval.testname = F,
+  med = FALSE,
   legend = TRUE,
   legendposition = c(0.85, 0.8),
   ci = NULL,
@@ -71,9 +72,11 @@ svyjskm(
 
 \item{pval.testname}{logical: add '(Log-rank)' text to p-value. Default = F}
 
-\item{legend}{logical. should a legend be added to the plot? Default: TRUE}
+\item{med}{should a median line be added to the plot? Default = F}
 
-\item{legendposition}{numeric. x, y position of the legend if plotted. Default: c(0.85, 0.8)}
+\item{legend}{logical. should a legend be added to the plot?}
+
+\item{legendposition}{numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)}
 
 \item{ci}{logical. Should confidence intervals be plotted. Default = NULL}
 
