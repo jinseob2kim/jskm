@@ -38,6 +38,7 @@
 #' @param nejm.infigure.ratiow Ratio of infigure width to total width, Default = 0.6
 #' @param nejm.infigure.ratioh Ratio of infigure height to total height, Default = 0.5
 #' @param nejm.infigure.ylim y-axis limit of infigure, Default = c(0,1)
+#' @param surv.by breaks unit in y-axis, default = NULL(ggplot default)
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -121,6 +122,7 @@ jskm <- function(sfit,
                  nejm.infigure.ratiow = 0.6,
                  nejm.infigure.ratioh = 0.5,
                  nejm.infigure.ylim = c(0, 1),
+                 surv.by = NULL,
                  ...) {
   #################################
   # sorting the use of subsetting #
@@ -376,8 +378,13 @@ jskm <- function(sfit,
       axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
-    scale_x_continuous(xlabs, breaks = times, limits = xlims) +
-    scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
+    scale_x_continuous(xlabs, breaks = times, limits = xlims) 
+  
+  if (!is.null(surv.by)){
+    p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels, breaks = seq(ylims[1], ylims[2], by = surv.by))
+  } else{
+    p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
+  }
 
 
 
