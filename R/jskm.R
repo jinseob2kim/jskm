@@ -378,11 +378,11 @@ jskm <- function(sfit,
       axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
-    scale_x_continuous(xlabs, breaks = times, limits = xlims) 
-  
-  if (!is.null(surv.by)){
+    scale_x_continuous(xlabs, breaks = times, limits = xlims)
+
+  if (!is.null(surv.by)) {
     p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels, breaks = seq(ylims[1], ylims[2], by = surv.by))
-  } else{
+  } else {
     p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   }
 
