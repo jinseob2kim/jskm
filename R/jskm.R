@@ -730,7 +730,7 @@ jskm <- function(sfit,
     p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(
       axis.title.x = element_blank(), axis.title.y = element_blank(),
       axis.text = element_text(size = 10 * nejm.infigure.ratiow),
-    ) + guides(colour = "none", linetype = "none")
+    ) + guides(colour = "none", linetype = "none") + scale_y_continuous(limits = nejm.infigure.ylim, breaks = waiver(), labels = scale_labels)
     p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
 
