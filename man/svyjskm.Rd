@@ -30,6 +30,7 @@ svyjskm(
   design = NULL,
   subs = NULL,
   table = F,
+  table.censor = F,
   label.nrisk = "Numbers at risk",
   size.label.nrisk = 10,
   cut.landmark = NULL,
@@ -92,6 +93,8 @@ svyjskm(
 \item{subs}{= NULL,}
 
 \item{table}{logical: Create a table graphic below the K-M plot, indicating at-risk numbers?}
+
+\item{table.censor}{logical: Add numbers of censored in table graphic}
 
 \item{label.nrisk}{Numbers at risk label. Default = "Numbers at risk"}
 

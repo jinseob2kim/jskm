@@ -24,6 +24,7 @@
 #' @param design Data design for reactive design data , Default: NULL
 #' @param subs = NULL,
 #' @param table logical: Create a table graphic below the K-M plot, indicating at-risk numbers?
+#' @param table.censor logical: Add numbers of censored in table graphic
 #' @param label.nrisk Numbers at risk label. Default = "Numbers at risk"
 #' @param size.label.nrisk Font size of label.nrisk. Default = 10
 #' @param cut.landmark cut-off for landmark analysis, Default = NULL
@@ -80,6 +81,7 @@ svyjskm <- function(sfit,
                     design = NULL,
                     subs = NULL,
                     table = F,
+                    table.censor = F, 
                     label.nrisk = "Numbers at risk",
                     size.label.nrisk = 10,
                     cut.landmark = NULL,
@@ -656,7 +658,16 @@ svyjskm <- function(sfit,
       time = summary(sfit2, times = times, extend = TRUE)$time[subs3],
       n.risk = summary(sfit2, times = times, extend = TRUE)$n.risk[subs3]
     )
-
+    if(table.censor){
+      risk.data <- data.frame(
+        strata = Factor,
+        time = summary(sfit2, times = times, extend = TRUE)$time[subs3],
+        n.risk = summary(sfit2, times = times, extend = TRUE)$n.risk[subs3],
+        n.censor = summary(sfit2, times = times, extend = TRUE)$n.censor[subs3]
+      )
+      risk.data$n.risk <- paste0(risk.data$n.risk, " (", risk.data$n.censor, ")")
+      risk.data$n.censor <- NULL
+    }
 
     risk.data$strata <- factor(risk.data$strata, levels = rev(levels(risk.data$strata)))
 

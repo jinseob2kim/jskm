@@ -1,3 +1,7 @@
+# jskm 0.5.8
+
+* Update: Add `table.censor` option to show censored number in `jskm`. 
+
 # jskm 0.5.7
 
 * Update: Add `surv.by` option to y-axis breaks in `jskm` and `svyjskm`. 

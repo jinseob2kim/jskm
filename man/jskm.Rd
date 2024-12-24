@@ -7,6 +7,7 @@
 jskm(
   sfit,
   table = FALSE,
+  table.censor = FALSE,
   xlabs = "Time-to-event",
   ylabs = NULL,
   xlims = c(0, max(sfit$time)),
@@ -51,6 +52,8 @@ jskm(
 \item{sfit}{a survfit object}
 
 \item{table}{logical: Create a table graphic below the K-M plot, indicating at-risk numbers?}
+
+\item{table.censor}{logical: Add numbers of censored in table graphic}
 
 \item{xlabs}{x-axis label}
 
