@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.8</span>
       </span>
     </div>
 
@@ -146,6 +146,7 @@
   <span class='kw'>design</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>subs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>table</span> <span class='kw'>=</span> <span class='no'>F</span>,
+  <span class='kw'>table.censor</span> <span class='kw'>=</span> <span class='no'>F</span>,
   <span class='kw'>label.nrisk</span> <span class='kw'>=</span> <span class='st'>"Numbers at risk"</span>,
   <span class='kw'>size.label.nrisk</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>cut.landmark</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -260,6 +261,10 @@
     <tr>
       <th>table</th>
       <td><p>logical: Create a table graphic below the K-M plot, indicating at-risk numbers?</p></td>
+    </tr>
+    <tr>
+      <th>table.censor</th>
+      <td><p>logical: Add numbers of censored in table graphic</p></td>
     </tr>
     <tr>
       <th>label.nrisk</th>

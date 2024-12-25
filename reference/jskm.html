@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.8</span>
       </span>
     </div>
 
@@ -123,6 +123,7 @@
     <pre class="usage"><span class='fu'>jskm</span>(
   <span class='no'>sfit</span>,
   <span class='kw'>table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>table.censor</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>xlabs</span> <span class='kw'>=</span> <span class='st'>"Time-to-event"</span>,
   <span class='kw'>ylabs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>sfit</span>$<span class='no'>time</span>)),
@@ -173,6 +174,10 @@
     <tr>
       <th>table</th>
       <td><p>logical: Create a table graphic below the K-M plot, indicating at-risk numbers?</p></td>
+    </tr>
+    <tr>
+      <th>table.censor</th>
+      <td><p>logical: Add numbers of censored in table graphic</p></td>
     </tr>
     <tr>
       <th>xlabs</th>
