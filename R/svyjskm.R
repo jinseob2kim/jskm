@@ -81,7 +81,7 @@ svyjskm <- function(sfit,
                     design = NULL,
                     subs = NULL,
                     table = F,
-                    table.censor = F, 
+                    table.censor = F,
                     label.nrisk = "Numbers at risk",
                     size.label.nrisk = 10,
                     cut.landmark = NULL,
@@ -658,7 +658,7 @@ svyjskm <- function(sfit,
       time = summary(sfit2, times = times, extend = TRUE)$time[subs3],
       n.risk = summary(sfit2, times = times, extend = TRUE)$n.risk[subs3]
     )
-    if(table.censor){
+    if (table.censor) {
       risk.data <- data.frame(
         strata = Factor,
         time = summary(sfit2, times = times, extend = TRUE)$time[subs3],
