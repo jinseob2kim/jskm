@@ -3,6 +3,7 @@
 export(jskm)
 export(svyjskm)
 import(ggplot2)
+importFrom(cmprsk,cuminc)
 importFrom(ggplot2,aes)
 importFrom(ggplot2,annotate)
 importFrom(ggplot2,element_blank)
