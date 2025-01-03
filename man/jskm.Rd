@@ -20,7 +20,7 @@ jskm(
   pval = FALSE,
   pval.size = 5,
   pval.coord = c(NULL, NULL),
-  pval.testname = F,
+  pval.testname = T,
   marks = TRUE,
   shape = 3,
   med = FALSE,

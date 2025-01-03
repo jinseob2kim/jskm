@@ -1,3 +1,8 @@
+# jskm 0.5.9
+
+* Update: Display p value for competing risk using Gray's test and also reorganize pval.testname option to display corresponding test names. 
+
+
 # jskm 0.5.8
 
 * Update: Add `table.censor` option to show censored number in `jskm`. 
