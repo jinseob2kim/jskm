@@ -66,7 +66,7 @@ colon$status2 <- colon$status
 colon$status2[1:400] <- 2
 colon$status2 <- factor(colon$status2)
 fit2 <- survfit(Surv(time, status2) ~ rx, data = colon)
-jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1")
+jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", data = colon)
 jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", showpercent = T, cut.landmark = 500)
 ```
 
