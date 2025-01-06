@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jskm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.10</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1>jskm</h1>
                         <h4 class="author">Jinseob Kim</h4>
             
-            <h4 class="date">2025-01-03</h4>
+            <h4 class="date">2025-01-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jinseob2kim/jskm/blob/master/vignettes/jskm.Rmd"><code>vignettes/jskm.Rmd</code></a></small>
       <div class="hidden name"><code>jskm.Rmd</code></div>
@@ -141,7 +141,7 @@ competing risk</p>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>colon<span class="sc">$</span>status2[<span class="dv">1</span><span class="sc">:</span><span class="dv">400</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>colon<span class="sc">$</span>status2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(colon<span class="sc">$</span>status2)</span>
 <span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, status2) <span class="sc">~</span> rx, <span class="at">data =</span> colon)</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">jskm</span>(fit2, <span class="at">mark =</span> F, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">table =</span> T, <span class="at">status.cmprsk =</span> <span class="st">"1"</span>)</span></code></pre></div>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">jskm</span>(fit2, <span class="at">mark =</span> F, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">table =</span> T, <span class="at">status.cmprsk =</span> <span class="st">"1"</span>, <span class="at">data =</span> colon)</span></code></pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">jskm</span>(fit2, <span class="at">mark =</span> F, <span class="at">surv.scale =</span> <span class="st">"percent"</span>, <span class="at">table =</span> T, <span class="at">status.cmprsk =</span> <span class="st">"1"</span>, <span class="at">showpercent =</span> T, <span class="at">cut.landmark =</span> <span class="dv">500</span>)</span></code></pre></div>
 <p><img src="jskm_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
