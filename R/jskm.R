@@ -130,10 +130,11 @@ jskm <- function(sfit,
   #################################
   # sorting the use of subsetting #
   #################################
-
+  
   test_type <- n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
-
+  
   times <- seq(0, max(sfit$time), by = timeby)
+  has_weights <- !is.null(sfit$call$weights) 
   if (!is.null(theme) && theme == "nejm") legendposition <- legendposition
   if (is.null(subs)) {
     if (length(levels(summary(sfit)$strata)) == 0) {
@@ -164,13 +165,13 @@ jskm <- function(sfit,
     subs2 <- which(regexpr(ssvar, summary(sfit, censored = T)$strata, perl = T) != -1)
     subs3 <- which(regexpr(ssvar, summary(sfit, times = times, extend = TRUE)$strata, perl = T) != -1)
   }
-
+  
   if ((!is.null(subs) | !is.null(sfit$states)) & is.null(status.cmprsk)) pval <- FALSE
-
+  
   ##################################
   # data manipulation pre-plotting #
   ##################################
-
+  
   if (is.null(ylabs)) {
     if (cumhaz | !is.null(sfit$states)) {
       ylabs <- "Cumulative incidence"
@@ -178,14 +179,15 @@ jskm <- function(sfit,
       ylabs <- "Survival probability"
     }
   }
-
+  
   if (!is.null(status.cmprsk)) {
     if (length(levels(summary(sfit)$strata)) == 0) {
       # [subs1]
       if (is.null(ystratalabs)) ystratalabs <- as.character("All")
     } else {
       # [subs1]
-      if (is.null(ystratalabs)) ystratalabs <- as.character(names(sfit$strata))
+      if (is.null(ystratalabs)) {ystratalabs <- as.character(names(sfit$strata))
+      ystratalabs <- gsub("^group=*", "", ystratalabs) }
     }
   } else {
     if (length(levels(summary(sfit)$strata)) == 0) {
@@ -202,6 +204,7 @@ jskm <- function(sfit,
       # [subs1]
       if (is.null(ystratalabs)) {
         ystratalabs <- as.character(names(sfit$strata))
+        ystratalabs <- gsub("^group=*", "", ystratalabs)
       }
       ystratalabs2 <- NULL
       for (i in 1:length(levels(summary(sfit)$strata))) {
@@ -216,16 +219,16 @@ jskm <- function(sfit,
   if (is.null(ystrataname)) ystrataname <- "Strata"
   m <- max(nchar(ystratalabs))
   times <- seq(0, max(sfit$time), by = timeby)
-
+  
   if (length(levels(summary(sfit)$strata)) == 0) {
     Factor <- factor(rep("All", length(subs2)))
   } else {
     Factor <- factor(summary(sfit, censored = T)$strata[subs2], levels = names(sfit$strata))
   }
-
+  
   # Data to be used in the survival plot
-
-
+  
+  
   if (is.null(sfit$state)) { # no cmprsk
     df <- data.frame(
       time = sfit$time[subs2],
@@ -253,12 +256,12 @@ jskm <- function(sfit,
       lower = sfit$lower[, col.cmprsk][subs2]
     )
   }
-
+  
   form <- sfit$call$formula
   time_var <- all.vars(form[[2]])[1]
   event_var <- all.vars(form[[2]])[2]
   group_var <- all.vars(form)[3]
-
+  
   if (!is.null(cut.landmark)) {
     if (is.null(data)) {
       data <- tryCatch(eval(sfit$call$data), error = function(e) e)
@@ -266,7 +269,7 @@ jskm <- function(sfit,
         stop("Landmark analysis requires data object. please input 'data' option")
       }
     }
-
+    
     var.time <- as.character(form[[2]][[2]])
     var.event <- as.character(form[[2]][[3]])
     if (length(var.event) > 1) {
@@ -278,23 +281,23 @@ jskm <- function(sfit,
     data1 <- data
     data1[[var.event]][data1[[var.time]] >= cut.landmark] <- 0
     data1[[var.time]][data1[[var.time]] >= cut.landmark] <- cut.landmark
-
+    
     sfit1 <- survfit(as.formula(form), data1)
     sfit2 <- survfit(as.formula(form), data[data[[var.time]] >= cut.landmark, ])
-
+    
     if (is.null(sfit$states)) {
       if (length(levels(Factor)) == 1) {
         df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")],
-          data.frame(time = sfit2$time, surv = sfit2$surv, strata = "All", upper = sfit2$upper, lower = sfit2$lower),
-          by = c("time", "strata")
+                     data.frame(time = sfit2$time, surv = sfit2$surv, strata = "All", upper = sfit2$upper, lower = sfit2$lower),
+                     by = c("time", "strata")
         )
       } else {
         df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")],
-          data.frame(time = sfit2$time, surv = sfit2$surv, strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper, lower = sfit2$lower),
-          by = c("time", "strata")
+                     data.frame(time = sfit2$time, surv = sfit2$surv, strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper, lower = sfit2$lower),
+                     by = c("time", "strata")
         )
       }
-
+      
       df11 <- rbind(subset(df, time < cut.landmark), df2[, names(df)])
       df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]], n.event = 0, n.censor = 0, surv = 1, strata = levels(df$strata), upper = 1, lower = 1))
     } else {
@@ -302,24 +305,24 @@ jskm <- function(sfit,
         status.cmprsk <- sfit$states[2]
       }
       col.cmprsk <- which(sfit$state == status.cmprsk)
-
+      
       if (length(levels(Factor)) == 1) {
         df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")],
-          data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = "All", upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]),
-          by = c("time", "strata")
+                     data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = "All", upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]),
+                     by = c("time", "strata")
         )
       } else {
         df2 <- merge(subset(df, time >= cut.landmark)[, c("time", "n.risk", "n.event", "n.censor", "strata")],
-          data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]),
-          by = c("time", "strata")
+                     data.frame(time = sfit2$time, surv = sfit2$pstate[, col.cmprsk], strata = rep(names(sfit2$strata), sfit2$strata), upper = sfit2$upper[, col.cmprsk], lower = sfit2$lower[, col.cmprsk]),
+                     by = c("time", "strata")
         )
       }
       df11 <- rbind(subset(df, time < cut.landmark), df2[, names(df)])
       df <- rbind(df11, data.frame(time = cut.landmark, n.risk = summary(sfit, times = cut.landmark)$n.risk[[1]], n.event = 0, n.censor = 0, surv = 0, strata = levels(df$strata), upper = 0, lower = 0))
     }
   }
-
-
+  
+  
   if (cumhaz & is.null(sfit$states)) {
     upper.new <- 1 - df$lower
     lower.new <- 1 - df$upper
@@ -327,7 +330,7 @@ jskm <- function(sfit,
     df$lower <- lower.new
     df$upper <- upper.new
   }
-
+  
   # Final changes to data for survival plot
   levels(df$strata) <- ystratalabs
   zeros <- data.frame(
@@ -340,37 +343,37 @@ jskm <- function(sfit,
     zeros$lower <- 0
     zeros$upper <- 0
   }
-
+  
   df <- rbind(zeros, df)
   d <- length(levels(df$strata))
-
+  
   ###################################
   # specifying axis parameteres etc #
   ###################################
-
+  
   if (dashed == TRUE | all(linecols == "black")) {
     linetype <- c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash", "1F", "F1", "4C88C488", "12345678")
   } else {
     linetype <- c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
   }
-
+  
   # Scale transformation
   # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   surv.scale <- match.arg(surv.scale)
   scale_labels <- ggplot2::waiver()
   if (surv.scale == "percent") scale_labels <- scales::percent
-
+  
   p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata)) +
     ggtitle(main)
-
-
+  
+  
   linecols2 <- linecols
   if (all(linecols == "black")) {
     linecols <- "Set1"
     p <- ggplot2::ggplot(df, aes(x = time, y = surv, linetype = strata)) +
       ggtitle(main)
   }
-
+  
   # Set up theme elements
   p <- p + theme_bw() +
     theme(
@@ -387,17 +390,17 @@ jskm <- function(sfit,
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
     scale_x_continuous(xlabs, breaks = times, limits = xlims)
-
+  
   if (!is.null(surv.by)) {
     p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels, breaks = seq(ylims[1], ylims[2], by = surv.by))
   } else {
     p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   }
-
-
-
-
-
+  
+  
+  
+  
+  
   if (!is.null(theme) && theme == "jama") {
     p <- p + theme(
       panel.grid.major.x = element_blank()
@@ -407,13 +410,13 @@ jskm <- function(sfit,
       panel.grid.major = element_blank()
     )
   }
-
-
+  
+  
   # Removes the legend:
   if (legend == FALSE) {
     p <- p + guides(colour = "none", linetype = "none")
   }
-
+  
   # Add lines too plot
   if (is.null(cut.landmark)) {
     if (med == T & is.null(status.cmprsk)) {
@@ -434,13 +437,13 @@ jskm <- function(sfit,
         geom_step(data = subset(df, time >= cut.landmark), linewidth = linewidth) + geom_step(data = subset(df, time < cut.landmark), linewidth = linewidth)
     }
   }
-
+  
   brewer.palette <- c(
     "BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2",
     "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
     "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"
   )
-
+  
   if (!is.null(theme) && theme == "jama") {
     col.pal <- c("#00AFBB", "#E7B800", "#FC4E07")
     col.pal <- rep(col.pal, ceiling(length(ystratalabs) / 3))
@@ -450,8 +453,8 @@ jskm <- function(sfit,
     col.pal <- linecols
     col.pal <- rep(col.pal, ceiling(length(ystratalabs) / length(linecols)))
   }
-
-
+  
+  
   if (is.null(cut.landmark)) {
     if (med == T & is.null(status.cmprsk)) {
       if (is.null(col.pal)) {
@@ -481,15 +484,15 @@ jskm <- function(sfit,
       }
     }
   }
-
+  
   # Add censoring marks to the line:
   if (marks == TRUE) {
     p <- p + geom_point(data = subset(df, n.censor >= 1), aes(x = time, y = surv, colour = strata), shape = shape)
   }
-
+  
   # Add median value
-
-
+  
+  
   if (med == TRUE & is.null(cut.landmark) & is.null(status.cmprsk)) {
     if (length(levels(summary(sfit)$strata)) == 0) {
       median_time <- summary(sfit)$table["median"][[1]]
@@ -508,7 +511,7 @@ jskm <- function(sfit,
       }
     }
   }
-
+  
   if (med == TRUE & !is.null(cut.landmark) & is.null(status.cmprsk)) {
     if (length(levels(summary(sfit)$strata)) == 0) {
       median_time <- summary(sfit1)$table[, "median"][[1]]
@@ -532,9 +535,9 @@ jskm <- function(sfit,
       }
     }
   }
-
-
-
+  
+  
+  
   # Add 95% CI to plot
   if (ci == TRUE) {
     if (med == FALSE | !is.null(status.cmprsk) | (!is.null(theme) && theme == "nejm")) {
@@ -555,11 +558,11 @@ jskm <- function(sfit,
       }
     }
   }
-
-
-
-
-
+  
+  
+  
+  
+  
   if (!is.null(cut.landmark)) {
     p <- p + geom_vline(xintercept = cut.landmark, lty = 2)
   }
@@ -594,8 +597,8 @@ jskm <- function(sfit,
       }
     }
   }
-
-
+  
+  
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +
     geom_blank() +
@@ -606,13 +609,13 @@ jskm <- function(sfit,
       axis.ticks = element_blank(),
       panel.grid.major = element_blank(), panel.border = element_blank()
     )
-
+  
   #####################
   # p-value placement #
   ##################### a
   if (length(levels(summary(sfit)$strata)) == 0) pval <- F
   # if(!is.null(cut.landmark)) pval <- F
-
+  
   if (pval == TRUE) {
     if (is.null(data)) {
       data <- tryCatch(eval(sfit$call$data), error = function(e) e)
@@ -625,7 +628,36 @@ jskm <- function(sfit,
         ci_obj <- cmprsk::cuminc(ftime = data[[time_var]], fstatus = data[[event_var]], group = data[[group_var]])
         pvalue <- ci_obj$Tests[, "pv"][2]
         test_type <- "Gray's Test"
-      } else {
+      }
+      else if (has_weights){
+        vv <- data[[group_var]]
+        unique_groups <- unique(vv)
+        n_groups <- length(unique_groups)
+        if(n_groups != 2){
+          warning("P-value calculation is only available for binary group variables (2 groups). Number of groups found: ", n_groups)
+          pval <- FALSE  # pval을 FALSE로 설정하여 p-value 계산 및 표시를 생략
+        } else {
+          if(is.factor(vv) || is.character(vv)){
+            vv <- as.character(vv)
+            unique_groups_sorted <- sort(unique_groups) 
+            vv <- ifelse(vv == unique_groups_sorted[1], 0, 1)
+          } else if(is.numeric(vv)){
+            unique_values_sorted <- sort(unique_groups)
+            vv <- ifelse(vv == unique_values_sorted[1], 0, 1)
+          } else {
+            warning("Unsupported group_var data type for p-value calculation.")
+            pval <- FALSE
+          }
+          tt <- data[[time_var]]
+          ff <- data[[event_var]]
+          weight_var <- as.character(sfit$call$weights)
+          weights <- data[[weight_var]]
+          adj_lr_result <- adjusted.LR(tt, ff, vv, weights)
+          pvalue <- adj_lr_result$p.value
+          test_type <- "Adjusted Log-Rank Test"
+        }
+      }
+      else {
         sdiff <- survival::survdiff(as.formula(form), data = data)
         pvalue <- pchisq(sdiff$chisq, length(sdiff$n) - 1, lower.tail = FALSE)
         test_type <- "Log-rank Test"
@@ -648,7 +680,7 @@ jskm <- function(sfit,
       if (pval.testname & !is.null(test_type)) {
         pvaltxt <- paste0(pvaltxt, " (", test_type, ")")
       }
-
+      
       # MOVE P-VALUE LEGEND HERE BELOW [set x and y]
       if (is.null(pval.coord)) {
         p <- p + annotate("text", x = (as.integer(max(sfit$time) / 5)), y = 0.1 + ylims[1], label = pvaltxt, size = pval.size)
@@ -659,12 +691,52 @@ jskm <- function(sfit,
       if (!is.null(status.cmprsk)) {
         ci_obj1 <- cmprsk::cuminc(ftime = data1[[time_var]], fstatus = data1[[event_var]], group = data1[[group_var]])
         data2 <- data[data[[var.time]] >= cut.landmark, ]
+        data2[[time_var]]<-data2[[time_var]]-cut.landmark
         ci_obj2 <- cmprsk::cuminc(ftime = data2[[time_var]], fstatus = data2[[event_var]], group = data2[[group_var]])
         pvalue1 <- ci_obj1$Tests[, "pv"][2]
         pvalue2 <- ci_obj2$Tests[, "pv"][2]
         pvalue <- c(pvalue1, pvalue2)
         test_type <- "Gray's Test"
-      } else {
+      } 
+      else if (has_weights){
+        compute_pval_weighted <- function(sub_data, sfit, group_var, time_var, event_var){
+          vv_sub <- sub_data[[group_var]]
+          unique_groups_sub <- unique(vv_sub)
+          n_groups_sub <- length(unique_groups_sub)
+          
+          if(n_groups_sub != 2){
+            warning("P-value calculation is only available for binary group variables (2 groups) in landmark subset. Number of groups found: ", n_groups_sub)
+            return(NA)
+          } else {
+            if(is.factor(vv_sub) || is.character(vv_sub)){
+              vv_sub <- as.character(vv_sub)
+              unique_groups_sorted_sub <- sort(unique_groups_sub)
+              vv_sub <- ifelse(vv_sub == unique_groups_sorted_sub[1], 0, 1)
+            } else if(is.numeric(vv_sub)){
+              unique_values_sorted_sub <- sort(unique_groups_sub)
+              vv_sub <- ifelse(vv_sub == unique_values_sorted_sub[1], 0, 1)
+            } else {
+              warning("Unsupported group_var data type for p-value calculation in landmark subset.")
+              return(NA)
+            }
+            tt_sub <- sub_data[[time_var]]
+            ff_sub <- sub_data[[event_var]]
+            weight_var_sub <- as.character(sfit$call$weights)
+            weights_sub <- sub_data[[weight_var_sub]]
+            
+            # Adjusted Log-Rank Test 계산
+            adj_lr_result_sub <- adjusted.LR(tt_sub, ff_sub, vv_sub, weights_sub)
+            return(adj_lr_result_sub$p.value)
+          }
+        }
+        data2 <- data[data[[var.time]] >= cut.landmark, ]
+        data2[[time_var]]<-data2[[time_var]]-cut.landmark
+        pvalue_1 <- compute_pval_weighted(data1, sfit, group_var, time_var, event_var)
+        pvalue_2 <- compute_pval_weighted(data2, sfit, group_var, time_var, event_var)
+        pvalue <- c(pvalue_1, pvalue_2)
+        test_type <- "Adjusted Log-Rank Test"
+      }
+      else {
         sdiff1 <- survival::survdiff(as.formula(form), data1)
         sdiff2 <- survival::survdiff(as.formula(form), data[data[[var.time]] >= cut.landmark, ])
         pvalue <- sapply(list(sdiff1, sdiff2), function(x) {
@@ -693,11 +765,11 @@ jskm <- function(sfit,
         }
       }
       pvaltxt <- ifelse(pvalue < 0.001, "p < 0.001", paste("p =", round(pvalue, 3)))
-
+      
       if (pval.testname & !is.null(test_type)) {
         pvaltxt <- paste0(pvaltxt, " (", test_type, ")")
       }
-
+      
       if (is.null(pval.coord)) {
         p <- p + annotate("text", x = c(as.integer(max(sfit$time) / 10), as.integer(max(sfit$time) / 10) + cut.landmark), y = 0.1 + ylims[1], label = pvaltxt, size = pval.size)
       } else {
@@ -705,36 +777,39 @@ jskm <- function(sfit,
       }
     }
   }
-
+  
   ###################################################
   # Create table graphic to include at-risk numbers #
   ###################################################
-
+  
   n.risk <- NULL
   if (length(levels(summary(sfit)$strata)) == 0) {
     Factor <- factor(rep("All", length(subs3)))
   } else {
     Factor <- factor(summary(sfit, times = times, extend = TRUE)$strata[subs3])
   }
-
+  
   if (table == TRUE) {
+    sfit_unweighted <- survfit(as.formula(form), data = data)
+    summary_unweighted <- summary(sfit_unweighted, times = times, extend = TRUE)
+    
     risk.data <- data.frame(
       strata = Factor,
-      time = summary(sfit, times = times, extend = TRUE)$time[subs3],
-      n.risk = summary(sfit, times = times, extend = TRUE)$n.risk[subs3]
+      time = summary_unweighted$time[subs3],
+      n.risk = summary_unweighted$n.risk[subs3]
     )
     if (table.censor) {
       risk.data <- data.frame(
         strata = Factor,
-        time = summary(sfit, times = times, extend = TRUE)$time[subs3],
-        n.risk = summary(sfit, times = times, extend = TRUE)$n.risk[subs3],
-        n.censor = summary(sfit, times = times, extend = TRUE)$n.censor[subs3]
+        time = summary_unweighted$time[subs3],
+        n.risk = summary_unweighted$n.risk[subs3],
+        n.censor = summary_unweighted$n.censor[subs3]
       )
       risk.data$n.risk <- paste0(risk.data$n.risk, " (", risk.data$n.censor, ")")
       risk.data$n.censor <- NULL
     }
     risk.data$strata <- factor(risk.data$strata, levels = rev(levels(risk.data$strata)))
-
+    
     data.table <- ggplot(risk.data, aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) +
       geom_text(size = 3.5) +
       theme_bw() +
@@ -751,18 +826,18 @@ jskm <- function(sfit,
       )
     data.table <- data.table +
       guides(colour = "none", linetype = "none") + xlab(NULL) + ylab(NULL)
-
-
+    
+    
     # ADJUST POSITION OF TABLE FOR AT RISK
     data.table <- data.table +
       theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 3.1, 4.3) - 0.38 * m), "lines"))
   }
-
-
+  
+  
   #######################
   # Plotting the graphs #
   #######################
-
+  
   if (!is.null(theme) && theme == "nejm") {
     p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(
       axis.title.x = element_blank(), axis.title.y = element_blank(),
@@ -770,12 +845,12 @@ jskm <- function(sfit,
     ) + guides(colour = "none", linetype = "none") + scale_y_continuous(limits = nejm.infigure.ylim, breaks = waiver(), labels = scale_labels)
     p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
-
+  
   if (table == TRUE) {
     ggpubr::ggarrange(p, blank.pic, data.table,
-      nrow = 3,
-      # align = "v",
-      heights = c(2, .1, .25)
+                      nrow = 3,
+                      # align = "v",
+                      heights = c(2, .1, .25)
     )
   } else {
     p
