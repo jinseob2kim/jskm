@@ -45,6 +45,10 @@ jskm(
   nejm.infigure.ratioh = 0.5,
   nejm.infigure.ylim = c(0, 1),
   surv.by = NULL,
+  hr = FALSE,
+  hr.size = 5,
+  hr.coord = c(NULL, NULL),
+  hr.testname = F,
   ...
 )
 }
@@ -128,6 +132,14 @@ jskm(
 \item{nejm.infigure.ylim}{y-axis limit of infigure, Default = c(0,1)}
 
 \item{surv.by}{breaks unit in y-axis, default = NULL(ggplot default)}
+
+\item{hr}{logical: add the hazard ratio to the plot?}
+
+\item{hr.size}{numeric value specifying the HR text size. Default is 5.}
+
+\item{hr.coord}{numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL}
+
+\item{hr.testname}{logical: add '(Log-rank)' text to p-value. Default = F}
 
 \item{...}{PARAM_DESCRIPTION}
 }

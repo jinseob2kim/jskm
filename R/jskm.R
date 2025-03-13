@@ -40,6 +40,10 @@
 #' @param nejm.infigure.ratioh Ratio of infigure height to total height, Default = 0.5
 #' @param nejm.infigure.ylim y-axis limit of infigure, Default = c(0,1)
 #' @param surv.by breaks unit in y-axis, default = NULL(ggplot default)
+#' @param hr logical: add the hazard ratio to the plot?
+#' @param hr.size numeric value specifying the HR text size. Default is 5.
+#' @param hr.coord numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL
+#' @param hr.testname logical: add '(Log-rank)' text to p-value. Default = F
 #' @param ... PARAM_DESCRIPTION
 #' @return Plot
 #' @details DETAILS
@@ -82,7 +86,7 @@
 #' @importFrom stats pchisq time as.formula
 #' @importFrom patchwork inset_element
 #' @importFrom survival survfit survdiff coxph Surv cluster frailty
-#' @importFrom cmprsk cuminc
+#' @importFrom cmprsk cuminc crr
 #' @export
 
 
@@ -126,6 +130,10 @@ jskm <- function(sfit,
                  nejm.infigure.ratioh = 0.5,
                  nejm.infigure.ylim = c(0, 1),
                  surv.by = NULL,
+                 hr = FALSE,
+                 hr.size = 5,
+                 hr.coord = c(NULL, NULL),
+                 hr.testname = F,
                  ...) {
   #################################
   # sorting the use of subsetting #
@@ -614,7 +622,7 @@ jskm <- function(sfit,
 
   #####################
   # p-value placement #
-  ##################### a
+  ##################### 
   if (length(levels(summary(sfit)$strata)) == 0) pval <- F
   # if(!is.null(cut.landmark)) pval <- F
 
@@ -636,7 +644,7 @@ jskm <- function(sfit,
         n_groups <- length(unique_groups)
         if (n_groups != 2) {
           warning("P-value calculation is only available for binary group variables (2 groups). Number of groups found: ", n_groups)
-          pval <- FALSE # pval을 FALSE로 설정하여 p-value 계산 및 표시를 생략
+          pval <- FALSE 
         } else {
           if (is.factor(vv) || is.character(vv)) {
             vv <- as.character(vv)
@@ -723,7 +731,7 @@ jskm <- function(sfit,
             weight_var_sub <- as.character(sfit$call$weights)
             weights_sub <- sub_data[[weight_var_sub]]
 
-            # Adjusted Log-Rank Test 계산
+            # Adjusted Log-Rank Test 
             adj_lr_result_sub <- adjusted.LR(tt_sub, ff_sub, vv_sub, weights_sub)
             return(adj_lr_result_sub$p.value)
           }
@@ -776,6 +784,144 @@ jskm <- function(sfit,
     }
   }
 
+  ##########################
+  # Hazard Ratio placement #
+  ##########################
+  
+  if (hr == TRUE) {
+    if (is.null(data)) {
+      data <- tryCatch(eval(sfit$call$data), error = function(e) e)
+      if ("error" %in% class(data)) {
+        stop("'HR' option requires data object. Please input 'data' option")
+      }
+    }
+    
+    # binary check.
+    group_values <- data[[group_var]]
+    unique_groups <- unique(group_values)
+    n_groups <- length(unique_groups)
+    if (n_groups != 2) {
+      stop("Currently, HR calculation is only available for binary group variables. Number of groups found: ", n_groups)
+    }
+   
+    # w/o Landmark
+    if (is.null(cut.landmark)) {
+      
+      # 1) competing risk: Fine-Gray 
+      if (!is.null(status.cmprsk)) {
+        fg_model <- cmprsk::crr(ftime = data[[time_var]],
+                                fstatus = data[[event_var]],
+                                cov1 = as.matrix(data[[group_var]]))
+        HR_value    <- exp(fg_model$coef[1])
+        HR_ci_lower <- exp(fg_model$coef[1] - 1.96 * sqrt(fg_model$var[1,1]))
+        HR_ci_upper <- exp(fg_model$coef[1] + 1.96 * sqrt(fg_model$var[1,1]))
+        test_type <- "Fine-Gray Model"
+        pval <- 2 * (1 - pnorm(abs(fg_model$coef[1] / sqrt(fg_model$var[1,1]))))
+        
+        
+      # 2) weights: Weighted cox
+      } else if (has_weights){
+        weight_var <- as.character(sfit$call$weights)
+        cox_model <- survival::coxph(as.formula(form), data = data, weights = data[[weight_var]])
+        HR_value    <- summary(cox_model)$coefficients[,"exp(coef)"][1]
+        HR_ci_lower <- summary(cox_model)$conf.int[1, "lower .95"]
+        HR_ci_upper <- summary(cox_model)$conf.int[1, "upper .95"]
+        pval <- summary(cox_model)$coefficients[, "Pr(>|z|)"][1]
+        test_type <- "Weighted Cox Model"
+        
+      # 3) else, Cox__ w/ cluster(3-1), w/o(3-2)
+      } else {
+        cox_model <- survival::coxph(as.formula(form), data = data)
+        HR_value    <- summary(cox_model)$coefficients[,"exp(coef)"][1]
+        HR_ci_lower <- summary(cox_model)$conf.int[1, "lower .95"]
+        HR_ci_upper <- summary(cox_model)$conf.int[1, "upper .95"]
+        pval <- summary(cox_model)$coefficients[, "Pr(>|z|)"][1]
+        test_type <- "Cox Model"
+        # w/ cluster(3-1)
+        if (cluster.option == "cluster" & !is.null(cluster.var)) {
+          form.old <- as.character(form)
+          form.new <- paste(form.old[2], form.old[1], " + ", form.old[3],
+                            " + cluster(", cluster.var, ")", sep = "")
+          cox_model <- survival::coxph(as.formula(form.new), data = data,
+                                       model = TRUE, robust = TRUE)
+          HR_value    <- summary(cox_model)$coefficients[,"exp(coef)"][1]
+          HR_ci_lower <- summary(cox_model)$conf.int[1, "lower .95"]
+          HR_ci_upper <- summary(cox_model)$conf.int[1, "upper .95"]
+          test_type <- "Cox (Cluster Robust)"
+          pval <- summary(cox_model)$coefficients[, "Pr(>|z|)"][1]
+        # w/o cluster (3-2)
+        } else if (cluster.option == "frailty" & !is.null(cluster.var)) {
+          form.old <- as.character(form)
+          form.new <- paste(form.old[2], form.old[1], " + ", form.old[3],
+                            " + frailty(", cluster.var, ")", sep = "")
+          cox_model <- survival::coxph(as.formula(form.new), data = data, model = TRUE)
+          HR_value    <- summary(cox_model)$coefficients[,"exp(coef)"][1]
+          HR_ci_lower <- summary(cox_model)$conf.int[1, "lower .95"]
+          HR_ci_upper <- summary(cox_model)$conf.int[1, "upper .95"]
+          test_type <- "Cox (Frailty)"
+          pval <- summary(cox_model)$coefficients[, "Pr(>|z|)"][1]
+        }
+    }
+    # HR text
+    hr_txt <- ifelse(HR_value < 0.001, "HR < 0.001", paste("HR =", round(HR_value, 2)))
+    hr_txt <- paste0(hr_txt, " (95% CI: ", round(HR_ci_lower, 2), " ", round(HR_ci_upper, 2), "; P = ", round(pval, 3), ")")
+
+    if ((hr.testname == T) & !is.null(test_type)) {
+      hr_txt <- paste0(hr_txt, " (", test_type, ")")
+    }
+    
+    if (is.null(hr.coord)) {
+      p <- p + annotate("text", x = (as.integer(max(sfit$time) / 5)),
+                        y = 0.2 + ylims[1], label = hr_txt, size = hr.size)
+    } else {
+      p <- p + annotate("text", x = hr.coord[1], y = hr.coord[2],
+                        label = hr_txt, size = hr.size)
+    }
+    
+    #  w Landmark(2 HRs)
+    } else {
+      data1 <- data[data[[var.time]] < cut.landmark, ]
+      cox_model1 <- survival::coxph(as.formula(form), data = data1)
+      HR1    <- summary(cox_model1)$coefficients[,"exp(coef)"][1]
+      HR1_ci_lower <- summary(cox_model1)$conf.int[1, "lower .95"]
+      HR1_ci_upper <- summary(cox_model1)$conf.int[1, "upper .95"]
+      pval1 <- summary(cox_model1)$coefficients[, "Pr(>|z|)"][1]
+      
+      
+      data2 <- data[data[[var.time]] >= cut.landmark, ]
+      data2[[time_var]] <- data2[[time_var]] - cut.landmark
+      cox_model2 <- survival::coxph(as.formula(form), data = data2)
+      HR2    <- summary(cox_model2)$coefficients[,"exp(coef)"][1]
+      HR2_ci_lower <- summary(cox_model2)$conf.int[1, "lower .95"]
+      HR2_ci_upper <- summary(cox_model2)$conf.int[1, "upper .95"]
+      pval2 <- summary(cox_model2)$coefficients[, "Pr(>|z|)"][1]
+      
+      test_type <- "Cox Model"
+      hr_txt <- paste0("HR1 = ", round(HR1, 2), 
+                       " (95% CI: ", round(HR1_ci_lower, 2)," ", round(HR1_ci_upper, 2), ");", 
+                       " P = ", round(pval1, 3),
+                       "\n",
+                       "HR2 = ", round(HR2, 2), 
+                       " (95% CI: ", round(HR2_ci_lower, 2)," ", round(HR2_ci_upper, 2), ");",
+                       " P = ", round(pval2, 3)
+                       )
+      if ((hr.testname==T) & !is.null(test_type)) {
+        hr_txt <- paste0(hr_txt, "\n(", test_type, ")")
+      }
+      
+      if (is.null(hr.coord)) {
+        p <- p + annotate("text",
+                          x = as.integer(max(sfit$time) / 10),
+                          y = 0.2 + ylims[1], label = hr_txt, size = hr.size)
+      } else {
+        p <- p + annotate("text",
+                          x = hr.coord[1],
+                          y = hr.coord[2], label = hr_txt, size = hr.size)
+      }
+    }
+  }
+  
+  
   ###################################################
   # Create table graphic to include at-risk numbers #
   ###################################################
