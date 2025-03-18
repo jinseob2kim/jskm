@@ -11,9 +11,12 @@
 #' @param timeby numeric: control the granularity along the time-axis; defaults to 7 time-points.
 #' @param main plot title, Default: ''
 #' @param pval logical: add the pvalue to the plot?, Default: FALSE
-#' @param pval.size numeric value specifying the p-value text size. Default is 5.
+#' @param pval.size numeric value specifying the p-value text size. Default is 4.
 #' @param pval.coord numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL
 #' @param pval.testname logical: add '(Log-rank)' text to p-value. Default = F
+#' @param hr logical: add the Hazard Ratio to the plot?, Default: FALSE
+#' @param hr.size numeric value specifying the Hazard Ratio text size. Default is 2.
+#' @param hr.coord numeric vector, of length 2, specifying the x and y coordinates of the Hazard Ratio. Default values are NULL
 #' @param med should a median line be added to the plot? Default = F
 #' @param legend logical. should a legend be added to the plot?
 #' @param legendposition numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
@@ -50,7 +53,7 @@
 #' @rdname svyjskm
 #' @import ggplot2
 #' @importFrom stats formula
-#' @importFrom survey svyranktest
+#' @importFrom survey svyranktest svycoxph
 #' @importFrom survival Surv
 #' @importFrom ggpubr ggarrange
 #' @importFrom patchwork inset_element
@@ -64,13 +67,17 @@ svyjskm <- function(sfit,
                     ylims = c(0, 1),
                     ystratalabs = NULL,
                     ystrataname = NULL,
+                    # font.family = "Times New Roman",  # 수정 중.
                     surv.scale = c("default", "percent"),
                     timeby = NULL,
                     main = "",
                     pval = FALSE,
-                    pval.size = 5,
+                    pval.size = 4,
                     pval.coord = c(NULL, NULL),
                     pval.testname = F,
+                    hr = FALSE,   # 수정 중 
+                    hr.size = 2,  # 수정 중
+                    hr.coord = c(NULL, NULL),  # 수정 중_
                     med = FALSE,
                     legend = TRUE,
                     legendposition = c(0.85, 0.8),
@@ -340,12 +347,15 @@ svyjskm <- function(sfit,
 
 
   p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata)) +
-    ggtitle(main)
+    ggtitle(main) # +
+    # theme(text = element_text(family = font.family))
+  
   linecols2 <- linecols
   if (all(linecols == "black")) {
     linecols <- "Set1"
     p <- ggplot2::ggplot(df, aes(x = time, y = surv, linetype = strata)) +
-      ggtitle(main)
+      ggtitle(main) # +
+      # theme(text = element_text(family = font.family))
   }
 
   # Set up theme elements
@@ -498,17 +508,20 @@ svyjskm <- function(sfit,
   }
 
   p1 <- p
-  ## p-value
+  
+  ## p-value #### 
   if (inherits(sfit, "svykm")) pval <- FALSE
   # if(is.null(design)) pval <- FALSE
   if (showpercent == TRUE) {
-    if (is.null(cut.landmark)) {
+  # is.null(landmark)
+      if (is.null(cut.landmark)) {
       y.percent <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
       p <- p + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black")
       if (!is.null(theme) && theme == "nejm") {
         p1 <- p1 + annotate(geom = "text", x = xlims[2], y = y.percent, label = paste0(round(100 * y.percent, 1), "%"), color = "black", size = nejm.infigure.ratiow * 5)
       }
     } else {
+      # landmark yes.
       df.cut <- df[df$time < cut.landmark, ]
       y.percent1 <- df.cut[df.cut$time %in% tapply(df.cut$time, df.cut$strata, max), "surv"]
       y.percent2 <- df[df$time %in% tapply(df$time, df$strata, max), "surv"]
@@ -584,9 +597,137 @@ svyjskm <- function(sfit,
   }
 
 
+  ## modify. HR. #### 
+  
+  if (hr == TRUE) {
+    # design check
+    
+    # if (is.null(design)) {
+    #   design <- tryCatch(get(as.character(attr(sfit, "call")$design)), error = function(e) e)
+    #   if ("error" %in% class(design)) {
+    #     stop("'HR' option requires design object. please input 'design' option")
+    #   }
+    # }
+      if (is.null(design)) {
+      design <- tryCatch(get(as.character(attr(sfit, "call")$design)), error = function(e) e)
+      if ("error" %in% class(design) || !inherits(design, "survey.design")) {
+        stop("'HR' option requires a valid survey design object. Please input a valid `design`.")
+      }
+    }
+    
+    # independent variable #n check
+    independent_var <- all.vars(formula(sfit))[-c(1, 2)]  # 첫 번째는 Surv(), 두 번째는 time, 이후가 독립변수
+    if (length(independent_var) != 1) {
+      stop("HR calculation requires exactly one independent variable. Found: ", paste(independent_var, collapse = ", "))
+    }
+    
+    # binary check
+    independent_var_name <- independent_var[1]
+    independent_var_data <- design$variables[[independent_var_name]]
+    
+    if (is.factor(independent_var_data)) {
+      n_levels <- length(levels(independent_var_data))
+    } else {
+      n_levels <- length(unique(independent_var_data))
+    }
+    
+    if (n_levels > 2) {
+      stop(paste0("HR calculation only supports binary independent variables. Found ", 
+                  n_levels, " levels in variable '", independent_var_name, "'."))
+    }
+    
+    # landmark check
+    if (is.null(cut.landmark)) {
+      # no landmark - cox 비례위험.
+      cox_model <- survey::svycoxph(formula(sfit), design = design)
+      cox_summary <- summary(cox_model)
+      
+        # HR CI
+        hr_value <- round(cox_summary$conf.int[1, "exp(coef)"], 2)  
+        hr_ci_lower <- round(cox_summary$conf.int[1, "lower .95"], 2)  
+        hr_ci_upper <- round(cox_summary$conf.int[1, "upper .95"], 2) 
+        hr_pval <- round(cox_summary$coefficients[1, "Pr(>|z|)"], 3)  
+        
+        # HR text
+        hr_text <- paste0("HR = ", hr_value, " (95% CI: ", hr_ci_lower, " - ", hr_ci_upper, 
+                          ifelse(hr_pval < 0.001, "; p < 0.001", paste("; p =", hr_pval)), ")")
+        
+        # HR placement
+        if (is.null(hr.coord)) {
+          hr_x <- max(sapply(sfit, function(x) { max(x$time) })) / 4
+          hr_y <- 0.15 + ylims[1]
+        } else {
+          hr_x <- hr.coord[1]
+          hr_y <- hr.coord[2]
+        }
+        
+        # annotate 
+        p <- p + annotate("text", x = hr_x, y = hr_y, label = hr_text, size = hr.size)
+      }else{
+      
+      # yes landmark
+        # # modify
+        var.time <- as.character(attr(sfit, "formula")[[2]][[2]])
+        var.event_all <- as.character(attr(sfit, "formula")[[2]][[3]])
+         var.event <- setdiff(var.event_all, c(">", "0", "1"))
+         var.event <- if (length(var.event) > 1) var.event[1] else var.event
 
-
-
+         if (!var.event %in% names(design$variables)) {
+          stop(paste("Error: Variable", var.event, "not found in design$variables"))
+        }
+        # 
+        
+      # design1 <- subset(design, get(attr(sfit, "formula")[[2]]) < cut.landmark)
+      # design2 <- subset(design, get(attr(sfit, "formula")[[2]]) >= cut.landmark)
+      # design2$variables[[as.character(attr(sfit, "formula")[[2]])]] <- 
+      #   design2$variables[[as.character(attr(sfit, "formula")[[2]])]] - cut.landmark
+      design1 <- subset(design, design$variables[[var.time]] < cut.landmark)
+      design2 <- subset(design, design$variables[[var.time]] >= cut.landmark)
+      design2$variables[[var.time]] <- design2$variables[[var.time]] - cut.landmark
+      
+      # before landmark_HR
+        cox_model1 <- survey::svycoxph(formula(sfit), design = design1)
+        cox_summary1 <- summary(cox_model1)
+        
+        hr1 <- round(cox_summary1$conf.int[1, "exp(coef)"], 2)
+        hr1_ci_lower <- round(cox_summary1$conf.int[1, "lower .95"], 2)
+        hr1_ci_upper <- round(cox_summary1$conf.int[1, "upper .95"], 2)
+        hr1_pval <- round(cox_summary1$coefficients[1, "Pr(>|z|)"], 3)
+      
+      # after landmark_HR
+        cox_model2 <- survey::svycoxph(formula(sfit), design = design2)
+        cox_summary2 <- summary(cox_model2)
+        
+        hr2 <- round(cox_summary2$conf.int[1, "exp(coef)"], 2)
+        hr2_ci_lower <- round(cox_summary2$conf.int[1, "lower .95"], 2)
+        hr2_ci_upper <- round(cox_summary2$conf.int[1, "upper .95"], 2)
+        hr2_pval <- round(cox_summary2$coefficients[1, "Pr(>|z|)"], 3)
+      
+      # HR text
+      hr_text1 <- paste0("HR1 = ", hr1, " (95% CI: ", hr1_ci_lower, " - ", hr1_ci_upper, 
+                         ifelse(hr1_pval < 0.001, "; p < 0.001", paste("; p =", hr1_pval)), ")")
+      hr_text2 <- paste0("HR2 = ", hr2, " (95% CI: ", hr2_ci_lower, " - ", hr2_ci_upper, 
+                         ifelse(hr2_pval < 0.001, "; p < 0.001", paste("; p =", hr2_pval)), ")")
+      
+      # HR placement
+      if (is.null(pval.coord)) {
+        hr_x1 <- max(sapply(sfit, function(x) max(x$time))) / 8  # HR1
+        hr_x2 <- hr_x1 + cut.landmark  # HR2
+        hr_y <- 0.15 + ylims[1] #same
+      } else {
+         hr_x1 <- hr.coord[1]
+         hr_x2 <- hr_x1 + cut.landmark  # HR2
+         hr_y <- rep(hr.coord[2], 2)
+      }
+      
+      # plot 
+      p <- p + annotate("text", x = hr_x1, y = hr_y, label = hr_text1, size = hr.size) +
+        annotate("text", x = hr_x2, y = hr_y, label = hr_text2, size = hr.size)
+    }
+  }
+    
+  
+  
   ## Create a blank plot for place-holding
   blank.pic <- ggplot(df, aes(time, surv)) +
     geom_blank() +
