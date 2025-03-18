@@ -1,7 +1,11 @@
+# jskm 0.5.11
+
+* Update: Add Hazard ratio display: **hr** option.
+
+
 # jskm 0.5.10
 
 * Update: Display p value for IPTW with adjusted log-rank test and delete "group =" in strata.
-
 
 # jskm 0.5.9
 
