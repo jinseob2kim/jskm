@@ -67,7 +67,6 @@ svyjskm <- function(sfit,
                     ylims = c(0, 1),
                     ystratalabs = NULL,
                     ystrataname = NULL,
-                    # font.family = "Times New Roman",  # 수정 중.
                     surv.scale = c("default", "percent"),
                     timeby = NULL,
                     main = "",
@@ -347,15 +346,13 @@ svyjskm <- function(sfit,
 
 
   p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata)) +
-    ggtitle(main) # +
-    # theme(text = element_text(family = font.family))
+    ggtitle(main) 
   
   linecols2 <- linecols
   if (all(linecols == "black")) {
     linecols <- "Set1"
     p <- ggplot2::ggplot(df, aes(x = time, y = surv, linetype = strata)) +
-      ggtitle(main) # +
-      # theme(text = element_text(family = font.family))
+      ggtitle(main) 
   }
 
   # Set up theme elements
@@ -509,7 +506,9 @@ svyjskm <- function(sfit,
 
   p1 <- p
   
-  ## p-value #### 
+  ###############
+  # p-value     # 
+  ###############
   if (inherits(sfit, "svykm")) pval <- FALSE
   # if(is.null(design)) pval <- FALSE
   if (showpercent == TRUE) {
@@ -596,8 +595,9 @@ svyjskm <- function(sfit,
     }
   }
 
-
-  ## modify. HR. #### 
+  ##################
+  # modify. HR. #
+  ###############
   
   if (hr == TRUE) {
     # design check
