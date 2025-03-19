@@ -13,7 +13,6 @@ svyjskm(
   ylims = c(0, 1),
   ystratalabs = NULL,
   ystrataname = NULL,
-  font.family = "Times New Roman",
   surv.scale = c("default", "percent"),
   timeby = NULL,
   main = "",
@@ -63,8 +62,6 @@ svyjskm(
 \item{ystratalabs}{character list. A list of names for each strata. Default: NULL}
 
 \item{ystrataname}{The legend name. Default: 'Strata'}
-
-\item{font.family}{font. ("Arial", "Times New Roman", "Courier", "Verdana"... etc.) Default: "Arial",}
 
 \item{surv.scale}{scale transformation of survival curves. Allowed values are "default" or "percent".}
 
