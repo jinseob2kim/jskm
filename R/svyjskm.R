@@ -508,6 +508,7 @@ svyjskm <- function(sfit,
   
   ###############
   # p-value     # 
+  ###############
   if (inherits(sfit, "svykm")) pval <- FALSE
   # if(is.null(design)) pval <- FALSE
   if (showpercent == TRUE) {
@@ -596,6 +597,7 @@ svyjskm <- function(sfit,
 
   ##################
   # modify. HR. #
+  ###############
   
   if (hr == TRUE) {
     # design check
