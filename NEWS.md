@@ -1,3 +1,7 @@
+# jskm 0.5.12
+
+* Update: Add censoring marks
+
 # jskm 0.5.11
 
 * Update: Add Hazard ratio display: **hr** option.

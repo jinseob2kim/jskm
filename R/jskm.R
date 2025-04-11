@@ -369,6 +369,7 @@ jskm <- function(sfit,
 
   # Scale transformation
   # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  #직접 surv.scale을 지정해주는게 맞지 않나?
   surv.scale <- match.arg(surv.scale)
   scale_labels <- ggplot2::waiver()
   if (surv.scale == "percent") scale_labels <- scales::percent
