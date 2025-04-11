@@ -20,6 +20,7 @@ svyjskm(
   pval.size = 4,
   pval.coord = c(NULL, NULL),
   pval.testname = F,
+  marks = FALSE,
   hr = FALSE,
   hr.size = 2,
   hr.coord = c(NULL, NULL),
@@ -76,6 +77,8 @@ svyjskm(
 \item{pval.coord}{numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL}
 
 \item{pval.testname}{logical: add '(Log-rank)' text to p-value. Default = F}
+
+\item{marks}{logical: should censoring marks be added?}
 
 \item{hr}{logical: add the Hazard Ratio to the plot?, Default: FALSE}
 

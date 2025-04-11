@@ -14,6 +14,7 @@
 #' @param pval.size numeric value specifying the p-value text size. Default is 4.
 #' @param pval.coord numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL
 #' @param pval.testname logical: add '(Log-rank)' text to p-value. Default = F
+#' @param marks logical: should censoring marks be added?
 #' @param hr logical: add the Hazard Ratio to the plot?, Default: FALSE
 #' @param hr.size numeric value specifying the Hazard Ratio text size. Default is 2.
 #' @param hr.coord numeric vector, of length 2, specifying the x and y coordinates of the Hazard Ratio. Default values are NULL
@@ -74,6 +75,7 @@ svyjskm <- function(sfit,
                     pval.size = 4,
                     pval.coord = c(NULL, NULL),
                     pval.testname = F,
+                    marks = FALSE, 
                     hr = FALSE,   # 수정 중 
                     hr.size = 2,  # 수정 중
                     hr.coord = c(NULL, NULL),  # 수정 중_
@@ -98,7 +100,7 @@ svyjskm <- function(sfit,
                     nejm.infigure.ylim = c(0, 1),
                     surv.by = NULL,
                     ...) {
-  surv <- strata <- lower <- upper <- NULL
+  n.censor <- surv <- strata <- lower <- upper <- NULL
 
   if (!is.null(theme) && theme == "nejm") legendposition <- legendposition
   if (is.null(timeby)) {
@@ -118,7 +120,53 @@ svyjskm <- function(sfit,
       ci <- "varlog" %in% names(sfit)
     }
   }
+  
+  
+  if (inherits(sfit, "svykmlist")) {
+    temp <- "varlog" %in% names(sfit[[1]])
+    if (temp & marks){
+      warning("Cannot mark when se=T")
+      marks <- F
+    }
+  } else if (inherits(sfit, "svykm")) {
+    temp <- "varlog" %in% names(sfit)
+    if (temp & marks){
+      warning("Cannot mark when se=T")
+      marks <- F
+    }
+  }
+  
 
+  
+  ##여기서 n.censor 시작할꺼야
+  #if (marks == T){
+    if (is.null(design)){
+      design <- tryCatch(get(as.character(attr(sfit, "call")$design)), error = function(e) e)
+      if ("error" %in% class(design)) {
+        warning("Design not found, can't mark it")
+        marks <- F
+      }
+    }
+  if(!is.null(design)){
+    var.time <- as.character(formula(sfit)[[2]][[2]])
+    var.event <- as.character(formula(sfit)[[2]][[3]])
+    if (length(var.event) > 1) {
+      var.event <- setdiff(var.event, as.character(as.symbol(var.event)))
+      var.event <- var.event[sapply(var.event, function(x) {
+        "warning" %in% class(tryCatch(as.numeric(x), warning = function(w) w))
+      })]
+    }
+    design1 <- design
+    form <- formula(sfit)
+    
+    fit2 <- survfit(form, data = design1$variables)
+  }
+    
+    
+  #}
+  
+  
+  
 
   if (ci & !is.null(cut.landmark)) {
     if (is.null(design)) {
@@ -200,10 +248,21 @@ svyjskm <- function(sfit,
             df2$med <- df2[closest_index, "time"]
             return(df2)
           }))
+          # mat <- cbind(fit2$time, fit2$n.censor)
+          # colnames(mat) <- c("time", "n.censor")
+          # mat_df <- as.data.frame(mat)
+          # df <- merge(x = df, y = mat_df, by = "time", all.x = TRUE)
         } else {
           df <- do.call(rbind, lapply(names(sfit), function(x) {
             data.frame("strata" = x, "time" = sfit[[x]]$time, "surv" = sfit[[x]]$surv)
           }))
+         # if (marks){
+            # mat <- cbind(fit2$time, fit2$n.censor)
+            # colnames(mat) <- c("time", "n.censor")
+            # mat_df <- as.data.frame(mat)
+            # df <- merge(x = df, y = mat_df, by = "time", all.x = TRUE)
+            #print(df2)
+          #}
         }
       }
     }
@@ -282,6 +341,17 @@ svyjskm <- function(sfit,
     }
   }
 
+  
+  if (!is.null(design)){
+    mat <- cbind(fit2$time, fit2$n.censor)
+    colnames(mat) <- c("time", "n.censor")
+    mat_df <- as.data.frame(mat)
+    df <- merge(x = df, y = mat_df, by = "time", all.x = TRUE)
+  }else{
+    df$n.censor <- NA
+  }
+  
+    
   m <- max(nchar(ystratalabs))
 
 
@@ -301,9 +371,9 @@ svyjskm <- function(sfit,
   # Final changes to data for survival plot
   levels(df$strata) <- ystratalabs
   zeros <- if (med == T & is.null(cut.landmark)) {
-    data.frame("strata" = factor(ystratalabs, levels = levels(df$strata)), "time" = 0, "surv" = 1, "med" = 0.5)
+    data.frame("strata" = factor(ystratalabs, levels = levels(df$strata)), "time" = 0, "surv" = 1, "med" = 0.5, "n.censor"=NA)
   } else {
-    data.frame("strata" = factor(ystratalabs, levels = levels(df$strata)), "time" = 0, "surv" = 1)
+    data.frame("strata" = factor(ystratalabs, levels = levels(df$strata)), "time" = 0, "surv" = 1, "n.censor"=NA)
   }
 
   if (ci) {
@@ -337,7 +407,7 @@ svyjskm <- function(sfit,
   } else {
     linetype <- c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
   }
-
+  
   # Scale transformation
   # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   surv.scale <- match.arg(surv.scale)
@@ -408,7 +478,12 @@ svyjskm <- function(sfit,
       scale_linetype_manual(name = ystrataname, values = linetype, labels = ystratalabs)
   }
 
-
+  if (marks == TRUE) {
+    p <- p + geom_point(data = subset(df, n.censor >= 1), aes(x = time, y = surv, colour = strata), shape = 3)
+  }
+  
+  
+  
   # Add median value
   if (med == TRUE & is.null(cut.landmark)) {
     df3 <- df[-c(1, 2), ]
