@@ -44,6 +44,7 @@ svyjskm(
   nejm.infigure.ratioh = 0.5,
   nejm.infigure.ylim = c(0, 1),
   surv.by = NULL,
+  nejm.surv.by = NULL,
   ...
 )
 }
@@ -125,6 +126,8 @@ svyjskm(
 \item{nejm.infigure.ylim}{y-axis limit of infigure, Default = c(0,1)}
 
 \item{surv.by}{breaks unit in y-axis, default = NULL(ggplot default)}
+
+\item{nejm.surv.by}{breaks unit in y-axis in nejm figure, default = NULL(ggplot default)}
 
 \item{...}{PARAM_DESCRIPTION}
 }
