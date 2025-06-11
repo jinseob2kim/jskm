@@ -40,6 +40,7 @@
 #' @param nejm.infigure.ratioh Ratio of infigure height to total height, Default = 0.5
 #' @param nejm.infigure.ylim y-axis limit of infigure, Default = c(0,1)
 #' @param surv.by breaks unit in y-axis, default = NULL(ggplot default)
+#' @param nejm.surv.by breaks unit in y-axis in nejm figure, default = NULL(ggplot default)
 #' @param hr logical: add the hazard ratio to the plot?
 #' @param hr.size numeric value specifying the HR text size. Default is 5.
 #' @param hr.coord numeric vector, of length 2, specifying the x and y coordinates of the p-value. Default values are NULL
@@ -130,6 +131,7 @@ jskm <- function(sfit,
                  nejm.infigure.ratioh = 0.5,
                  nejm.infigure.ylim = c(0, 1),
                  surv.by = NULL,
+                 nejm.surv.by = NULL,
                  hr = FALSE,
                  hr.size = 5,
                  hr.coord = c(NULL, NULL),
@@ -984,10 +986,20 @@ jskm <- function(sfit,
   #######################
 
   if (!is.null(theme) && theme == "nejm") {
-    p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(
-      axis.title.x = element_blank(), axis.title.y = element_blank(),
-      axis.text = element_text(size = 10 * nejm.infigure.ratiow),
-    ) + guides(colour = "none", linetype = "none") + scale_y_continuous(limits = nejm.infigure.ylim, breaks = waiver(), labels = scale_labels)
+    
+    if(!is.null(nejm.surv.by)){
+      p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(
+        axis.title.x = element_blank(), axis.title.y = element_blank(),
+        axis.text = element_text(size = 10 * nejm.infigure.ratiow),
+      ) + guides(colour = "none", linetype = "none") + scale_y_continuous(limits = nejm.infigure.ylim, breaks = seq(nejm.infigure.ylim[1], nejm.infigure.ylim[2], by = nejm.surv.by), labels = scale_labels)
+    }else{
+      p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(
+        axis.title.x = element_blank(), axis.title.y = element_blank(),
+        axis.text = element_text(size = 10 * nejm.infigure.ratiow),
+      ) + guides(colour = "none", linetype = "none") + scale_y_continuous(limits = nejm.infigure.ylim, breaks = waiver(), labels = scale_labels)
+    }
+    
+    
     p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
 

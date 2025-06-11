@@ -45,6 +45,7 @@ jskm(
   nejm.infigure.ratioh = 0.5,
   nejm.infigure.ylim = c(0, 1),
   surv.by = NULL,
+  nejm.surv.by = NULL,
   hr = FALSE,
   hr.size = 5,
   hr.coord = c(NULL, NULL),
@@ -132,6 +133,8 @@ jskm(
 \item{nejm.infigure.ylim}{y-axis limit of infigure, Default = c(0,1)}
 
 \item{surv.by}{breaks unit in y-axis, default = NULL(ggplot default)}
+
+\item{nejm.surv.by}{breaks unit in y-axis in nejm figure, default = NULL(ggplot default)}
 
 \item{hr}{logical: add the hazard ratio to the plot?}
 
