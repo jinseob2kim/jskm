@@ -11,3 +11,4 @@
 ^CRAN-RELEASE$
 ^\.github$
 ^CRAN-SUBMISSION$
+^pkgdown$
