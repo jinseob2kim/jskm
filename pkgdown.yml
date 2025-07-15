@@ -3,7 +3,7 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   jskm: jskm.html
-last_built: 2025-07-15T06:06Z
+last_built: 2025-07-15T06:09Z
 urls:
   reference: https://jinseob2kim.github.io/jskm/reference
   article: https://jinseob2kim.github.io/jskm/articles
