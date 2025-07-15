@@ -1,5 +1,4 @@
 url: https://jinseob2kim.github.io/jskm/
-URL: https://jinseob2kim.github.io/jskm
 development:
   mode: auto
 authors:
@@ -13,7 +12,5 @@ template:
   bootstrap: 5
   light-switch: yes
   bslib:
-    # navbar-bg: "#19490A"
-    navbar-light-bg: "#19490A"
-    navbar-dark-bg: "#19490A"
+    pkgdown-navbar-bg: '#19490A'
 
