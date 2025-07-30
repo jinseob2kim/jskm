@@ -1,4 +1,4 @@
-# jskm 0.5.13
+# jskm 0.5.14
 
 * Update: Add `nejm.infigure.xlim` option to x-axis breaks in `jskm` and `svyjskm`.
 
