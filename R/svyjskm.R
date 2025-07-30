@@ -38,6 +38,7 @@
 #' @param nejm.infigure.ratiow Ratio of infigure width to total width, Default = 0.6
 #' @param nejm.infigure.ratioh Ratio of infigure height to total height, Default = 0.5
 #' @param nejm.infigure.ylim y-axis limit of infigure, Default = c(0,1)
+#' @param nejm.infigure.xlim x-axis limit of infigure, Default = NULL
 #' @param surv.by breaks unit in y-axis, default = NULL(ggplot default)
 #' @param nejm.surv.by breaks unit in y-axis in nejm figure, default = NULL(ggplot default)
 #' @param ... PARAM_DESCRIPTION
