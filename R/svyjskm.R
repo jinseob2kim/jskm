@@ -98,6 +98,7 @@ svyjskm <- function(sfit,
                     linewidth = 0.75,
                     nejm.infigure.ratiow = 0.6,
                     nejm.infigure.ratioh = 0.5,
+                    nejm.infigure.xlim = NULL,
                     nejm.infigure.ylim = c(0, 1),
                     surv.by = NULL,
                     nejm.surv.by = NULL,
@@ -915,17 +916,109 @@ svyjskm <- function(sfit,
   #######################
   # Plotting the graphs #
   #######################
+  
   if (!is.null(theme) && theme == "nejm") {
-    if (!is.null(nejm.surv.by)) {
-      p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(
-        axis.title.x = element_blank(), axis.title.y = element_blank(),
-        axis.text = element_text(size = 10 * nejm.infigure.ratiow) 
-      ) + guides(colour = "none", linetype = "none")+ scale_y_continuous(limits = nejm.infigure.ylim, breaks = seq(nejm.infigure.ylim[1], nejm.infigure.ylim[2], by = nejm.surv.by), labels = scale_labels)
-      } else {
-      p2 <- p1 + coord_cartesian(ylim = nejm.infigure.ylim) + theme(
-        axis.title.x = element_blank(), axis.title.y = element_blank(),
-        axis.text = element_text(size = 10 * nejm.infigure.ratiow) + scale_y_continuous(limits = nejm.infigure.ylim, breaks = waiver(), labels = scale_labels)
-      ) + guides(colour = "none", linetype = "none")
+    ## both are NULL
+    if (is.null(nejm.infigure.xlim) && is.null(nejm.surv.by)) {
+      p2 <- p1 +
+        coord_cartesian(ylim = nejm.infigure.ylim) +
+        theme(
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text    = element_text(size = 10 * nejm.infigure.ratiow)
+        ) +
+        guides(colour = "none", linetype = "none") +
+        scale_y_continuous(
+          limits = nejm.infigure.ylim,
+          breaks = waiver(),
+          labels = scale_labels
+        )
+      
+      ## nejm.infigure.xlim: NOT NULL, nejm.surv.by: NULL
+    } else if (!is.null(nejm.infigure.xlim) && is.null(nejm.surv.by)) {
+      p2 <- p1 +
+        coord_cartesian(
+          xlim = nejm.infigure.xlim,
+          ylim = nejm.infigure.ylim
+        ) +
+        theme(
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text    = element_text(size = 10 * nejm.infigure.ratiow)
+        ) +
+        guides(colour = "none", linetype = "none") +
+        scale_x_continuous(
+          limits = nejm.infigure.xlim,
+          breaks = signif(
+            seq(
+              nejm.infigure.xlim[1],
+              nejm.infigure.xlim[2],
+              length.out = 7
+            ),
+            2
+          ),
+          labels = waiver()
+        ) +
+        scale_y_continuous(
+          limits = nejm.infigure.ylim,
+          breaks = waiver(),
+          labels = scale_labels
+        )
+      
+      ## nejm.infigure.xlim: NULL, nejm.surv.by: NOT NULL
+    } else if (is.null(nejm.infigure.xlim) && !is.null(nejm.surv.by)) {
+      p2 <- p1 +
+        coord_cartesian(ylim = nejm.infigure.ylim) +
+        theme(
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text    = element_text(size = 10 * nejm.infigure.ratiow)
+        ) +
+        guides(colour = "none", linetype = "none") +
+        scale_y_continuous(
+          limits = nejm.infigure.ylim,
+          breaks = seq(
+            nejm.infigure.ylim[1],
+            nejm.infigure.ylim[2],
+            by = nejm.surv.by
+          ),
+          labels = scale_labels
+        )
+      
+      ## both of them are NOT NULL
+    } else {
+      p2 <- p1 +
+        coord_cartesian(
+          xlim = nejm.infigure.xlim,
+          ylim = nejm.infigure.ylim
+        ) +
+        theme(
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text    = element_text(size = 10 * nejm.infigure.ratiow)
+        ) +
+        guides(colour = "none", linetype = "none") +
+        scale_x_continuous(
+          limits = nejm.infigure.xlim,
+          breaks = signif(
+            seq(
+              nejm.infigure.xlim[1],
+              nejm.infigure.xlim[2],
+              length.out = 7
+            ),
+            2
+          ),
+          labels = waiver()
+        ) +
+        scale_y_continuous(
+          limits = nejm.infigure.ylim,
+          breaks = seq(
+            nejm.infigure.ylim[1],
+            nejm.infigure.ylim[2],
+            by = nejm.surv.by
+          ),
+          labels = scale_labels
+        )
     }
     
     
