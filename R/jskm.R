@@ -192,6 +192,12 @@ jskm <- function(sfit,
   }
 
   if (!is.null(status.cmprsk)) {
+    if (is.null(data)) {
+      data <- tryCatch(eval(sfit$call$data), error = function(e) e)
+      if ("error" %in% class(data)) {
+        stop("Competing-risk analysis requires data object. please input 'data' option")
+      }
+    }
     if (length(levels(summary(sfit)$strata)) == 0) {
       # [subs1]
       if (is.null(ystratalabs)) ystratalabs <- as.character("All")
