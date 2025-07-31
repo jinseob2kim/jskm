@@ -43,6 +43,7 @@ jskm(
   theme = NULL,
   nejm.infigure.ratiow = 0.6,
   nejm.infigure.ratioh = 0.5,
+  nejm.infigure.xlim = NULL,
   nejm.infigure.ylim = c(0, 1),
   surv.by = NULL,
   nejm.surv.by = NULL,
@@ -129,6 +130,8 @@ jskm(
 \item{nejm.infigure.ratiow}{Ratio of infigure width to total width, Default = 0.6}
 
 \item{nejm.infigure.ratioh}{Ratio of infigure height to total height, Default = 0.5}
+
+\item{nejm.infigure.xlim}{x-axis limit of infigure, Default = NULL}
 
 \item{nejm.infigure.ylim}{y-axis limit of infigure, Default = c(0,1)}
 
