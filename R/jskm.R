@@ -962,6 +962,10 @@ jskm <- function(sfit,
       )
       risk.data$n.risk <- paste0(risk.data$n.risk, " (", risk.data$n.censor, ")")
       risk.data$n.censor <- NULL
+      
+      if (identical(label.nrisk, "Numbers at risk")) {
+        label.nrisk <- "Numbers at risk (number censored)"
+      }
     }
     risk.data$strata <- factor(risk.data$strata, levels = rev(levels(risk.data$strata)))
 
