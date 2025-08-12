@@ -22,7 +22,7 @@
 #' @param legend logical. should a legend be added to the plot?
 #' @param legendposition numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
 #' @param ci logical. Should confidence intervals be plotted. Default = NULL
-#' @param linecols Character or Character vector. Colour brewer pallettes too colour lines. Default ="Set1", "black" for black with dashed line, character vector for the customization of line colors.
+#' @param linecols Character or Character vector. Colour imported from ggsci to colour lines. Default ="Set1", "black" for black with dashed line, character vector for the customization of line colors.
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default: FALSE
 #' @param cumhaz Show cumulaive incidence function, Default: F
 #' @param design Data design for reactive design data , Default: NULL
