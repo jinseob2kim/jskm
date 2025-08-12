@@ -60,6 +60,7 @@
 #' @importFrom survival Surv
 #' @importFrom ggpubr ggarrange
 #' @importFrom patchwork inset_element
+#' @importFrom ggsci scale_color_npg scale_fill_npg scale_color_aaas scale_fill_aaas scale_color_nejm scale_fill_nejm scale_color_lancet scale_fill_lancet scale_color_jama scale_fill_jama scale_color_jco scale_fill_jco scale_color_frontiers scale_fill_frontiers
 #' @export
 
 svyjskm <- function(sfit,
@@ -424,7 +425,7 @@ svyjskm <- function(sfit,
   
   linecols2 <- linecols
   if (all(linecols == "black")) {
-    linecols <- "Set1"
+    # linecols <- "Set1"
     p <- ggplot2::ggplot(df, aes(x = time, y = surv, linetype = strata)) +
       ggtitle(main) 
   }
@@ -507,16 +508,14 @@ svyjskm <- function(sfit,
     }
   }
 
-  brewer.palette <- c(
-    "BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2",
-    "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
-    "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"
-  )
+  
+  Set1 <- c("#E41A1CFF", "#377EB8FF", "#4DAF4AFF", "#984EA3FF", "#FF7F00FF", "#FFFF33FF", "#A65628FF", "#F781BFFF", "#999999FF")
+  ggsci_palettes <- c("Set1", "npg", "aaas", "nejm", "lancet", "jama", "jco", "frontiers")
 
   if (!is.null(theme) && theme == "jama") {
     col.pal <- c("#00AFBB", "#E7B800", "#FC4E07")
     col.pal <- rep(col.pal, ceiling(length(ystratalabs) / 3))
-  } else if (all(linecols %in% brewer.palette)) {
+  } else if (linecols[1] %in% ggsci_palettes) {
     col.pal <- NULL
   } else {
     col.pal <- linecols
@@ -535,46 +534,48 @@ svyjskm <- function(sfit,
   #    } }
 
 
-  if (is.null(cut.landmark)) {
-    if (med == T) {
-      if (is.null(col.pal)) {
-        p <- p + scale_colour_brewer(name = ystrataname, palette = linecols, labels = ystratalabs2)
-      } else {
-        p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = ystratalabs2)
-      }
-    } else {
-      if (is.null(col.pal)) {
-        p <- p + scale_colour_brewer(name = ystrataname, palette = linecols, labels = ystratalabs)
-      } else {
-        p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = ystratalabs)
-      }
-    }
+  if (is.null(col.pal)) {
+    p <- p + switch(linecols[1],
+                    "Set1"      = scale_color_manual(name = ystrataname, values = Set1, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                    "npg"       = scale_color_npg(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                    "aaas"      = scale_color_aaas(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                    "nejm"      = scale_color_nejm(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                    "lancet"    = scale_color_lancet(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                    "jama"      = scale_color_jama(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                    "jco"       = scale_color_jco(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                    "frontiers" = scale_color_frontiers(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                    scale_colour_brewer(name = ystrataname, palette = linecols, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs)
+    )
   } else {
-    if (is.null(col.pal)) {
-      p <- p + scale_colour_brewer(name = ystrataname, palette = linecols, labels = ystratalabs)
-    } else {
-      p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = ystratalabs)
-    }
+    p <- p + scale_color_manual(name   = ystrataname, values = col.pal, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs)
   }
   # Add 95% CI to plot
 
 
   if (ci == TRUE) {
-    if (med == TRUE & is.null(cut.landmark)) {
-      if (all(linecols2 == "black")) {
-        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
-      } else if (is.null(col.pal)) {
-        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_brewer(name = ystrataname, palette = linecols, labels = ystratalabs2)
-      } else {
-        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_manual(name = ystrataname, values = col.pal, labels = ystratalabs2)
-      }
+    if (all(linecols2 == "black")) {
+      p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
     } else {
-      if (all(linecols2 == "black")) {
-        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
-      } else if (is.null(col.pal)) {
-        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_brewer(name = ystrataname, palette = linecols, labels = ystratalabs)
+      p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA)
+      
+      if (is.null(col.pal)) {
+        p <- p + switch(linecols[1],
+                        "Set1"      = scale_fill_manual(name = ystrataname, values = Set1, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                        "npg"       = scale_fill_npg(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                        "aaas"      = scale_fill_aaas(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                        "nejm"      = scale_fill_nejm(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                        "lancet"    = scale_fill_lancet(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                        "jama"      = scale_fill_jama(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                        "jco"       = scale_fill_jco(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                        "frontiers" = scale_fill_frontiers(name = ystrataname, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs),
+                        scale_fill_brewer(name = ystrataname, palette = linecols, labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs)
+        )
       } else {
-        p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA) + scale_fill_manual(name = ystrataname, values = col.pal, labels = ystratalabs)
+        p <- p + scale_fill_manual(
+          name   = ystrataname,
+          values = col.pal,
+          labels = if (isTRUE(med) && is.null(cut.landmark)) ystratalabs2 else ystratalabs
+        )
       }
     }
   }

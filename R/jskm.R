@@ -81,7 +81,6 @@
 #' @importFrom ggplot2 xlab
 #' @importFrom ggplot2 ylab
 #' @importFrom ggplot2 ggsave
-#' @importFrom ggplot2 scale_colour_brewer
 #' @importFrom ggplot2 geom_ribbon
 #' @importFrom grid unit
 #' @importFrom ggpubr ggarrange
@@ -460,11 +459,6 @@ jskm <- function(sfit,
     }
   }
   
-  # brewer.palette <- c(
-  #   "BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2",
-  #   "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
-  #   "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"
-  # )
   
   Set1 <- c("#E41A1CFF", "#377EB8FF", "#4DAF4AFF", "#984EA3FF", "#FF7F00FF", "#FFFF33FF", "#A65628FF", "#F781BFFF", "#999999FF")
   ggsci_palettes <- c("Set1", "npg", "aaas", "nejm", "lancet", "jama", "jco", "frontiers")
@@ -472,7 +466,6 @@ jskm <- function(sfit,
   if (!is.null(theme) && theme == "jama") {
     col.pal <- c("#00AFBB", "#E7B800", "#FC4E07")
     col.pal <- rep(col.pal, ceiling(length(ystratalabs) / 3))
-  # } else if (all(linecols %in% brewer.palette)) {
   } else if (linecols[1] %in% ggsci_palettes) {
     col.pal <- NULL
   } else {
@@ -550,21 +543,30 @@ jskm <- function(sfit,
   
   # Add 95% CI to plot
   if (ci == TRUE) {
-    p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA)
-    
-    if (is.null(col.pal)) {
-      p <- p + switch(linecols[1],
-                      "Set1" = scale_fill_manual(name = ystrataname, values = Set1, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
-                      "npg" = scale_fill_npg(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
-                      "aaas" = scale_fill_aaas(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
-                      "nejm" = scale_fill_nejm(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
-                      "lancet" = scale_fill_lancet(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
-                      "jama" = scale_fill_jama(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
-                      "jco" = scale_fill_jco(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
-                      "frontiers" = scale_fill_frontiers(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs)
-      )
+    if (all(linecols2 == "black")) {
+      p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper), alpha = 0.25, colour = NA)
     } else {
-      p <- p + scale_fill_manual(name = ystrataname, values = col.pal, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs)
+      p <- p + geom_ribbon(data = df, aes(ymin = lower, ymax = upper, fill = strata), alpha = 0.25, colour = NA)
+      
+      if (is.null(col.pal)) {
+        p <- p + switch(linecols[1],
+                        "Set1"      = scale_fill_manual(name = ystrataname, values = Set1, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs),
+                        "npg"       = scale_fill_npg(name = ystrataname, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs),
+                        "aaas"      = scale_fill_aaas(name = ystrataname, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs),
+                        "nejm"      = scale_fill_nejm(name = ystrataname, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs),
+                        "lancet"    = scale_fill_lancet(name = ystrataname, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs),
+                        "jama"      = scale_fill_jama(name = ystrataname, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs),
+                        "jco"       = scale_fill_jco(name = ystrataname, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs),
+                        "frontiers" = scale_fill_frontiers(name = ystrataname, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs),
+                        scale_fill_brewer(name = ystrataname, palette = linecols, labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs)
+        )
+      } else {
+        p <- p + scale_fill_manual(
+          name   = ystrataname,
+          values = col.pal,
+          labels = if (isTRUE(med) && is.null(status.cmprsk) && (is.null(theme) || theme != "nejm")) ystratalabs2 else ystratalabs
+        )
+      }
     }
   }
   
