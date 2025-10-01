@@ -1,12 +1,13 @@
 Package: jskm
 Title: Kaplan-Meier Plot with 'ggplot2'
-Version: 0.5.16
-Date: 2025-08-12
+Version: 0.5.20
+Date: 2025-10-01
 Authors@R: c(person("Jinseob", "Kim", email = "jinseob2kim@gmail.com", role = c("aut", "cre"),  comment = c(ORCID = "0000-0002-9403-605X")),
              person("yoonkyoung", "Chun", email = "rachel200357@gmail.com", role = "aut"),
              person("Zarathu", role = c("cph", "fnd")),
              person("sungho", "Choi", email = "1213sam0@gmail.com", role = "aut"),
-             person("Mingu", "Jee", email = "rafamingujee047@gmail.com", role = "aut")
+             person("Mingu", "Jee", email = "rafamingujee047@gmail.com", role = "aut"),
+             person("Wonbin", "Hahn", email = "andrewhahn2001@gmail.com", role = "aut")
              )
 Description: The function 'jskm()' creates publication quality Kaplan-Meier plot with at risk tables below. 'svyjskm()' provides plot for weighted Kaplan-Meier estimator. 
 Depends: R (>= 3.4.0)
