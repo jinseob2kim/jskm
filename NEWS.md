@@ -1,3 +1,6 @@
+# jskm 0.5.20
+* Update: Add `left.nrisk` option to the risktable in `jskm`and `svyjskm`.
+
 # jskm 0.5.16
 
 * Update: jskm now supports more reasonable colors used in various journals(eg. npg, aaas, nejm, etc...)

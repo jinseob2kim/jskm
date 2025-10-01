@@ -36,6 +36,7 @@ svyjskm(
   table = F,
   table.censor = F,
   label.nrisk = "Numbers at risk",
+  left.nrisk = FALSE,
   size.label.nrisk = 10,
   cut.landmark = NULL,
   showpercent = F,
@@ -111,6 +112,8 @@ svyjskm(
 \item{table.censor}{logical: Add numbers of censored in table graphic}
 
 \item{label.nrisk}{Numbers at risk label. Default = "Numbers at risk"}
+
+\item{left.nrisk}{Should risk label be at top left? Default = "False"}
 
 \item{size.label.nrisk}{Font size of label.nrisk. Default = 10}
 

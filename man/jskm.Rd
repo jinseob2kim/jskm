@@ -29,6 +29,7 @@ jskm(
   ci = FALSE,
   subs = NULL,
   label.nrisk = "Numbers at risk",
+  left.nrisk = FALSE,
   size.label.nrisk = 10,
   linecols = "Set1",
   dashed = FALSE,
@@ -102,6 +103,8 @@ jskm(
 \item{subs}{= NULL,}
 
 \item{label.nrisk}{Numbers at risk label. Default = "Numbers at risk"}
+
+\item{left.nrisk}{Should risk label be at top left? Default = "False"}
 
 \item{size.label.nrisk}{Font size of label.nrisk. Default = 10}
 

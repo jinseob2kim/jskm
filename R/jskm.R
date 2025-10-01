@@ -24,6 +24,7 @@
 #' @param ci logical. Should confidence intervals be plotted. Default = FALSE
 #' @param subs = NULL,
 #' @param label.nrisk Numbers at risk label. Default = "Numbers at risk"
+#' @param left.nrisk  Should risk label be at top left? Default = "False"
 #' @param size.label.nrisk Font size of label.nrisk. Default = 10
 #' @param linecols Character or Character vector. Colour imported from ggsci. Default ="Set1", "black" for black with dashed line, character vector for the customization of line colors.
 #' @param dashed logical. Should a variety of linetypes be used to identify lines. Default = FALSE
@@ -116,6 +117,7 @@ jskm <- function(sfit,
                  ci = FALSE,
                  subs = NULL,
                  label.nrisk = "Numbers at risk",
+                 left.nrisk = FALSE,
                  size.label.nrisk = 10,
                  linecols = "Set1",
                  dashed = FALSE,
@@ -621,6 +623,14 @@ jskm <- function(sfit,
       panel.grid.major = element_blank(), panel.border = element_blank()
     )
   
+  header.pic <- ggplot(df, aes(x = time, y = surv)) +
+    geom_blank() +
+    theme_void() +
+    annotate("text", x = -Inf, y = Inf, label = label.nrisk, 
+             hjust = 0, vjust = 1, size = size.label.nrisk/3) +
+    theme(plot.margin = margin(t = 0, r = 0, b = 0, l = 5, unit = "pt"))
+
+  
   #####################
   # p-value placement #
   ##################### 
@@ -958,7 +968,8 @@ jskm <- function(sfit,
       }
     }
     risk.data$strata <- factor(risk.data$strata, levels = rev(levels(risk.data$strata)))
-    
+
+
     data.table <- ggplot(risk.data, aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) +
       geom_text(size = 3.5) +
       theme_bw() +
@@ -966,7 +977,7 @@ jskm <- function(sfit,
         breaks = as.character(levels(risk.data$strata)),
         labels = rev(ystratalabs)
       ) +
-      scale_x_continuous(label.nrisk, limits = xlims) +
+      # scale_x_continuous(label.nrisk, limits = xlims) +
       theme(
         axis.title.x = element_text(size = size.label.nrisk, vjust = 1),
         panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -976,12 +987,20 @@ jskm <- function(sfit,
     data.table <- data.table +
       guides(colour = "none", linetype = "none") + xlab(NULL) + ylab(NULL)
     
-    
-    # ADJUST POSITION OF TABLE FOR AT RISK
-    data.table <- data.table +
-      theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 3.1, 4.3) - 0.38 * m), "lines"))
+    if (left.nrisk == TRUE) {
+      data.table <- data.table +
+        scale_x_continuous(NULL, limits = xlims)
+    } else {
+      data.table <- data.table +
+        scale_x_continuous(label.nrisk, limits = xlims)
+    }
   }
-  
+
+  # ADJUST POSITION OF TABLE FOR AT RISK
+  #   data.table <- data.table +
+  #     theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 3.1, 4.3) - 0.38 * m), "lines"))
+  # }
+
   
   #######################
   # Plotting the graphs #
@@ -1094,12 +1113,40 @@ jskm <- function(sfit,
     p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
   
+  
   if (table == TRUE) {
-    ggpubr::ggarrange(p, blank.pic, data.table,
-                      nrow = 3,
-                      # align = "v",
-                      heights = c(2, .1, .25)
-    )
+    g_plot <- ggplot2::ggplotGrob(p)
+    g_table <- ggplot2::ggplotGrob(data.table)
+    
+    y_axis_cols_plot <- which(grepl("axis-l", g_plot$layout$name))
+    panel_cols_plot <- which(grepl("panel", g_plot$layout$name))
+    
+    y_axis_cols_table <- which(grepl("axis-l", g_table$layout$name))
+    panel_cols_table <- which(grepl("panel", g_table$layout$name))
+    
+    full_range_plot <- min(y_axis_cols_plot):max(panel_cols_plot)
+    full_range_table <- min(y_axis_cols_table):max(panel_cols_table)
+    
+    maxWidth <- grid::unit.pmax(g_plot$widths[full_range_plot], g_table$widths[full_range_table])
+    
+    g_plot$widths[full_range_plot] <- as.list(maxWidth)
+    g_table$widths[full_range_table] <- as.list(maxWidth)
+    
+    if (left.nrisk == TRUE) {
+      ggpubr::ggarrange(
+        plotlist = list(g_plot, header.pic, g_table),
+        nrow = 3,
+        heights = c(2, 0.07, 0.5)
+      )
+      
+    } else {
+      ggpubr::ggarrange(
+        plotlist = list(g_plot, blank.pic, g_table),
+        nrow = 3,
+        heights = c(2, 0.05, 0.5)
+      )
+    }
+    
   } else {
     p
   }
