@@ -145,7 +145,7 @@ jskm <- function(sfit,
   # sorting the use of subsetting #
   #################################
   
-  test_type <- n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
+  id <- fgwt <- test_type <- n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
   
   times <- seq(0, max(sfit$time), by = timeby)
   has_weights <- !is.null(sfit$call$weights)
