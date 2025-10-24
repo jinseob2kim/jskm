@@ -87,8 +87,8 @@
 #' @importFrom ggpubr ggarrange
 #' @importFrom stats pchisq time as.formula
 #' @importFrom patchwork inset_element
-#' @importFrom survival survfit survdiff coxph Surv cluster frailty
-#' @importFrom cmprsk cuminc crr
+#' @importFrom survival survfit survdiff coxph Surv cluster frailty finegray
+#' @importFrom cmprsk cuminc
 #' @importFrom ggsci scale_color_npg scale_fill_npg scale_color_aaas scale_fill_aaas scale_color_nejm scale_fill_nejm scale_color_lancet scale_fill_lancet scale_color_jama scale_fill_jama scale_color_jco scale_fill_jco scale_color_frontiers scale_fill_frontiers
 #' @export
 
@@ -818,16 +818,25 @@ jskm <- function(sfit,
     # w/o Landmark
     if (is.null(cut.landmark)) {
       
-      # 1) competing risk: Fine-Gray 
+      # 1) competing risk: Fine-Gray using survival::finegray
       if (!is.null(status.cmprsk)) {
-        fg_model <- cmprsk::crr(ftime = data[[time_var]],
-                                fstatus = data[[event_var]],
-                                cov1 = as.matrix(data[[group_var]]))
-        HR_value    <- exp(fg_model$coef[1])
-        HR_ci_lower <- exp(fg_model$coef[1] - 1.96 * sqrt(fg_model$var[1,1]))
-        HR_ci_upper <- exp(fg_model$coef[1] + 1.96 * sqrt(fg_model$var[1,1]))
+        # Get unique ID if not exists
+        if (!"id" %in% names(data)) {
+          data$id <- 1:nrow(data)
+        }
+
+        # Create finegray dataset
+        fg_data <- survival::finegray(as.formula(form), data = data, etype = status.cmprsk)
+
+        # Fit Cox model with id
+        cox_form <- as.formula(paste("Surv(fgstart, fgstop, fgstatus) ~", group_var))
+        fg_model <- survival::coxph(cox_form, data = fg_data, id = id, weights = fgwt)
+
+        HR_value    <- summary(fg_model)$coefficients[,"exp(coef)"][1]
+        HR_ci_lower <- summary(fg_model)$conf.int[1, "lower .95"]
+        HR_ci_upper <- summary(fg_model)$conf.int[1, "upper .95"]
         test_type <- "Fine-Gray Model"
-        pval <- 2 * (1 - pnorm(abs(fg_model$coef[1] / sqrt(fg_model$var[1,1]))))
+        pval <- summary(fg_model)$coefficients[, "Pr(>|z|)"][1]
         
         
         # 2) weights: Weighted cox
@@ -875,7 +884,7 @@ jskm <- function(sfit,
       }
       # HR text
       hr_txt <- ifelse(HR_value < 0.001, "HR < 0.001", paste("HR =", round(HR_value, 2)))
-      hr_txt <- paste0(hr_txt, " (95% CI: ", round(HR_ci_lower, 2), " ", round(HR_ci_upper, 2), "; P = ", round(pval, 3), ")")
+      hr_txt <- paste0(hr_txt, " (95% CI: ", round(HR_ci_lower, 2), " ", round(HR_ci_upper, 2), "; P = ", ifelse(pval < 0.001, "<0.001", round(pval, 3)), ")")
       
       if ((hr.testname == T) & !is.null(test_type)) {
         hr_txt <- paste0(hr_txt, " (", test_type, ")")

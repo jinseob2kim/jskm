@@ -1,3 +1,6 @@
+# jskm 0.5.21
+* Update: Change competing risk HR calculation from `cmprsk::crr()` to `survival::finegray()` + `coxph(id = id)`.
+
 # jskm 0.5.20
 * Update: Add `left.nrisk` option to the risktable in `jskm`and `svyjskm`.
 

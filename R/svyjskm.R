@@ -732,7 +732,7 @@ svyjskm <- function(sfit,
         
         # HR text
         hr_text <- paste0("HR = ", hr_value, " (95% CI: ", hr_ci_lower, " - ", hr_ci_upper, 
-                          ifelse(hr_pval < 0.001, "; p < 0.001", paste("; p =", hr_pval)), ")")
+                          ifelse(hr_pval < 0.001, "; P < 0.001", paste("; P =", hr_pval)), ")")
         
         # HR placement
         if (is.null(hr.coord)) {
