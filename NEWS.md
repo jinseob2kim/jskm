@@ -1,3 +1,6 @@
+# jskm 0.5.22
+* Update: Add `med.decimal` option to `jskm`and `svyjskm`.
+
 # jskm 0.5.21
 * Update: Change competing risk HR calculation from `cmprsk::crr()` to `survival::finegray()` + `coxph(id = id)`.
 
