@@ -24,6 +24,7 @@ jskm(
   marks = TRUE,
   shape = 3,
   med = FALSE,
+  med.decimal = 2,
   legend = TRUE,
   legendposition = c(0.85, 0.8),
   ci = FALSE,
@@ -93,6 +94,8 @@ jskm(
 \item{shape}{what shape should the censoring marks be, default is a vertical line}
 
 \item{med}{should a median line be added to the plot? Default = F}
+
+\item{med.decimal}{Select the decimal to round to. Default = 2}
 
 \item{legend}{logical. should a legend be added to the plot?}
 

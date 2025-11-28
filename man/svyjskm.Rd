@@ -25,6 +25,7 @@ svyjskm(
   hr.size = 2,
   hr.coord = c(NULL, NULL),
   med = FALSE,
+  med.decimal = 2,
   legend = TRUE,
   legendposition = c(0.85, 0.8),
   ci = NULL,
@@ -90,6 +91,8 @@ svyjskm(
 \item{hr.coord}{numeric vector, of length 2, specifying the x and y coordinates of the Hazard Ratio. Default values are NULL}
 
 \item{med}{should a median line be added to the plot? Default = F}
+
+\item{med.decimal}{Select the decimal to round to. Default = 2}
 
 \item{legend}{logical. should a legend be added to the plot?}
 
