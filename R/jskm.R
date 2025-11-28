@@ -19,6 +19,7 @@
 #' @param marks logical: should censoring marks be added?
 #' @param shape what shape should the censoring marks be, default is a vertical line
 #' @param med should a median line be added to the plot? Default = F
+#' @param med.decimal Select the decimal to round to. Default = 2
 #' @param legend logical. should a legend be added to the plot?
 #' @param legendposition numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
 #' @param ci logical. Should confidence intervals be plotted. Default = FALSE
@@ -112,6 +113,7 @@ jskm <- function(sfit,
                  marks = TRUE,
                  shape = 3,
                  med = FALSE,
+                 med.decimal = 2,
                  legend = TRUE,
                  legendposition = c(0.85, 0.8),
                  ci = FALSE,
@@ -212,6 +214,9 @@ jskm <- function(sfit,
       }
     }
   } else {
+    if (!is.numeric(med.decimal) || length(med.decimal) != 1 || med.decimal < 0 || med.decimal %% 1 != 0) {
+      stop("med.decimal must be a non-negative integer (e.g., 0, 1, 2).")
+    }
     if (length(levels(summary(sfit)$strata)) == 0) {
       # [subs1]
       if (is.null(ystratalabs)) {
@@ -221,7 +226,7 @@ jskm <- function(sfit,
       L <- summary(sfit)$table[nc - 1][[1]]
       U <- summary(sfit)$table[nc][[1]]
       median_time <- summary(sfit)$table["median"][[1]]
-      ystratalabs2 <- paste0(ystratalabs, " (median : ", median_time, ", ", sfit$conf.int * 100, "% CI : ", L, " - ", U, ")")
+      ystratalabs2 <- paste0(ystratalabs, " (median : ", round(median_time, med.decimal), ", ", sfit$conf.int * 100, "% CI : ", round(L, med.decimal), " - ", round(U, med.decimal), ")")
     } else {
       # [subs1]
       if (is.null(ystratalabs)) {
@@ -234,7 +239,7 @@ jskm <- function(sfit,
         L <- summary(sfit)$table[, nc - 1][[i]]
         U <- summary(sfit)$table[, nc][[i]]
         median_time <- summary(sfit)$table[, "median"][[i]]
-        ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", median_time, ", ", sfit$conf.int * 100, "% CI : ", L, " - ", U, ")"))
+        ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", round(median_time, med.decimal), ", ", sfit$conf.int * 100, "% CI : ", round(L, med.decimal), " - ", round(U, med.decimal), ")"))
       }
     }
   }

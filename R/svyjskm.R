@@ -19,6 +19,7 @@
 #' @param hr.size numeric value specifying the Hazard Ratio text size. Default is 2.
 #' @param hr.coord numeric vector, of length 2, specifying the x and y coordinates of the Hazard Ratio. Default values are NULL
 #' @param med should a median line be added to the plot? Default = F
+#' @param med.decimal Select the decimal to round to. Default = 2
 #' @param legend logical. should a legend be added to the plot?
 #' @param legendposition numeric. x, y position of the legend if plotted. Default=c(0.85,0.8)
 #' @param ci logical. Should confidence intervals be plotted. Default = NULL
@@ -84,6 +85,7 @@ svyjskm <- function(sfit,
                     hr.size = 2,  # 수정 중
                     hr.coord = c(NULL, NULL),  # 수정 중_
                     med = FALSE,
+                    med.decimal = 2,
                     legend = TRUE,
                     legendposition = c(0.85, 0.8),
                     ci = NULL,
@@ -197,9 +199,11 @@ svyjskm <- function(sfit,
 
     sfit2 <- survey::svykm(formula(sfit), design = subset(design, get(var.time) >= cut.landmark), se = T)
   }
-
-
-
+  
+  
+  if (!is.numeric(med.decimal) || length(med.decimal) != 1 || med.decimal < 0 || med.decimal %% 1 != 0) {
+    stop("med.decimal must be a non-negative integer (e.g., 0, 1, 2).")
+  }
 
   if (inherits(sfit, "svykmlist")) {
     if (is.null(ystrataname)) ystrataname <- as.character(formula(sfit)[[3]])
@@ -278,6 +282,7 @@ svyjskm <- function(sfit,
     times <- seq(0, max(sapply(sfit, function(x) {
       max(x$time)
     })), by = timeby)
+    
     if (is.null(ystratalabs)) {
       df3 <- df[-c(1, 2), ]
       ystratalabs <- levels(df$strata)
@@ -285,7 +290,7 @@ svyjskm <- function(sfit,
         ystratalabs2 <- NULL
         for (i in 1:length(names(sfit))) {
           median_time <- unique(df3[df3$strata == names(sfit)[[i]], "med"])
-          ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", median_time, ")"))
+          ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", round(median_time, med.decimal), ")"))
         }
       }
     }
@@ -341,7 +346,11 @@ svyjskm <- function(sfit,
     times <- seq(0, max(sfit$time), by = timeby)
     if (is.null(ystratalabs)) {
       ystratalabs <- "All"
-      ystratalabs2 <- paste0(ystratalabs, " (median : ", unique(df$med), ")")
+      if (med == TRUE) {
+        ystratalabs2 <- paste0(ystratalabs, " (median : ", round(unique(df$med), med.decimal), ")")
+      } else {
+        ystratalabs2 <- ystratalabs
+      }    
     }
     if (is.null(xlims)) {
       xlims <- c(0, max(sfit$time))
