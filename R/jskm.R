@@ -95,22 +95,22 @@
 
 
 jskm <- function(sfit,
-                 table = TRUE,
+                 table = FALSE,
                  table.censor = FALSE,
                  xlabs = "Time-to-event",
                  ylabs = NULL,
                  xlims = c(0, max(sfit$time)),
                  ylims = c(0, 1),
-                 surv.scale = c("percent", "default"),
+                 surv.scale = c("default", "percent"),
                  ystratalabs = NULL,
-                 ystrataname = "Group",
+                 ystrataname = "Strata",
                  timeby = signif(max(sfit$time) / 7, 1),
                  main = "",
                  pval = FALSE,
                  pval.size = 5,
                  pval.coord = c(NULL, NULL),
                  pval.testname = T,
-                 marks = FALSE,
+                 marks = TRUE,
                  shape = 3,
                  med = FALSE,
                  med.decimal = 2,
@@ -118,9 +118,9 @@ jskm <- function(sfit,
                  legendposition = c(0.85, 0.8),
                  ci = FALSE,
                  subs = NULL,
-                 label.nrisk = "No. at Risk",
-                 left.nrisk = TRUE,
-                 size.label.nrisk = 11,
+                 label.nrisk = "Numbers at risk",
+                 left.nrisk = FALSE,
+                 size.label.nrisk = 10,
                  linecols = "Set1",
                  dashed = FALSE,
                  cumhaz = F,
@@ -130,13 +130,13 @@ jskm <- function(sfit,
                  cut.landmark = NULL,
                  showpercent = F,
                  status.cmprsk = NULL,
-                 linewidth = 1.2,
+                 linewidth = 0.75,
                  theme = NULL,
                  nejm.infigure.ratiow = 0.6,
                  nejm.infigure.ratioh = 0.5,
                  nejm.infigure.xlim = NULL,
                  nejm.infigure.ylim = c(0, 1),
-                 surv.by = 0.1,
+                 surv.by = NULL,
                  nejm.surv.by = NULL,
                  hr = FALSE,
                  hr.size = 5,
@@ -148,7 +148,7 @@ jskm <- function(sfit,
   #################################
   
   id <- fgwt <- test_type <- n.risk <- n.censor <- surv <- strata <- lower <- upper <- NULL
-
+  
   times <- seq(0, max(sfit$time), by = timeby)
   has_weights <- !is.null(sfit$call$weights)
   if (!is.null(theme) && theme == "nejm") legendposition <- legendposition
@@ -187,7 +187,6 @@ jskm <- function(sfit,
   ##################################
   # data manipulation pre-plotting #
   ##################################
-  surv.scale <- match.arg(surv.scale)
   
   if (is.null(ylabs)) {
     if (cumhaz | !is.null(sfit$states)) {
@@ -195,88 +194,58 @@ jskm <- function(sfit,
     } else {
       ylabs <- "Survival probability"
     }
-    
-    # [추가] surv.scale이 percent인 경우 제목 뒤에 (%) 추가
-    if (surv.scale == "percent") {
-      ylabs <- paste0(ylabs, " (%)")
-    }
-  }
-  # [수정 포인트 1] 데이터 로드 로직을 최상단으로 통합 (Scoping 에러 방지)
-  if (is.null(data)) {
-    data <- tryCatch(eval(sfit$call$data), error = function(e) e)
-    if ("error" %in% class(data)) {
-      # 만약 테이블이나 P-value 계산이 필요한데 데이터를 못 찾으면 여기서 중단
-      if (table == TRUE | pval == TRUE | hr == TRUE) {
-        stop("This analysis requires the 'data' object. Please input the 'data' argument explicitly (e.g., jskm(fit, data = colon)).")
-      }
-    }
   }
   
-  # [수정 포인트 2] 중앙값 및 라벨 처리 로직
   if (!is.null(status.cmprsk)) {
-    # 경쟁 위험 분석인 경우
+    if (is.null(data)) {
+      data <- tryCatch(eval(sfit$call$data), error = function(e) e)
+      if ("error" %in% class(data)) {
+        stop("Competing-risk analysis requires data object. please input 'data' option")
+      }
+    }
     if (length(levels(summary(sfit)$strata)) == 0) {
+      # [subs1]
       if (is.null(ystratalabs)) ystratalabs <- as.character("All")
     } else {
+      # [subs1]
       if (is.null(ystratalabs)) {
         ystratalabs <- as.character(names(sfit$strata))
-        ystratalabs <- gsub("^.*=", "", ystratalabs)
+        ystratalabs <- gsub("^group=*", "", ystratalabs)
       }
     }
   } else {
-    # 일반 KM 분석인 경우 (중앙값 계산 로직 포함)
     if (!is.numeric(med.decimal) || length(med.decimal) != 1 || med.decimal < 0 || med.decimal %% 1 != 0) {
       stop("med.decimal must be a non-negative integer (e.g., 0, 1, 2).")
     }
-    
     if (length(levels(summary(sfit)$strata)) == 0) {
-      if (is.null(ystratalabs)) ystratalabs <- as.character("All")
-      
-      # 중앙값 테이블 추출
+      # [subs1]
+      if (is.null(ystratalabs)) {
+        ystratalabs <- as.character("All")
+      }
       nc <- length(summary(sfit)$table)
       L <- summary(sfit)$table[nc - 1][[1]]
       U <- summary(sfit)$table[nc][[1]]
       median_time <- summary(sfit)$table["median"][[1]]
-      
-      # ystratalabs2 생성
-      ystratalabs2 <- paste0(ystratalabs, " (median : ", round(median_time, med.decimal), 
-                             ", ", sfit$conf.int * 100, "% CI : ", round(L, med.decimal), 
-                             " - ", round(U, med.decimal), ")")
+      ystratalabs2 <- paste0(ystratalabs, " (median : ", round(median_time, med.decimal), ", ", sfit$conf.int * 100, "% CI : ", round(L, med.decimal), " - ", round(U, med.decimal), ")")
     } else {
+      # [subs1]
       if (is.null(ystratalabs)) {
         ystratalabs <- as.character(names(sfit$strata))
-        ystratalabs <- gsub("^.*=", "", ystratalabs)
+        ystratalabs <- gsub("^group=*", "", ystratalabs)
       }
-      
       ystratalabs2 <- NULL
       for (i in 1:length(levels(summary(sfit)$strata))) {
         nc <- ncol(summary(sfit)$table)
         L <- summary(sfit)$table[, nc - 1][[i]]
         U <- summary(sfit)$table[, nc][[i]]
         median_time <- summary(sfit)$table[, "median"][[i]]
-        
-        ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", 
-                                               round(median_time, med.decimal), ", ", 
-                                               sfit$conf.int * 100, "% CI : ", 
-                                               round(L, med.decimal), " - ", 
-                                               round(U, med.decimal), ")"))
+        ystratalabs2 <- c(ystratalabs2, paste0(ystratalabs[[i]], " (median : ", round(median_time, med.decimal), ", ", sfit$conf.int * 100, "% CI : ", round(L, med.decimal), " - ", round(U, med.decimal), ")"))
       }
     }
   }
-  
   if (is.null(ystrataname)) ystrataname <- "Strata"
   m <- max(nchar(ystratalabs))
   times <- seq(0, max(sfit$time), by = timeby)
-  
-  if (!is.null(ystratalabs)) {
-    ystratalabs <- paste0(ystratalabs, "    ") 
-  }
-  
-  # 2. 중앙값이 포함된 레이블(있을 경우) 뒤에도 공백 추가
-  if (!exists("ystratalabs2")) ystratalabs2 <- NULL # 에러 방지용 체크
-  if (!is.null(ystratalabs2)) {
-    ystratalabs2 <- paste0(ystratalabs2, "    ")
-  }
   
   if (length(levels(summary(sfit)$strata)) == 0) {
     Factor <- factor(rep("All", length(subs2)))
@@ -416,10 +385,11 @@ jskm <- function(sfit,
   }
   
   # Scale transformation
+  # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  #직접 surv.scale을 지정해주는게 맞지 않나?
+  surv.scale <- match.arg(surv.scale)
   scale_labels <- ggplot2::waiver()
-  if (surv.scale == "percent") {
-    scale_labels <- function(x) x * 100
-  }
+  if (surv.scale == "percent") scale_labels <- scales::percent
   
   p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata)) +
     ggtitle(main)
@@ -435,18 +405,7 @@ jskm <- function(sfit,
   # Set up theme elements
   p <- p + theme_bw() +
     theme(
-      plot.title = element_text(face = "bold", size = 11, hjust = 0.5),
-      # 1. 축 제목(x, y축 이름) 설정
-      axis.title.x = element_text(vjust = 0.7, size = 11, colour = "black", face = "bold", margin = margin(t = 15)),
-      axis.title.y = element_text(vjust = -10, size = 11, colour = "black", face = "bold"),
-      
-      # 2. 축 숫자(Tick labels - 0, 25, 50... 등) 설정
-      axis.text.x = element_text(size = 10, colour = "black"),
-      axis.text.y = element_text(size = 10, colour = "black"),
-      
-      axis.ticks.length = unit(0.2, "cm"),
-      axis.ticks = element_line(linewidth = 0.5, colour = "black"),
-      
+      axis.title.x = element_text(vjust = 0.7),
       panel.grid.minor = element_blank(),
       axis.line = element_line(linewidth = 0.5, colour = "black"),
       legend.position = "inside",
@@ -454,23 +413,18 @@ jskm <- function(sfit,
       legend.background = element_rect(fill = NULL),
       legend.key = element_rect(colour = NA),
       panel.border = element_blank(),
+      # plot.margin = unit(c(0, 1, .5, ifelse(m < 10, 1.5, 2.5)), "lines"),
       axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
-    scale_x_continuous(xlabs, breaks = times, limits = xlims, expand = c(0, 0))
-    
+    scale_x_continuous(xlabs, breaks = times, limits = xlims)
+  
   if (!is.null(surv.by)) {
-    p <- p + scale_y_continuous(ylabs, 
-                                limits = ylims, 
-                                labels = scale_labels, 
-                                breaks = seq(ylims[1], ylims[2], by = surv.by),
-                                expand = c(0, 0)) # 여백 제거 추가
+    p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels, breaks = seq(ylims[1], ylims[2], by = surv.by))
   } else {
-    p <- p + scale_y_continuous(ylabs, 
-                                limits = ylims, 
-                                labels = scale_labels,
-                                expand = c(0, 0)) # 여백 제거 추가
+    p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   }
+  
   
   
   
@@ -537,9 +491,9 @@ jskm <- function(sfit,
                     "jama" = scale_color_jama(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
                     "jco" = scale_color_jco(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs),
                     "frontiers" = scale_color_frontiers(name = ystrataname, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs))
-  } else {
-    p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs)
-  }
+    } else {
+      p <- p + scale_color_manual(name = ystrataname, values = col.pal, labels = if(med == T & is.null(status.cmprsk)) ystratalabs2 else ystratalabs)
+      }
   
   # Add censoring marks to the line:
   if (marks == TRUE) {
@@ -678,9 +632,9 @@ jskm <- function(sfit,
     geom_blank() +
     theme_void() +
     annotate("text", x = -Inf, y = Inf, label = label.nrisk, 
-             hjust = 0, vjust = 1, size = size.label.nrisk/.pt, fontface = "bold") +
-    theme(plot.margin = margin(t = 0, r = 0, b = 0, l = 18, unit = "pt"))
-  
+             hjust = 0, vjust = 1, size = size.label.nrisk/3) +
+    theme(plot.margin = margin(t = 0, r = 0, b = 0, l = 5, unit = "pt"))
+
   
   #####################
   # p-value placement #
@@ -875,14 +829,14 @@ jskm <- function(sfit,
         if (!"id" %in% names(data)) {
           data$id <- 1:nrow(data)
         }
-        
+
         # Create finegray dataset
         fg_data <- survival::finegray(as.formula(form), data = data, etype = status.cmprsk)
-        
+
         # Fit Cox model with id
         cox_form <- as.formula(paste("Surv(fgstart, fgstop, fgstatus) ~", group_var))
         fg_model <- survival::coxph(cox_form, data = fg_data, id = id, weights = fgwt)
-        
+
         HR_value    <- summary(fg_model)$coefficients[,"exp(coef)"][1]
         HR_ci_lower <- summary(fg_model)$conf.int[1, "lower .95"]
         HR_ci_upper <- summary(fg_model)$conf.int[1, "upper .95"]
@@ -1028,8 +982,8 @@ jskm <- function(sfit,
       }
     }
     risk.data$strata <- factor(risk.data$strata, levels = rev(levels(risk.data$strata)))
-    
-    
+
+
     data.table <- ggplot(risk.data, aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) +
       geom_text(size = 3.5) +
       theme_bw() +
@@ -1045,32 +999,22 @@ jskm <- function(sfit,
         axis.ticks = element_blank(), axis.text.y = element_text(face = "bold", hjust = 1)
       )
     data.table <- data.table +
-      guides(colour = "none", linetype = "none") + xlab(NULL) + ylab(NULL) +
-      coord_cartesian(clip = "off") +
-      theme(
-        panel.background = element_blank(),
-        plot.background = element_blank(),
-        axis.text.y = element_text(
-          face = "plain", 
-          colour = "black", 
-          size = 10, hjust = 0, 
-          margin = margin(r = 10)),
-        )
+      guides(colour = "none", linetype = "none") + xlab(NULL) + ylab(NULL)
     
     if (left.nrisk == TRUE) {
       data.table <- data.table +
-        scale_x_continuous(NULL, limits = xlims, expand = c(0, 0))
+        scale_x_continuous(NULL, limits = xlims)
     } else {
       data.table <- data.table +
-        scale_x_continuous(label.nrisk, limits = xlims, expand = c(0, 0))
+        scale_x_continuous(label.nrisk, limits = xlims)
     }
   }
-  
+
   # ADJUST POSITION OF TABLE FOR AT RISK
   #   data.table <- data.table +
   #     theme(plot.margin = unit(c(-1.5, 1, 0.1, ifelse(m < 10, 3.1, 4.3) - 0.38 * m), "lines"))
   # }
-  
+
   
   #######################
   # Plotting the graphs #

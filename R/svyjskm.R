@@ -68,22 +68,22 @@
 svyjskm <- function(sfit,
                     theme = NULL,
                     xlabs = "Time-to-event",
-                    ylabs = NULL,
+                    ylabs = "Survival probability",
                     xlims = NULL,
                     ylims = c(0, 1),
                     ystratalabs = NULL,
-                    ystrataname = "Group",           # 'Strata'에서 'Group'으로 변경
-                    surv.scale = c("percent", "default"),
+                    ystrataname = NULL,
+                    surv.scale = c("default", "percent"),
                     timeby = NULL,
                     main = "",
                     pval = FALSE,
-                    pval.size = 5,                  # 4에서 5로 상향 (jskm 기준)
+                    pval.size = 4,
                     pval.coord = c(NULL, NULL),
                     pval.testname = F,
                     marks = FALSE, 
-                    hr = FALSE,
-                    hr.size = 5,                    # 2에서 5로 상향
-                    hr.coord = c(NULL, NULL),
+                    hr = FALSE,   # 수정 중 
+                    hr.size = 2,  # 수정 중
+                    hr.coord = c(NULL, NULL),  # 수정 중_
                     med = FALSE,
                     med.decimal = 2,
                     legend = TRUE,
@@ -94,19 +94,19 @@ svyjskm <- function(sfit,
                     cumhaz = F,
                     design = NULL,
                     subs = NULL,
-                    table = TRUE,                   # F에서 TRUE로 변경 (표 기본 출력)
+                    table = F,
                     table.censor = F,
-                    label.nrisk = "No. at Risk",    # jskm과 동일하게 통일
-                    left.nrisk = TRUE,              # FALSE에서 TRUE로 변경 (왼쪽 정렬 기본값)
-                    size.label.nrisk = 11,          # 10에서 11로 상향
+                    label.nrisk = "Numbers at risk",
+                    left.nrisk = FALSE,
+                    size.label.nrisk = 10,
                     cut.landmark = NULL,
                     showpercent = F,
-                    linewidth = 1.2,                # 0.75에서 1.2로 상향 (굵은 선)
+                    linewidth = 0.75,
                     nejm.infigure.ratiow = 0.6,
                     nejm.infigure.ratioh = 0.5,
                     nejm.infigure.xlim = NULL,
                     nejm.infigure.ylim = c(0, 1),
-                    surv.by = 0.1,                  # NULL에서 0.1로 변경
+                    surv.by = NULL,
                     nejm.surv.by = NULL,
                     ...) {
   n.censor <- surv <- strata <- lower <- upper <- NULL
@@ -145,29 +145,6 @@ svyjskm <- function(sfit,
     }
   }
   
-  surv.scale <- match.arg(surv.scale)
-  
-  # 2. 축 숫자 레이블 설정 (scales::percent 대신 직접 계산)
-  scale_labels <- ggplot2::waiver()
-  if (surv.scale == "percent") {
-    # 0.25 -> 25 로 표시해주는 익명 함수 사용
-    scale_labels <- function(x) x * 100
-  }
-  
-  
-  # 1. y축 제목 설정 로직
-  if (is.null(ylabs)) {
-    if (cumhaz | (!is.null(sfit$states) && inherits(sfit, "svykm"))) {
-      ylabs <- "Cumulative incidence"
-    } else {
-      ylabs <- "Survival probability"
-    }
-    
-    # surv.scale이 percent인 경우 제목 뒤에 (%) 자동 추가
-    if (surv.scale == "percent") {
-      ylabs <- paste0(ylabs, " (%)")
-    }
-  }
 
   
   ##여기서 n.censor 시작할꺼야
@@ -390,17 +367,11 @@ svyjskm <- function(sfit,
     df$n.censor <- NA
   }
   
-  # [수정] 변수명(rx= 등) 제거 및 0점 가려짐 방지 공백 추가
-  if (!is.null(ystratalabs)) {
-    ystratalabs <- gsub("^.*=", "", ystratalabs) # 모든 변수명 대응
-    ystratalabs <- paste0(ystratalabs, "    ")    # 물리적 여백
-  }
-  if (exists("ystratalabs2") && !is.null(ystratalabs2)) {
-    ystratalabs2 <- gsub("^.*=", "", ystratalabs2)
-    ystratalabs2 <- paste0(ystratalabs2, "    ")
-  }
     
   m <- max(nchar(ystratalabs))
+
+
+
 
 
   if (cumhaz) {
@@ -452,6 +423,13 @@ svyjskm <- function(sfit,
   } else {
     linetype <- c("solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid", "solid")
   }
+  
+  # Scale transformation
+  # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  surv.scale <- match.arg(surv.scale)
+  scale_labels <- ggplot2::waiver()
+  if (surv.scale == "percent") scale_labels <- scales::percent
+
 
   p <- ggplot2::ggplot(df, aes(x = time, y = surv, colour = strata, linetype = strata)) +
     ggtitle(main) 
@@ -466,43 +444,24 @@ svyjskm <- function(sfit,
   # Set up theme elements
   p <- p + theme_bw() +
     theme(
-      plot.title = element_text(face = "bold", size = 11, hjust = 0.5),
-      # x축 제목 간격 확보 (t=15)
-      axis.title.x = element_text(size = 11, colour = "black", face = "bold", margin = margin(t = 15)),
-      axis.title.y = element_text(size = 11, colour = "black", face = "bold"),
-      axis.text.x = element_text(size = 10, colour = "black"),
-      axis.text.y = element_text(size = 10, colour = "black"),
-      # 눈금 선 길게 (0.25cm)
-      axis.ticks.length = unit(0.2, "cm"),
-      axis.ticks = element_line(linewidth = 0.5, colour = "black"),
+      axis.title.x = element_text(vjust = 0.7),
       panel.grid.minor = element_blank(),
-      panel.grid.major = element_blank(),
       axis.line = element_line(linewidth = 0.5, colour = "black"),
       legend.position = "inside",
       legend.position.inside = legendposition,
       legend.background = element_rect(fill = NULL),
       legend.key = element_rect(colour = NA),
-      panel.border = element_blank()
+      panel.border = element_blank(),
+      # plot.margin = unit(c(0, 1, .5, ifelse(m < 10, 1.5, 2.5)), "lines"),
+      axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
+      axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
-    # [수정] x축 0점 딱 붙이기
-    scale_x_continuous(xlabs, breaks = times, limits = xlims, expand = c(0, 0))
+    scale_x_continuous(xlabs, breaks = times, limits = xlims)
 
-  # y축 설정 부분
   if (!is.null(surv.by)) {
-    p <- p + scale_y_continuous(
-      name = ylabs,                  # 명시적으로 ylabs 변수 사용
-      limits = ylims, 
-      labels = scale_labels, 
-      breaks = seq(ylims[1], ylims[2], by = surv.by),
-      expand = c(0, 0)               # 0점 밀착
-    )
+    p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels, breaks = seq(ylims[1], ylims[2], by = surv.by))
   } else {
-    p <- p + scale_y_continuous(
-      name = ylabs,                  # 명시적으로 ylabs 변수 사용
-      limits = ylims, 
-      labels = scale_labels,
-      expand = c(0, 0)               # 0점 밀착
-    )
+    p <- p + scale_y_continuous(ylabs, limits = ylims, labels = scale_labels)
   }
 
   if (!is.null(theme) && theme == "jama") {
@@ -544,21 +503,17 @@ svyjskm <- function(sfit,
   # Add median value
   if (med == TRUE & is.null(cut.landmark)) {
     df3 <- df[-c(1, 2), ]
-    # [수정 후] 길이 체크 추가
     if (inherits(sfit, "svykm")) {
       median_time <- unique(df3$med)
-      # 길이가 있고(>0), NA가 아닐 때만 실행
-      if (length(median_time) > 0 && !is.na(median_time)) { 
-        p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + 
-          annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed")
+
+      if (!is.na(median_time)) {
+        p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed")
       }
     } else {
       for (i in 1:length(names(sfit))) {
         median_time <- unique(df3[df3$strata == names(sfit)[[i]], "med"])
-        # 길이가 있고(>0), NA가 아닐 때만 실행
-        if (length(median_time) > 0 && !is.na(median_time)) {
-          p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + 
-            annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed")
+        if (!is.na(median_time)) {
+          p <- p + annotate("segment", x = xlims[1], xend = median_time, y = 0.5, yend = 0.5, linewidth = 0.3, linetype = "dashed") + annotate("segment", x = median_time, xend = median_time, y = ylims[1], yend = 0.5, linewidth = 0.3, linetype = "dashed")
         }
       }
     }
@@ -874,17 +829,12 @@ svyjskm <- function(sfit,
       axis.ticks = element_blank(),
       panel.grid.major = element_blank(), panel.border = element_blank()
     )
-  # [수정] No. at risk 라벨을 굵은(Bold) 11폰트로 정확하게 설정
   header.pic <- ggplot(df, aes(x = time, y = surv)) +
     geom_blank() +
     theme_void() +
-    annotate("text", 
-             x = -Inf, y = Inf, 
-             label = label.nrisk, 
-             hjust = 0, vjust = 1, 
-             size = size.label.nrisk / .pt,  # [수정] .pt로 나누어야 정확한 포인트 크기가 됨
-             fontface = "bold") +            # [수정] 굵게 설정
-    theme(plot.margin = margin(t = 0, r = 0, b = 0, l = 18, unit = "pt"))
+    annotate("text", x = -Inf, y = Inf, label = label.nrisk, 
+             hjust = 0, vjust = 1, size = size.label.nrisk/3) +
+    theme(plot.margin = margin(t = 0, r = 0, b = 0, l = 5, unit = "pt"))
 
   ###################################################
   # Create table graphic to include at-risk numbers #
@@ -963,33 +913,29 @@ svyjskm <- function(sfit,
 
     risk.data$strata <- factor(risk.data$strata, levels = rev(levels(risk.data$strata)))
     
-    # 1. data.table 생성 및 테마 설정 (여기를 수정하세요)
     data.table <- ggplot(risk.data, aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) +
       geom_text(size = 3.5) +
       theme_bw() +
-      scale_y_discrete(breaks = as.character(levels(risk.data$strata)), labels = rev(ystratalabs)) +
-      coord_cartesian(clip = "off") + 
+      scale_y_discrete(
+        breaks = as.character(levels(risk.data$strata)),
+        labels = rev(ystratalabs)
+      ) +
+      # scale_x_continuous(label.nrisk, limits = xlims) +
       theme(
+        axis.title.x = element_text(size = size.label.nrisk, vjust = 1),
         panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.border = element_blank(), axis.text.x = element_blank(),
-        axis.ticks = element_blank(), 
-        axis.text.y = element_text(face = "plain", colour = "black", size = 10, hjust = 0, margin = margin(r = 10)),
-        
-        # [핵심 수정] 왼쪽/오른쪽 불필요한 텍스트 및 잔상 완벽 제거
-        axis.title.y = element_blank(),         # 왼쪽 세로 글씨 제거
-        axis.text.y.right = element_blank(),    # 오른쪽 잔상 제거
-        axis.ticks.y.right = element_blank(),
-        axis.title.y.right = element_blank(),
-        
-        panel.background = element_blank(),
-        plot.background = element_blank()
+        axis.ticks = element_blank(), axis.text.y = element_text(face = "bold", hjust = 1)
       )
+    data.table <- data.table +
+      guides(colour = "none", linetype = "none") + xlab(NULL) + ylab(NULL)
     
-    # [수정] 표 x축도 그래프와 똑같이 expand = c(0, 0) 적용해야 정렬이 맞음
     if (left.nrisk == TRUE) {
-      data.table <- data.table + scale_x_continuous(NULL, limits = xlims, expand = c(0, 0))
+      data.table <- data.table +
+        scale_x_continuous(NULL, limits = xlims)
     } else {
-      data.table <- data.table + scale_x_continuous(label.nrisk, limits = xlims, expand = c(0, 0))
+      data.table <- data.table +
+        scale_x_continuous(label.nrisk, limits = xlims)
     }
   }
 
@@ -1114,25 +1060,25 @@ svyjskm <- function(sfit,
     g_plot <- ggplot2::ggplotGrob(p)
     g_table <- ggplot2::ggplotGrob(data.table)
     
-    # 왼쪽 레이블 너비 일치화 (핵심)
-    plot_left <- g_plot$widths[g_plot$layout[g_plot$layout$name == "axis-l", ]$l]
-    table_left <- g_table$widths[g_table$layout[g_table$layout$name == "axis-l", ]$l]
-    max_left <- grid::unit.pmax(plot_left, table_left)
+    y_axis_cols_plot <- which(grepl("axis-l", g_plot$layout$name))
+    panel_cols_plot <- which(grepl("panel", g_plot$layout$name))
     
-    g_plot$widths[g_plot$layout[g_plot$layout$name == "axis-l", ]$l] <- max_left
-    g_table$widths[g_table$layout[g_table$layout$name == "axis-l", ]$l] <- max_left
+    y_axis_cols_table <- which(grepl("axis-l", g_table$layout$name))
+    panel_cols_table <- which(grepl("panel", g_table$layout$name))
     
-    # 전체 너비 맞춤
-    maxWidth <- grid::unit.pmax(g_plot$widths, g_table$widths)
-    g_plot$widths <- maxWidth
-    g_table$widths <- maxWidth
+    full_range_plot <- min(y_axis_cols_plot):max(panel_cols_plot)
+    full_range_table <- min(y_axis_cols_table):max(panel_cols_table)
     
-    # 정렬 배치
+    maxWidth <- grid::unit.pmax(g_plot$widths[full_range_plot], g_table$widths[full_range_table])
+    
+    g_plot$widths[full_range_plot] <- as.list(maxWidth)
+    g_table$widths[full_range_table] <- as.list(maxWidth)
+    
     if (left.nrisk == TRUE) {
       ggpubr::ggarrange(
         plotlist = list(g_plot, header.pic, g_table),
         nrow = 3,
-        heights = c(2, 0.07, 0.5)  # [수정] 0.08 -> 0.07 (jskm과 통일)
+        heights = c(2, 0.07, 0.5)
       )
       
     } else {
@@ -1142,6 +1088,7 @@ svyjskm <- function(sfit,
         heights = c(2, 0.05, 0.5)
       )
     }
+    
   } else {
     p
   }
