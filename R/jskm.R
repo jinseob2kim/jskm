@@ -457,19 +457,19 @@ jskm <- function(sfit,
       axis.line.x = element_line(linewidth = 0.5, linetype = "solid", colour = "black"),
       axis.line.y = element_line(linewidth = 0.5, linetype = "solid", colour = "black")
     ) +
-    scale_x_continuous(xlabs, breaks = times, limits = xlims, expand = c(0, 0))
+    scale_x_continuous(xlabs, breaks = times, limits = xlims, expand = expansion(mult = c(0.001, 0.001)))
     
   if (!is.null(surv.by)) {
     p <- p + scale_y_continuous(ylabs, 
                                 limits = ylims, 
                                 labels = scale_labels, 
                                 breaks = seq(ylims[1], ylims[2], by = surv.by),
-                                expand = c(0, 0)) # 여백 제거 추가
+                                expand = expansion(mult = c(0.001, 0.001))) 
   } else {
     p <- p + scale_y_continuous(ylabs, 
                                 limits = ylims, 
                                 labels = scale_labels,
-                                expand = c(0, 0)) # 여백 제거 추가
+                                expand = expansion(mult = c(0.001, 0.001))) 
   }
   
   

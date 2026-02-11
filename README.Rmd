@@ -21,7 +21,17 @@ Kaplan-Meier Plot with 'ggplot2': 'survfit' and 'svykm' objects from 'survival' 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = F, warning = F, fig.path = "man/figures/README-")
-library(jskm)
+# library(jskm)
+library(ggplot2)
+library(survival)
+library(ggpubr)
+library(survey)
+library(patchwork)
+library(cmprsk)
+library(ggsci)
+source("R/jskm.R")
+source("R/svyjskm.R")
+source("R/adjustedLR.R")
 ```
 
 
@@ -57,14 +67,14 @@ jskm(fit,
 
 ### Cumulative hazard: 1- Survival probability
 ```{r}
-jskm(fit, ci = T, cumhaz = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, ci = T, cumhaz = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ### Landmark analysis 
 
 ```{r}
-jskm(fit, mark = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500)
-jskm(fit, mark = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500, showpercent = T)
+jskm(fit, marks = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500)
+jskm(fit, marks = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500, showpercent = T)
 ```
 
 ### Competing risk analysis
@@ -76,8 +86,8 @@ colon$status2 <- colon$status
 colon$status2[1:400] <- 2
 colon$status2 <- factor(colon$status2)
 fit2 <- survfit(Surv(time, status2) ~ rx, data = colon)
-jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1")
-jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", showpercent = T, cut.landmark = 500)
+jskm(fit2, marks = F, surv.scale = "percent", table = T, status.cmprsk = "1")
+jskm(fit2, marks = F, surv.scale = "percent", table = T, status.cmprsk = "1", showpercent = T, cut.landmark = 500)
 ```
 
 ### Theme 
@@ -85,13 +95,13 @@ jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", sho
 #### JAMA
 
 ```{r}
-jskm(fit, theme = "jama", cumhaz = T, table = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme = "jama", cumhaz = T, table = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 #### NEJM
 
 ```{r}
-jskm(fit, theme = "nejm", nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0, 0.7), cumhaz = T, table = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme = "nejm", nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0, 0.7), cumhaz = T, table = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ### Weighted Kaplan-Meier plot - `svykm.object` in **survey** package
@@ -110,7 +120,7 @@ s2 <- svykm(Surv(time, status > 0) ~ sex, design = dpbc)
 
 svyjskm(s1)
 svyjskm(s2, pval = T, table = T, design = dpbc)
-svyjskm(s2, cumhaz = T, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7), showpercent = T)
+svyjskm(s2, cumhaz = T, surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7), showpercent = T)
 ```
 
 If you want to get **confidence interval**, you should apply `se = T` option to `svykm` object.

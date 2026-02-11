@@ -484,24 +484,24 @@ svyjskm <- function(sfit,
       legend.key = element_rect(colour = NA),
       panel.border = element_blank()
     ) +
-    # [수정] x축 0점 딱 붙이기
-    scale_x_continuous(xlabs, breaks = times, limits = xlims, expand = c(0, 0))
+    # [수정] x축 여백 변경
+    scale_x_continuous(xlabs, breaks = times, limits = xlims, expand = expansion(mult = c(0.001, 0.001)))
 
   # y축 설정 부분
   if (!is.null(surv.by)) {
     p <- p + scale_y_continuous(
-      name = ylabs,                  # 명시적으로 ylabs 변수 사용
+      name = ylabs,                  
       limits = ylims, 
       labels = scale_labels, 
       breaks = seq(ylims[1], ylims[2], by = surv.by),
-      expand = c(0, 0)               # 0점 밀착
+      expand = expansion(mult = c(0.001, 0.001)) # 상하 여백 변경
     )
   } else {
     p <- p + scale_y_continuous(
-      name = ylabs,                  # 명시적으로 ylabs 변수 사용
+      name = ylabs,                  
       limits = ylims, 
       labels = scale_labels,
-      expand = c(0, 0)               # 0점 밀착
+      expand = expansion(mult = c(0.001, 0.001)) # 상하 여백 변경
     )
   }
 

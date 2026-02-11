@@ -62,7 +62,7 @@ jskm(fit,
 ### Cumulative hazard: 1- Survival probability
 
 ``` r
-jskm(fit, ci = T, cumhaz = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, ci = T, cumhaz = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
@@ -70,13 +70,13 @@ jskm(fit, ci = T, cumhaz = T, mark = F, ylab = "Cumulative incidence (%)", surv.
 ### Landmark analysis
 
 ``` r
-jskm(fit, mark = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500)
+jskm(fit, marks = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500)
 ```
 
 ![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
 ``` r
-jskm(fit, mark = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500, showpercent = T)
+jskm(fit, marks = F, surv.scale = "percent", pval = T, table = T, cut.landmark = 500, showpercent = T)
 ```
 
 ![](man/figures/README-unnamed-chunk-3-2.png)<!-- -->
@@ -91,13 +91,13 @@ colon$status2 <- colon$status
 colon$status2[1:400] <- 2
 colon$status2 <- factor(colon$status2)
 fit2 <- survfit(Surv(time, status2) ~ rx, data = colon)
-jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1")
+jskm(fit2, marks = F, surv.scale = "percent", table = T, status.cmprsk = "1")
 ```
 
 ![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
-jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", showpercent = T, cut.landmark = 500)
+jskm(fit2, marks = F, surv.scale = "percent", table = T, status.cmprsk = "1", showpercent = T, cut.landmark = 500)
 ```
 
 ![](man/figures/README-unnamed-chunk-4-2.png)<!-- -->
@@ -107,7 +107,7 @@ jskm(fit2, mark = F, surv.scale = "percent", table = T, status.cmprsk = "1", sho
 #### JAMA
 
 ``` r
-jskm(fit, theme = "jama", cumhaz = T, table = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme = "jama", cumhaz = T, table = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
@@ -115,7 +115,7 @@ jskm(fit, theme = "jama", cumhaz = T, table = T, mark = F, ylab = "Cumulative in
 #### NEJM
 
 ``` r
-jskm(fit, theme = "nejm", nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0, 0.7), cumhaz = T, table = T, mark = F, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme = "nejm", nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0, 0.7), cumhaz = T, table = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
@@ -146,7 +146,7 @@ svyjskm(s2, pval = T, table = T, design = dpbc)
 ![](man/figures/README-unnamed-chunk-7-2.png)<!-- -->
 
 ``` r
-svyjskm(s2, cumhaz = T, ylab = "Cumulative incidence (%)", surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7), showpercent = T)
+svyjskm(s2, cumhaz = T, surv.scale = "percent", pval = T, design = dpbc, pval.coord = c(300, 0.7), showpercent = T)
 ```
 
 ![](man/figures/README-unnamed-chunk-7-3.png)<!-- -->

@@ -1,3 +1,8 @@
+# jskm 0.6.1
+* Fix : `svyjskm` kaplan-meier curve is vanished at starting point (0,0)
+
+* Fix : `jskm` kaplan-meier curve is vanished at starting point (0,0)
+
 # jskm 0.6.0
 
 * Update: Improve UI consistency (linewidth, axis alignment, risk table style) for `jskm` and `svyjskm`.
