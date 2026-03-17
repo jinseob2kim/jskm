@@ -1,3 +1,7 @@
+# jskm 0.6.2
+
+* Fix: Gray's test p-value was incorrect when using `status.cmprsk` with factor status variable. `cmprsk::cuminc()` was called without `cencode`, causing the first factor level (censoring) to be treated as an event. Now correctly sets `cencode` to the first factor level and returns the p-value for the specified `status.cmprsk` event type.
+
 # jskm 0.6.1
 * Fix : `svyjskm` kaplan-meier curve is vanished at starting point (0,0)
 

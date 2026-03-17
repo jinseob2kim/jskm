@@ -697,8 +697,10 @@ jskm <- function(sfit,
     }
     if (is.null(cut.landmark)) {
       if (!is.null(status.cmprsk)) {
-        ci_obj <- cmprsk::cuminc(ftime = data[[time_var]], fstatus = data[[event_var]], group = data[[group_var]])
-        pvalue <- ci_obj$Tests[, "pv"][1]
+        fstatus_val <- data[[event_var]]
+        cen_code <- if (is.factor(fstatus_val)) levels(fstatus_val)[1] else 0
+        ci_obj <- cmprsk::cuminc(ftime = data[[time_var]], fstatus = fstatus_val, group = data[[group_var]], cencode = cen_code)
+        pvalue <- ci_obj$Tests[status.cmprsk, "pv"]
         test_type <- "Gray's Test"
       } else if (has_weights) {
         vv <- data[[group_var]]
@@ -759,12 +761,14 @@ jskm <- function(sfit,
       }
     } else {
       if (!is.null(status.cmprsk)) {
-        ci_obj1 <- cmprsk::cuminc(ftime = data1[[time_var]], fstatus = data1[[event_var]], group = data1[[group_var]])
+        fstatus_val1 <- data1[[event_var]]
+        cen_code <- if (is.factor(fstatus_val1)) levels(fstatus_val1)[1] else 0
+        ci_obj1 <- cmprsk::cuminc(ftime = data1[[time_var]], fstatus = fstatus_val1, group = data1[[group_var]], cencode = cen_code)
         data2 <- data[data[[var.time]] >= cut.landmark, ]
         data2[[time_var]] <- data2[[time_var]] - cut.landmark
-        ci_obj2 <- cmprsk::cuminc(ftime = data2[[time_var]], fstatus = data2[[event_var]], group = data2[[group_var]])
-        pvalue1 <- ci_obj1$Tests[, "pv"][1]
-        pvalue2 <- ci_obj2$Tests[, "pv"][1]
+        ci_obj2 <- cmprsk::cuminc(ftime = data2[[time_var]], fstatus = data2[[event_var]], group = data2[[group_var]], cencode = cen_code)
+        pvalue1 <- ci_obj1$Tests[status.cmprsk, "pv"]
+        pvalue2 <- ci_obj2$Tests[status.cmprsk, "pv"]
         pvalue <- c(pvalue1, pvalue2)
         test_type <- "Gray's Test"
       } else if (has_weights) {
