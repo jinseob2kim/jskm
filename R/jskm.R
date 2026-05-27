@@ -1094,7 +1094,8 @@ jskm <- function(sfit,
         scale_y_continuous(
           limits = nejm.infigure.ylim,
           breaks = waiver(),
-          labels = scale_labels
+          labels = scale_labels,
+          expand = expansion(mult = c(0.001, 0.001))
         )
       
       ## nejm.infigure.xlim: NOT NULL, nejm.surv.by: NULL
@@ -1125,7 +1126,8 @@ jskm <- function(sfit,
         scale_y_continuous(
           limits = nejm.infigure.ylim,
           breaks = waiver(),
-          labels = scale_labels
+          labels = scale_labels,
+          expand = expansion(mult = c(0.001, 0.001))
         )
       
       ## nejm.infigure.xlim: NULL, nejm.surv.by: NOT NULL
@@ -1145,7 +1147,8 @@ jskm <- function(sfit,
             nejm.infigure.ylim[2],
             by = nejm.surv.by
           ),
-          labels = scale_labels
+          labels = scale_labels,
+          expand = expansion(mult = c(0.001, 0.001))
         )
       
       ## both of them are NOT NULL
@@ -1180,7 +1183,8 @@ jskm <- function(sfit,
             nejm.infigure.ylim[2],
             by = nejm.surv.by
           ),
-          labels = scale_labels
+          labels = scale_labels,
+          expand = expansion(mult = c(0.001, 0.001))
         )
     }
   }

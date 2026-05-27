@@ -1,3 +1,7 @@
+# jskm 0.6.4
+
+* Fix: NEJM in-figure inset y-axis was floating above the panel bottom because the inset's `scale_y_continuous` replaced the main scale and reverted to ggplot's default ~5% expansion. The inset now uses `expand = expansion(mult = c(0.001, 0.001))`, so the lower y limit (e.g. 0) sits flush at the bottom edge of the inset panel.
+
 # jskm 0.6.3
 
 * Fix: `jskm` and `svyjskm` NEJM theme inset figure was lost when `table = TRUE`. The grob-based width alignment introduced in 0.5.20 dropped the patchwork inset; the inset is now applied after width alignment via `patchwork::wrap_elements()` so both the in-figure and the plot/risk-table x-axis alignment are preserved.
