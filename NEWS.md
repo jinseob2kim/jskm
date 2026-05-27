@@ -1,3 +1,9 @@
+# jskm 0.6.3
+
+* Fix: `jskm` and `svyjskm` NEJM theme inset figure was lost when `table = TRUE`. The grob-based width alignment introduced in 0.5.20 dropped the patchwork inset; the inset is now applied after width alignment via `patchwork::wrap_elements()` so both the in-figure and the plot/risk-table x-axis alignment are preserved.
+
+* Fix: `svyjskm` single curve (`svykm` object from formula `~ 1`) drew no line and showed a broken legend. The `strata` column stayed character, so `levels(df$strata) <- ystratalabs` only set an attribute; the later `rbind` with a factor `zeros` row produced NA strata. Now coerces to factor before relabeling.
+
 # jskm 0.6.2
 
 * Fix: Gray's test p-value was incorrect when using `status.cmprsk` with factor status variable. `cmprsk::cuminc()` was called without `cencode`, causing the first factor level (censoring) to be treated as an event. Now correctly sets `cencode` to the first factor level and returns the p-value for the specified `status.cmprsk` event type.

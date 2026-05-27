@@ -414,6 +414,7 @@ svyjskm <- function(sfit,
   }
 
   # Final changes to data for survival plot
+  if (!is.factor(df$strata)) df$strata <- factor(df$strata)
   levels(df$strata) <- ystratalabs
   zeros <- if (med == T & is.null(cut.landmark)) {
     data.frame("strata" = factor(ystratalabs, levels = levels(df$strata)), "time" = 0, "surv" = 1, "med" = 0.5, "n.censor"=NA)
@@ -1105,44 +1106,54 @@ svyjskm <- function(sfit,
           labels = scale_labels
         )
     }
-    
-    
-    p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
-  
+
+  is_nejm <- !is.null(theme) && theme == "nejm"
+
   if (table == TRUE) {
     g_plot <- ggplot2::ggplotGrob(p)
     g_table <- ggplot2::ggplotGrob(data.table)
-    
+
     # 왼쪽 레이블 너비 일치화 (핵심)
     plot_left <- g_plot$widths[g_plot$layout[g_plot$layout$name == "axis-l", ]$l]
     table_left <- g_table$widths[g_table$layout[g_table$layout$name == "axis-l", ]$l]
     max_left <- grid::unit.pmax(plot_left, table_left)
-    
+
     g_plot$widths[g_plot$layout[g_plot$layout$name == "axis-l", ]$l] <- max_left
     g_table$widths[g_table$layout[g_table$layout$name == "axis-l", ]$l] <- max_left
-    
+
     # 전체 너비 맞춤
     maxWidth <- grid::unit.pmax(g_plot$widths, g_table$widths)
     g_plot$widths <- maxWidth
     g_table$widths <- maxWidth
-    
+
+    # Apply NEJM inset on the width-aligned grob via patchwork::wrap_elements,
+    # so that the main plot stays aligned with the at-risk table.
+    plot_obj <- if (is_nejm) {
+      patchwork::wrap_elements(full = g_plot) +
+        patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
+    } else {
+      g_plot
+    }
+
     # 정렬 배치
     if (left.nrisk == TRUE) {
       ggpubr::ggarrange(
-        plotlist = list(g_plot, header.pic, g_table),
+        plotlist = list(plot_obj, header.pic, g_table),
         nrow = 3,
-        heights = c(2, 0.07, 0.5)  # [수정] 0.08 -> 0.07 (jskm과 통일)
+        heights = c(2, 0.07, 0.5)
       )
-      
     } else {
       ggpubr::ggarrange(
-        plotlist = list(g_plot, blank.pic, g_table),
+        plotlist = list(plot_obj, blank.pic, g_table),
         nrow = 3,
         heights = c(2, 0.05, 0.5)
       )
     }
   } else {
+    if (is_nejm) {
+      p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
+    }
     p
   }
 }

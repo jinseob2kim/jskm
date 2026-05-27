@@ -1183,45 +1183,54 @@ jskm <- function(sfit,
           labels = scale_labels
         )
     }
-    
-    p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
   }
-  
-  
+
+  is_nejm <- !is.null(theme) && theme == "nejm"
+
   if (table == TRUE) {
     g_plot <- ggplot2::ggplotGrob(p)
     g_table <- ggplot2::ggplotGrob(data.table)
-    
+
     y_axis_cols_plot <- which(grepl("axis-l", g_plot$layout$name))
     panel_cols_plot <- which(grepl("panel", g_plot$layout$name))
-    
+
     y_axis_cols_table <- which(grepl("axis-l", g_table$layout$name))
     panel_cols_table <- which(grepl("panel", g_table$layout$name))
-    
+
     full_range_plot <- min(y_axis_cols_plot):max(panel_cols_plot)
     full_range_table <- min(y_axis_cols_table):max(panel_cols_table)
-    
+
     maxWidth <- grid::unit.pmax(g_plot$widths[full_range_plot], g_table$widths[full_range_table])
-    
+
     g_plot$widths[full_range_plot] <- as.list(maxWidth)
     g_table$widths[full_range_table] <- as.list(maxWidth)
-    
+
+    # Apply NEJM inset on the width-aligned grob via patchwork::wrap_elements,
+    # so that the main plot stays aligned with the at-risk table.
+    plot_obj <- if (is_nejm) {
+      patchwork::wrap_elements(full = g_plot) +
+        patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
+    } else {
+      g_plot
+    }
+
     if (left.nrisk == TRUE) {
       ggpubr::ggarrange(
-        plotlist = list(g_plot, header.pic, g_table),
+        plotlist = list(plot_obj, header.pic, g_table),
         nrow = 3,
         heights = c(2, 0.07, 0.5)
       )
-      
     } else {
       ggpubr::ggarrange(
-        plotlist = list(g_plot, blank.pic, g_table),
+        plotlist = list(plot_obj, blank.pic, g_table),
         nrow = 3,
         heights = c(2, 0.05, 0.5)
       )
     }
-    
   } else {
+    if (is_nejm) {
+      p <- p + patchwork::inset_element(p2, 1 - nejm.infigure.ratiow, 1 - nejm.infigure.ratioh, 1, 1, align_to = "panel")
+    }
     p
   }
 }

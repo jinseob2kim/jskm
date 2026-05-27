@@ -107,7 +107,7 @@ jskm(fit2, marks = F, surv.scale = "percent", table = T, status.cmprsk = "1", sh
 #### JAMA
 
 ``` r
-jskm(fit, theme = "jama", cumhaz = T, table = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme = "jama", cumhaz = T, table = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(1000, 0.7))
 ```
 
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
@@ -115,7 +115,7 @@ jskm(fit, theme = "jama", cumhaz = T, table = T, marks = F, surv.scale = "percen
 #### NEJM
 
 ``` r
-jskm(fit, theme = "nejm", nejm.infigure.ratiow = 0.7, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0, 0.7), cumhaz = T, table = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(300, 0.7))
+jskm(fit, theme = "nejm", nejm.infigure.ratiow = 0.45, nejm.infigure.ratioh = 0.4, nejm.infigure.ylim = c(0, 0.7), cumhaz = T, table = T, marks = F, surv.scale = "percent", pval = T, pval.size = 6, pval.coord = c(1000, 0.3))
 ```
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
