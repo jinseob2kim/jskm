@@ -58,6 +58,7 @@ fit <- survfit(Surv(time, status) ~ rx, data = colon)
 
 # Plot the data
 jskm(fit)
+jskm(fit, surv.scale = "default")
 jskm(fit,
   table = T, pval = T, med = T, label.nrisk = "No. at risk", size.label.nrisk = 8,
   xlabs = "Time(Day)", ylabs = "Survival", ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx",
