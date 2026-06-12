@@ -1,3 +1,9 @@
+# jskm 0.6.5
+
+* Fix: `BugReports` in DESCRIPTION pointed to the `jstable` repository; corrected to `jskm` so the pkgdown "Browse source code" / GitHub links resolve to the correct repository.
+
+* Docs: add a `surv.scale = "default"` example to the README and vignette so the proportion-scale y-axis (`0.1`, `0.2`, `0.3`) is shown alongside the percent scale. No change to plotting behaviour: `surv.scale = "default"` keeps proportions and `surv.scale = "percent"` shows `0`–`100` with a `(%)` axis title; the argument default remains `c("percent", "default")`.
+
 # jskm 0.6.4
 
 * Fix: NEJM in-figure inset y-axis was floating above the panel bottom because the inset's `scale_y_continuous` replaced the main scale and reverted to ggplot's default ~5% expansion. The inset now uses `expand = expansion(mult = c(0.001, 0.001))`, so the lower y limit (e.g. 0) sits flush at the bottom edge of the inset panel.

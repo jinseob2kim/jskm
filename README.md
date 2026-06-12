@@ -50,6 +50,12 @@ jskm(fit)
 ![](man/figures/README-unnamed-chunk-1-1.png)<!-- -->
 
 ``` r
+jskm(fit, surv.scale = "default")
+```
+
+![](man/figures/README-unnamed-chunk-1-2.png)<!-- -->
+
+``` r
 jskm(fit,
   table = T, pval = T, med = T, label.nrisk = "No. at risk", size.label.nrisk = 8,
   xlabs = "Time(Day)", ylabs = "Survival", ystratalabs = c("Obs", "Lev", "Lev + 5FU"), ystrataname = "rx",
@@ -57,7 +63,7 @@ jskm(fit,
 )
 ```
 
-![](man/figures/README-unnamed-chunk-1-2.png)<!-- -->
+![](man/figures/README-unnamed-chunk-1-3.png)<!-- -->
 
 ### Cumulative hazard: 1- Survival probability
 
